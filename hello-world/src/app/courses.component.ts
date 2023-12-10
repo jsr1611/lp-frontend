@@ -4,8 +4,8 @@ import { Component } from "@angular/core";
     selector: 'courses',
     template: `
       <h2>{{ getTitle() }}</h2>
-      <ul *ngFor="let item of courses">
-        <li>{{item}}</li>
+      <ul >
+        <li *ngFor="let item of courses">{{item}}</li>
       </ul>
     `
 })
