@@ -1,0 +1,9 @@
+<h1>Arab Tili</h1>
+<h2>Yangi so`zlar:</h2>
+  <ng-container
+    *ngFor="let item of dict">
+    <p *ngIf="item.word != ''">
+      <span class="word-arabic">{{item.arabic != '' ? item.arabic : item.word}} </span> =>
+      <span class="word-meaning">{{item.meaning}}</span>
+    </p>
+  </ng-container>
