@@ -1,8 +1,8 @@
+node_modules/
 ts-hello
-/hello-world/.angular/
-/hello-world/.vscode/
-/hello-world/node_modules/
-/hello-world/.editorconfig
-/hello-world/package-lock.json
-hello-world/node_modules/.package-lock.json
-hello-world/src/assets/.gitkeep
+.angular/
+.vscode/
+
+.editorconfig
+package-lock.json
+.gitkeep

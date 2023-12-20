@@ -8,3 +8,8 @@ font-style: bold;
   font-size: 28px;
   font-style: bold;
 }
+
+.form{
+  margin: 5px;
+  padding: 2px;
+}

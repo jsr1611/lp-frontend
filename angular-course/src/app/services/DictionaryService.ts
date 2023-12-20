@@ -5,8 +5,14 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class DictionaryService {
+  readonly API_Url = "http://localhost:5038/api/arabic/dict";
   constructor(private httpClient: HttpClient) {}
   getDictionary() {
-    return this.httpClient.get<any[]>('assets/data/dict.json');
+    return this.httpClient.get<any[]>(this.API_Url);
+  }
+
+  createDictEntry(word:any){
+    console.log("Sending...", word);
+    return this.httpClient.post<any>(this.API_Url, word);
   }
 }
