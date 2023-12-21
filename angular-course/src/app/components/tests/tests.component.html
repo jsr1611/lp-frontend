@@ -1,7 +1,13 @@
 <p>
+    Test raqami: {{testNumber}}
+</p>
+<p>
     Bu nima?
 </p>
 <h2>{{testWord}}</h2>
 <p>Javoblar:</p>
 
-<button *ngFor="let ans of answers; index as i;" id="ans{{i}}" class="btn btn-light" (click)="submitAnswer(i)"><i class="bi"></i> {{ans}}</button>
+<button *ngFor="let ans of answers; index as i;" id="ans{{i}}" class="btn btn-light" (click)="submitAnswer(i)"><i class="bi"></i> {{ans.meaning}}</button>
+
+<br>
+<button (click)="generateTest()" class="btn btn-primary" >Yangi test</button>
