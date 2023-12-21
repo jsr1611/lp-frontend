@@ -11,6 +11,8 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { TestsComponent } from './components/tests/tests.component';
 import { HomeComponent } from './components/home/home.component';
 import { AddWordComponent } from './components/add-word/add-word.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { AddWordComponent } from './components/add-word/add-word.component';
     NotFoundComponent,
     TestsComponent,
     HomeComponent,
-    AddWordComponent
+    AddWordComponent,
+    NavbarComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

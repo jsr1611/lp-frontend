@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { DictionaryService } from 'src/app/services/DictionaryService';
 
 @Component({
@@ -8,13 +9,14 @@ import { DictionaryService } from 'src/app/services/DictionaryService';
 })
 export class TestsComponent implements OnInit{
 
-  constructor(private dictService: DictionaryService){ }
+  constructor(private dictService: DictionaryService, private router: Router){ }
   dict:any = [];
   testNumber:number = 0;
   testWord:any = "";
   answers:any = [];
   tmpAnswerNumbers:number[] = [];
   correctAnswer:number = 2;
+  totalTestNumbers:number[] = [];
 
   ngOnInit(): void {
     this.dict = this.dictService.getDictionary()
@@ -31,22 +33,36 @@ export class TestsComponent implements OnInit{
 
   generateTest(){
     this.testNumber = this.generateRandomNumber(this.dict.length);
+    if(this.totalTestNumbers.length > 0){
+      if(this.totalTestNumbers.length === this.dict.length){
+        alert('You have finished all tests! Start over?');
+        this.totalTestNumbers = [];
+      }
+      while(this.totalTestNumbers.includes(this.testNumber)){
+        this.testNumber = this.generateRandomNumber(this.dict.length);
+      }
+    }
+    this.totalTestNumbers.push(this.testNumber);
     console.log("test number generated: ", this.testNumber);
     this.testWord = this.dict[this.testNumber].arabic;
+
     this.answers = [];
     this.tmpAnswerNumbers = [];
     let randNumber = 0;
     this.correctAnswer = this.generateRandomNumber(4);
+    console.log('correct number:', this.correctAnswer);
+
     this.tmpAnswerNumbers.push(this.correctAnswer);
     for (let i = 0; i <  4; i++)   {
-      if(i==this.correctAnswer){
+      if(i === this.correctAnswer){
         this.answers.push(this.dict[this.testNumber]);
       }else{
-        randNumber = this.dict[this.generateRandomNumber(this.dict.length)];
+        randNumber = this.generateRandomNumber(this.dict.length);
         while(this.tmpAnswerNumbers.includes(randNumber)){
-          randNumber = this.dict[this.generateRandomNumber(this.dict.length)];
+          randNumber = this.generateRandomNumber(this.dict.length);
         }
-        this.answers.push(randNumber);
+        this.answers.push(this.dict[randNumber]);
+        this.tmpAnswerNumbers.push(randNumber);
       }
     }
   }
