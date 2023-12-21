@@ -1,10 +1,38 @@
 <h2>Yangi so`z qo`shish:</h2>
 <div class="form">
-  O'qilishi: <input [(ngModel)]="word" type="text" class="word-meaning" placeholder="So'zni o'qilishini kiriting"> <br>
-  Arabchasi: <input [(ngModel)]="arabic" class="word-meaning" type="text" placeholder="So'zni arabcha shaklini kiriting"> <br>
-  Ma`nosi: <input [(ngModel)]="meaning" class="word-meaning" type="text" placeholder="So'zni ma`nosini kiriting"> <br>
-  Turi: <input [(ngModel)]="wordType" type="text" class="word-meaning" placeholder="So'zni turini kiriting"> <br>
-  <button (click)="addWord()">Saqlash</button>
+  O'qilishi:
+  <input
+    [(ngModel)]="word"
+    type="text"
+    class="word-meaning"
+    placeholder="So'zni o'qilishini kiriting"
+  />
+  <br />
+  Arabchasi:
+  <input
+    [(ngModel)]="arabic"
+    class="word-meaning"
+    type="text"
+    placeholder="So'zni arabcha shaklini kiriting"
+  />
+  <br />
+  Ma`nosi:
+  <input
+    [(ngModel)]="meaning"
+    class="word-meaning"
+    type="text"
+    placeholder="So'zni ma`nosini kiriting"
+  />
+  <br />
+  Turi:
+  <input
+    [(ngModel)]="wordType"
+    type="text"
+    class="word-meaning"
+    placeholder="So'zni turini kiriting"
+  />
+  <br />
+  <button (click)="addWord()" class="btn btn-primary">Saqlash</button>
 </div>
-
-<a href="/words">Yangi so'zlarni ko'rish</a>
+<hr>
+<a href="/words" class="btn btn-primary">Yangi so'zlarni ko'rish</a>

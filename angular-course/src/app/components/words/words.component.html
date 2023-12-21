@@ -1,10 +1,13 @@
 <h2>Yangi so`zlar:</h2>
-<ng-container
-    *ngFor="let item of dict">
-    <p *ngIf="item.word != ''">
-      <span class="word-arabic">{{item.arabic != '' ? item.arabic : item.word}} </span> =>
-      <span class="word-meaning">{{item.meaning}}</span>
-    </p>
-  </ng-container>
-
-  <a href="/">Orqaga qaytish</a>
+<ng-container *ngFor="let item of dict">
+  <p *ngIf="item.word != ''">
+    <span class="word-arabic"
+      >{{ item.arabic != "" ? item.arabic : item.word }}
+    </span>
+    =>
+    <span class="word-meaning">{{ item.meaning }}</span>
+  </p>
+</ng-container>
+<hr />
+<a href="/add-word" class="btn btn-primary">Yangi so'z qo'shish</a>
+<a href="/" class="btn btn-primary">Orqaga qaytish</a>
