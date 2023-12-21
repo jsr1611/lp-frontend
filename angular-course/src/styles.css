@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+.word-arabic {
+  font-size: 44px;
+  margin: 10px;
+  font-style: bold;
+}
+
+.word-meaning {
+  font-size: 28px;
+  font-style: bold;
+}
+
+.form {
+  margin: 5px;
+  padding: 2px;
+}
