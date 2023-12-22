@@ -13,6 +13,7 @@ import { HomeComponent } from './components/home/home.component';
 import { AddWordComponent } from './components/add-word/add-word.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { NavBarService } from './components/navbar/navbar.service';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,7 @@ import { FooterComponent } from './components/footer/footer.component';
       {path:'**', component:NotFoundComponent}
     ])
   ],
-  providers: [DictionaryService],
+  providers: [DictionaryService, NavBarService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

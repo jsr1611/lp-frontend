@@ -4,7 +4,10 @@
 <p>
     Bu nima?
 </p>
-<h2>{{testWord}}</h2>
+<h2 *ngIf="test; else elseBlock">{{test.arabic}} \ {{test.word}} \ </h2>
+<ng-template #elseBlock>
+    <h2>Server bilan aloqa yo'q. Lokal DB dan foydalanib ko'ring</h2>    
+</ng-template>
 <p>Javoblar:</p>
 
 <button *ngFor="let ans of answers; index as i;" id="ans{{i}}" class="ans-btn btn btn-light" (click)="submitAnswer(i)"><i class="bi"></i> {{ans.meaning}}</button>

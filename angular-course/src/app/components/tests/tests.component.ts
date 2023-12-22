@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { Subscription, catchError, of } from "rxjs";
 import { DictionaryService } from "src/app/services/DictionaryService";
+import { NavBarService } from "../navbar/navbar.service";
 
 @Component({
   selector: "app-tests",
@@ -8,10 +10,14 @@ import { DictionaryService } from "src/app/services/DictionaryService";
   styleUrls: ["./tests.component.css"],
 })
 export class TestsComponent implements OnInit {
-  constructor(private dictService: DictionaryService, private router: Router) {}
+  constructor(
+    private dictService: DictionaryService,
+    private router: Router,
+    private navbarService: NavBarService
+  ) {}
   dict: any = [];
   testNumber: number = 0;
-  testWord: any = "";
+  test: any = "";
   answers: any = [];
   tmpAnswerNumbers: number[] = [];
   correctAnswer: number = 2;
@@ -21,11 +27,40 @@ export class TestsComponent implements OnInit {
   userCorrectTimes: number = 0;
   userFalseTimes: number = 0;
 
+  localDbState: boolean = false;
+  private _dbStateSub: Subscription = new Subscription();
+
   ngOnInit(): void {
-    this.dict = this.dictService.getDictionary().subscribe((data) => {
-      this.dict = data;
-      this.generateTest();
-    });
+    this.dict = this.dictService
+      .getDictionary()
+      .pipe(
+        catchError((error) => {
+          console.log(error);
+          return of(null);
+        })
+      )
+      .subscribe((data) => {
+        this.dict = data;
+        this.generateTest();
+      });
+    this._dbStateSub = this.navbarService.dbState.subscribe(
+      (newState: boolean) => {
+        this.localDbState = newState;
+        if(newState){
+          this.dict = this.dictService.getDictionaryLocal()
+          .pipe(
+            catchError((error) => {
+              console.log(error);
+              return of(null);
+            })
+          )
+          .subscribe((data) => {
+            this.dict = data;
+            this.generateTest();
+          }); 
+        }
+      }
+    );
   }
 
   generateRandomNumber(max: number): number {
@@ -36,15 +71,21 @@ export class TestsComponent implements OnInit {
     let btns = document.getElementsByClassName("ans-btn");
     for (let index = 0; index < btns.length; index++) {
       const btn = btns[index];
-      btn.className = '';
-      btn.classList.add('ans-btn', 'btn', 'btn-light');
+      btn.className = "";
+      btn.classList.add("ans-btn", "btn", "btn-light");
     }
 
     this.answers = [];
     this.testNumber = this.generateRandomNumber(this.dict.length);
     if (this.totalTestNumbers.length > 0) {
       if (this.totalTestNumbers.length === this.dict.length) {
-        alert("Siz " + this.totalTestNumbers.length +" ta testdan "+ this.userCorrectTimes+" tasini to'g'ri yechdingiz. Yana urinib ko'ring!");
+        alert(
+          "Siz " +
+            this.totalTestNumbers.length +
+            " ta testdan " +
+            this.userCorrectTimes +
+            " tasini to'g'ri yechdingiz. Yana urinib ko'ring!"
+        );
         this.totalTestNumbers = [];
         this.userAnsers = [];
         this.userCorrectTimes = 0;
@@ -56,7 +97,7 @@ export class TestsComponent implements OnInit {
     }
     this.totalTestNumbers.push(this.testNumber);
     console.log("test number generated: ", this.testNumber);
-    this.testWord = this.dict[this.testNumber].arabic;
+    this.test = this.dict[this.testNumber];
 
     this.tmpAnswerNumbers = [];
     let randNumber = 0;

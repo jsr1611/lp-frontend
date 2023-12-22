@@ -11,6 +11,10 @@ export class DictionaryService {
     return this.httpClient.get<any[]>(this.API_Url);
   }
 
+  getDictionaryLocal(){
+    return this.httpClient.get<any[]>('/assets/data/dict.json');
+  }
+
   createDictEntry(word:any){
     console.log("Sending...", word);
     return this.httpClient.post<any>(this.API_Url, word);
