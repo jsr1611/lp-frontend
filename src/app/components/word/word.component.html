@@ -1,0 +1,12 @@
+<h2>Yangi so`z:</h2>
+<p *ngIf="word.word; else elseBlock">
+  <span class="word-arabic"
+    >{{ word.arabic != "" ? word.arabic : word.word }}
+  </span>
+  =>
+  <span class="word-meaning">{{ word.meaning }}</span>
+</p>
+<ng-template #elseBlock>
+  <p>So'z topilmadi!</p>
+</ng-template>
+

@@ -14,6 +14,7 @@ import { AddWordComponent } from './components/add-word/add-word.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NavBarService } from './components/navbar/navbar.service';
+import { WordComponent } from './components/word/word.component';
 
 @NgModule({
   declarations: [
@@ -24,23 +25,25 @@ import { NavBarService } from './components/navbar/navbar.service';
     HomeComponent,
     AddWordComponent,
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    WordComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      {path:'', component:HomeComponent},
-      {path:'home', component:HomeComponent},
-      {path:'add-word', component:AddWordComponent},
-      {path:'words', component:WordsComponent},
-      {path:'tests', component:TestsComponent},
+      { path: '', component: HomeComponent },
+      { path: 'home', component: HomeComponent },
+      { path: 'add-word', component: AddWordComponent },
+      { path: 'words', component: WordsComponent },
+      { path: 'words/:id', component: WordComponent },
+      { path: 'tests', component: TestsComponent },
       //404 Not Found
-      {path:'**', component:NotFoundComponent}
-    ])
+      { path: '**', component: NotFoundComponent },
+    ]),
   ],
   providers: [DictionaryService, NavBarService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
