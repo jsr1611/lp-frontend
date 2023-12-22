@@ -6,3 +6,6 @@ ts-hello
 .editorconfig
 package-lock.json
 .gitkeep
+
+# Local Netlify folder
+.netlify

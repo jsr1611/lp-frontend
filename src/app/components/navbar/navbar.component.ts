@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavBarService } from './navbar.service';
 
 @Component({
@@ -6,9 +6,8 @@ import { NavBarService } from './navbar.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent{
   constructor(private navbarService: NavBarService){ }
-
   useLocalDB(){
     let btn = document.getElementById("localdb");
     let iTag = btn?.querySelector('i');
