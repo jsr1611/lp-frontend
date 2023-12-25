@@ -12,25 +12,25 @@ export class AddWordComponent {
 
   word = "";
   arabic = "";
-  meaning = "";
-  wordType = "";
+  uzbek = "";
+  wtype = "";
 
   constructor(private http: DictionaryService){}
 
   addWord(){
     console.log("New word");
-    
+
     const newWord = {
       word: this.word,
       arabic: this.arabic,
-      meaning: this.meaning,
-      type: this.wordType
+      uzbek: this.uzbek,
+      wtype: this.wtype
     }
-    if(!newWord.arabic || !newWord.meaning) {
+    if(!newWord.arabic || !newWord.uzbek) {
       console.log("Word is missing");
       return;
     }
-    else{     
+    else{
     this.http.createDictEntry(newWord).pipe(
         catchError((error) => {
           console.log(error);
@@ -42,8 +42,8 @@ export class AddWordComponent {
         console.log("Server response: ", data);
         this.word = "";
         this.arabic = "";
-        this.meaning = "";
-        this.wordType = "";
+        this.uzbek = "";
+        this.wtype = "";
       }
     });
   };

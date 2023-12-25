@@ -27,6 +27,9 @@ export class TestsComponent implements OnInit {
   userCorrectTimes: number = 0;
   userFalseTimes: number = 0;
 
+  UZ_AR: boolean = false;
+
+
   localDbState: boolean = false;
   private _dbStateSub: Subscription = new Subscription();
 
@@ -57,10 +60,15 @@ export class TestsComponent implements OnInit {
           .subscribe((data) => {
             this.dict = data;
             this.generateTest();
-          }); 
+          });
         }
       }
     );
+  }
+
+
+  changeUzbArab(){
+    this.UZ_AR = !this.UZ_AR;
   }
 
   generateRandomNumber(max: number): number {

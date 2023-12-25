@@ -4,13 +4,33 @@
 <p>
     Bu nima?
 </p>
-<h2 *ngIf="test; else elseBlock">{{test.arabic}} \ {{test.word}} \ </h2>
+<h2 *ngIf="test; else elseBlock">
+  <span *ngIf="UZ_AR; else AR_UZ">
+  {{test.arabic}} \ {{test.word}} \
+</span>
+<ng-template #AR_UZ>
+  {{test.uzbek}}
+</ng-template>
+
+</h2>
 <ng-template #elseBlock>
-    <h2>Server bilan aloqa yo'q. Lokal DB dan foydalanib ko'ring</h2>    
+    <h2>Server bilan aloqa yo'q. Lokal DB dan foydalanib ko'ring</h2>
 </ng-template>
 <p>Javoblar:</p>
+<span *ngIf="UZ_AR; else AR_UZ">
+<button *ngFor="let ans of answers; index as i;" id="ans{{i}}" class="ans-btn btn btn-light" (click)="submitAnswer(i)"><i class="bi"></i>
+  {{ans.uzbek}}
+</button>
+</span>
+<ng-template #AR_UZ>
+  <button *ngFor="let ans of answers; index as i;" id="ans{{i}}" class="ans-btn btn btn-light" (click)="submitAnswer(i)"><i class="bi"></i>
+    {{ans.arabic}}
+  </button>
+</ng-template>
 
-<button *ngFor="let ans of answers; index as i;" id="ans{{i}}" class="ans-btn btn btn-light" (click)="submitAnswer(i)"><i class="bi"></i> {{ans.meaning}}</button>
 
 <br>
 <button (click)="generateTest()" class="btn btn-primary" >Yangi test</button>
+
+<button (click)="changeUzbArab()" class="btn btn-primary" >Arab <-> O`zbek</button>
+
