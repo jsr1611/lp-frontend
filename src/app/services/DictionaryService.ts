@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 export class DictionaryService {
   // readonly API_Url_Server = "http://127.0.0.1:3000/api/dict";
   // readonly API_Url_Server = "https://lp-backend-t6jz.onrender.com/api/arabic/dict";
-  readonly API_Url_Server = "https://jumanazar.uz/arabic/api/dict";
+  readonly API_Url_Server = "http://api.jumanazar.uz/dict";
   constructor(private httpClient: HttpClient) {}
   getDictionary() {
     return this.httpClient.get<any[]>(this.API_Url_Server);

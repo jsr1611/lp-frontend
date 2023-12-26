@@ -1,0 +1,91 @@
+[
+  {
+    "word": "yahruju",
+    "arabic": "يَخْرُجُ",
+    "uzbek": "chiqayapti",
+    "wtype": "fel",
+    "english": "coming out",
+    "russian": "выходит"
+  },
+  {
+    "word": "saljun",
+    "arabic": "ثَلْجٌ",
+    "uzbek": "qor",
+    "wtype": "narsa",
+    "english": "snow",
+    "russian": "снег"
+  },
+  {
+    "word": "yajrii",
+    "arabic": "يَجْرِي",
+    "uzbek": "yuguryapti",
+    "wtype": "fel",
+    "english": "running",
+    "russian": "бегает"
+  },
+  {
+    "word": "jamalun",
+    "arabic": "جَمَلٌ",
+    "uzbek": "tuya",
+    "wtype": "hayvon",
+    "english": "camel",
+    "russian": "верблюд"
+  },
+  {
+    "word": "jadvalun",
+    "arabic": "جَدْوَللٌ",
+    "uzbek": "soy",
+    "wtype": "narsa",
+    "english": "stream",
+    "russian": ""
+  },
+  {
+    "word": "jidarun",
+    "arabic": "جِدَارٌ",
+    "uzbek": "devor",
+    "wtype": "narsa",
+    "english": "wall",
+    "russian": "стена"
+  },
+  {
+    "word": "jaddun",
+    "arabic": "جَدٌّ",
+    "uzbek": "bobo",
+    "wtype": "odam",
+    "english": "grandfather",
+    "russian": "дедушка"
+  },
+  {
+    "word": "jubnun",
+    "arabic": "جُبْنٌ",
+    "uzbek": "pishloq",
+    "wtype": "narsa",
+    "english": "cheese",
+    "russian": ""
+  },
+  {
+    "word": "jabalun",
+    "arabic": "جَبَلٌ",
+    "uzbek": "tog`",
+    "wtype": "narsa",
+    "english": "mountain",
+    "russian": ""
+  },
+  {
+    "word": "mashavijun",
+    "arabic": "مَشعْوِذٌ",
+    "uzbek": "masxaraboz",
+    "wtype": "noun",
+    "english": "cloun",
+    "russian": "клоун"
+  },
+  {
+    "word": "mashavijun",
+    "arabic": "مَشعْوِذٌ",
+    "uzbek": "masxaraboz",
+    "wtype": "noun",
+    "english": "cloun",
+    "russian": "клоун"
+  }
+]
+

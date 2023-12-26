@@ -1,62 +1,408 @@
 [
   {
-  "word":"yahruju",
-  "arabic":"يَخْرُجُ",
-  "meaning":"chiqayapti",
-  "type":"fel"
-},
-{
-  "word":"saljun",
-  "arabic":"ثَلْجٌ",
-  "meaning":"qor",
-  "type":"narsa"
-},
-{
-  "word":"yajrii",
-  "arabic":"يَجْرِي",
-  "meaning":"yuguryapti",
-  "type":"fel"
-},
-{
-  "word":"jamalun",
-  "arabic":"جَمَلٌ",
-  "meaning":"tuya",
-  "type":"hayvon"
-},
-{
-  "word":"jadvalun",
-  "arabic":"جَدْوَللٌ",
-  "meaning":"soy",
-  "type":"narsa"
-},
-{
-  "word":"jidarun",
-  "arabic":"جِدَارٌ",
-  "meaning":"devor",
-  "type":"narsa"
-},
-{
-  "word":"jaddun",
-  "arabic":"جَدٌّ",
-  "meaning":"bobo",
-  "type":"odam"
-},
-{
-  "word":"jubnun",
-  "arabic":"جُبْنٌ",
-  "meaning":"pishloq",
-  "type":"narsa"
-},
-{
-  "word":"jabalun",
-  "arabic":"جَبَلٌ",
-  "meaning":"tog`",
-  "type":"narsa"
-},
-{
-  "word":"mashavijun",
-  "arabic":"مَشعْوِذٌ",
-  "meaning":"masxaraboz",
-  "type":"noun"
-}
+    "_id": "1",
+    "word": "yahruju",
+    "arabic": "يَخْرُجُ",
+    "uzbek": "chiqayapti",
+    "wtype": "verb",
+    "english": "coming out",
+    "russian": "выходит",
+    "category": ""
+  },
+  {
+    "_id": "2",
+    "word": "saljun",
+    "arabic": "ثَلْجٌ",
+    "uzbek": "qor",
+    "wtype": "noun",
+    "english": "snow",
+    "russian": "снег",
+    "category": ""
+  },
+  {
+    "_id": "3",
+    "word": "yajrii",
+    "arabic": "يَجْرِي",
+    "uzbek": "yuguryapti",
+    "wtype": "verb",
+    "english": "running",
+    "russian": "бегает",
+    "category": ""
+  },
+  {
+    "_id": "4",
+    "word": "jamalun",
+    "arabic": "جَمَلٌ",
+    "uzbek": "tuya",
+    "wtype": "noun",
+    "english": "camel",
+    "russian": "верблюд",
+    "category": ""
+  },
+  {
+    "_id": "5",
+    "word": "jadvalun",
+    "arabic": "جَدْوَللٌ",
+    "uzbek": "soy",
+    "wtype": "noun",
+    "english": "stream",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "6",
+    "word": "jidarun",
+    "arabic": "جِدَارٌ",
+    "uzbek": "devor",
+    "wtype": "noun",
+    "english": "wall",
+    "russian": "стена",
+    "category": ""
+  },
+  {
+    "_id": "7",
+    "word": "jaddun",
+    "arabic": "جَدٌّ",
+    "uzbek": "bobo",
+    "wtype": "noun",
+    "english": "grandfather",
+    "russian": "дедушка",
+    "category": ""
+  },
+  {
+    "_id": "8",
+    "word": "jubnun",
+    "arabic": "جُبْنٌ",
+    "uzbek": "pishloq",
+    "wtype": "noun",
+    "english": "cheese",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "9",
+    "word": "jabalun",
+    "arabic": "جَبَلٌ",
+    "uzbek": "tog`",
+    "wtype": "noun",
+    "english": "mountain",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "10",
+    "word": "ason",
+    "arabic": "عَصًا",
+    "uzbek": "hassa",
+    "wtype": "noun",
+    "english": "",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "11",
+    "word": "kitabun",
+    "arabic": "كِتَابٌ",
+    "uzbek": "kitob",
+    "wtype": "noun",
+    "english": "book",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "12",
+    "word": "asadun",
+    "arabic": "اَسَدٌ",
+    "uzbek": "arson, sher",
+    "wtype": "noun",
+    "english": "lion",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "13",
+    "word": "ajurun",
+    "arabic": "آجُرٌّ",
+    "uzbek": "g`isht",
+    "wtype": "noun",
+    "english": "brick",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "14",
+    "word": "ibnun",
+    "arabic": "اِبْنٌ",
+    "uzbek": "o`g`il",
+    "wtype": "noun",
+    "english": "son",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "15",
+    "word": "ibrotun",
+    "arabic": "اِبْرَةٌ",
+    "uzbek": "igna",
+    "wtype": "noun",
+    "english": "",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "16",
+    "word": "ardun",
+    "arabic": "اَرْضٌ",
+    "uzbek": "yer",
+    "wtype": "noun",
+    "english": "Earth",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "17",
+    "word": "uzunun",
+    "arabic": "اُذُنٌ",
+    "uzbek": "quloq",
+    "wtype": "noun",
+    "english": "ear",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "18",
+    "word": "g`urobun",
+    "arabic": "غُرَابٌ",
+    "uzbek": "qarg`a",
+    "wtype": "noun",
+    "english": "",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "19",
+    "word": "maktabun",
+    "arabic": "مَكْتَبٌ",
+    "uzbek": "stol",
+    "wtype": "noun",
+    "english": "chair",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "20",
+    "word": "hablun",
+    "arabic": "حَبْلٌ",
+    "uzbek": "arqon",
+    "wtype": "noun",
+    "english": "",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "21",
+    "word": "baytun",
+    "arabic": "بَيْتٌ",
+    "uzbek": "uy",
+    "wtype": "noun",
+    "english": "house",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "22",
+    "word": "batnun",
+    "arabic": "بَطْنٌ",
+    "uzbek": "qorin",
+    "wtype": "noun",
+    "english": "stomach",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "23",
+    "word": "basolun",
+    "arabic": "بَصَلٌ",
+    "uzbek": "piyoz",
+    "wtype": "noun",
+    "english": "onion",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "24",
+    "word": "bahrun",
+    "arabic": "بَحْرٌ",
+    "uzbek": "dengiz",
+    "wtype": "noun",
+    "english": "river",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "25",
+    "word": "babg`ou",
+    "arabic": "بَبْغَاءٌ",
+    "uzbek": "to`ti",
+    "wtype": "noun",
+    "english": "",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "26",
+    "word": "bittiixun",
+    "arabic": "بِطِّيخٌ",
+    "uzbek": "tarvuz",
+    "wtype": "noun",
+    "english": "watermelon",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "27",
+    "word": "banatun",
+    "arabic": "بَنَاتٌ",
+    "uzbek": "qizlar",
+    "wtype": "noun",
+    "english": "girls",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "28",
+    "word": "tostun",
+    "arabic": "طَسْتٌ",
+    "uzbek": "tog`ora",
+    "wtype": "noun",
+    "english": "",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "29",
+    "word": "miftahun",
+    "arabic": "مِفْتَاحٌ",
+    "uzbek": "kalit",
+    "wtype": "noun",
+    "english": "key",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "30",
+    "word": "tiynun",
+    "arabic": "تِيْنٌ",
+    "uzbek": "anjir",
+    "wtype": "noun",
+    "english": "",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "31",
+    "word": "tuutun",
+    "arabic": "تُوتٌ",
+    "uzbek": "tut",
+    "wtype": "noun",
+    "english": "tut",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "32",
+    "word": "tilmiizun",
+    "arabic": "تِلْمِيلذٌ",
+    "uzbek": "o`quvchi",
+    "wtype": "noun",
+    "english": "pupil",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "33",
+    "word": "romlun",
+    "arabic": "رَمْلٌ",
+    "uzbek": "qum",
+    "wtype": "noun",
+    "english": "sand",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "34",
+    "word": "namiru",
+    "arabic": "نَمرُ",
+    "uzbek": "yo`lbars",
+    "wtype": "noun",
+    "english": "tiger",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "35",
+    "word": "himaarun",
+    "arabic": "حِمَارٌ",
+    "uzbek": "eshak",
+    "wtype": "noun",
+    "english": "donkey",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "36",
+    "word": "yarkabu",
+    "arabic": "يَرْكَبُ",
+    "uzbek": "minayapti",
+    "wtype": "verb",
+    "english": "riding",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "37",
+    "word": "rojulun",
+    "arabic": "رَجُلٌ",
+    "uzbek": "kishi",
+    "wtype": "noun",
+    "english": "man",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "38",
+    "word": "roxiysun",
+    "arabic": "رَخِيصٌ",
+    "uzbek": "arzon",
+    "wtype": "adjective", "english": "", "russian":"", "category":""
+  },
+  {
+    "_id": "39",
+    "word": "rukbatun",
+    "arabic": "رُكْبَةٌ",
+    "uzbek": "tizza",
+    "wtype": "noun",
+    "english": "toe",
+    "russian": "",
+    "category": ""
+  },
+  {
+    "_id": "40",
+    "word": "ro-sun",
+    "arabic": "رَأْسٌ",
+    "uzbek": "bosh",
+    "wtype": "noun",
+    "english": "head",
+    "russian": "голова",
+    "category": ""
+  },
+  {
+    "_id": "41",
+    "word": "mashavijun",
+    "arabic": "مَشعْوِذٌ",
+    "uzbek": "masxaraboz",
+    "wtype": "noun",
+    "english": "cloun",
+    "russian": "клоун"
+  }
 ]
