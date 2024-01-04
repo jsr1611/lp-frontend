@@ -24,8 +24,9 @@
 </span>
 <ng-template #AR_UZ>
   <button *ngFor="let ans of answers; index as i;" id="ans{{i}}" class="ans-btn btn btn-light" (click)="submitAnswer(i)"><i class="bi"></i>
-    {{ans.arabic}}
+    {{ans.arabic}} \{{ans.word}}\
   </button>
+
 </ng-template>
 
 

@@ -9,19 +9,19 @@
           <li class="nav-item">
             <a class="nav-link" href="/words">Yangi so'zlar</a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" href="/add-word">Yangi so'z qo'shish</a>
-          </li>
+          </li> -->
           <li class="nav-item">
             <a class="nav-link" href="/tests">Test yechish</a>
           </li>
-          
+
         </ul>
-        <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-          <button id="localdb" class="btn btn-light" (click)="useLocalDB()"><i class="bi bi-sun"></i> LocalDB</button>
-        </form>
+        <div class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" [(ngModel)]="searchKey">
+          <button class="btn btn-outline-success" type="submit" [routerLink]="['/search/'+searchKey]">Search</button>
+          <!-- <button id="localdb" class="btn btn-light" (click)="useLocalDB()"><i class="bi bi-sun"></i> LocalDB</button> -->
+        </div>
       </div>
     </div>
   </nav>

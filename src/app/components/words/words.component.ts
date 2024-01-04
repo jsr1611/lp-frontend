@@ -10,7 +10,7 @@ import { DictionaryService } from 'src/app/services/DictionaryService';
 export class WordsComponent implements OnInit{
 
   constructor(private dictService: DictionaryService) { }
-  
+
   ngOnInit(): void {
   this.refresh();
   }
@@ -18,7 +18,7 @@ export class WordsComponent implements OnInit{
 
   refresh(){
     this.dictService
-    .getDictionary()
+    .getDictionaryLocal()
     .pipe(
       catchError((error) => {
       console.log(error);

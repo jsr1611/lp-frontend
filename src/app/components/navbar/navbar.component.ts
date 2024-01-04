@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { NavBarService } from './navbar.service';
 
 @Component({
@@ -6,8 +6,15 @@ import { NavBarService } from './navbar.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent{
+export class NavbarComponent implements OnChanges{
   constructor(private navbarService: NavBarService){ }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+  }
+
+  searchKey:string = "";
+
   useLocalDB(){
     let btn = document.getElementById("localdb");
     let iTag = btn?.querySelector('i');

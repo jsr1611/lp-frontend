@@ -374,7 +374,10 @@
     "word": "roxiysun",
     "arabic": "رَخِيصٌ",
     "uzbek": "arzon",
-    "wtype": "adjective", "english": "", "russian":"", "category":""
+    "wtype": "adjective",
+    "english": "cheap",
+    "russian": "",
+    "category": ""
   },
   {
     "_id": "39",

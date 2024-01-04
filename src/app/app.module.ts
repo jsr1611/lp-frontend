@@ -39,6 +39,7 @@ import { WordComponent } from './components/word/word.component';
       { path: 'words', component: WordsComponent },
       { path: 'words/:id', component: WordComponent },
       { path: 'tests', component: TestsComponent },
+      {path: 'search/:searchKey', component: WordComponent},
       //404 Not Found
       { path: '**', component: NotFoundComponent },
     ]),

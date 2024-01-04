@@ -35,7 +35,7 @@ export class TestsComponent implements OnInit {
 
   ngOnInit(): void {
     this.dict = this.dictService
-      .getDictionary()
+      .getDictionaryLocal()
       .pipe(
         catchError((error) => {
           console.log(error);
