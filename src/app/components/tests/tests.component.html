@@ -1,8 +1,8 @@
-<p>
-    Test raqami: {{totalTestNumbers.length}} | Jami testlar soni: {{dict.length}} | To'g'ri javoblar: {{userCorrectTimes}} | Xato javoblar: {{userFalseTimes}}
+<p class="border">
+    Testlar soni: {{dict.length}} | Natija: {{userCorrectTimes}}<i class="bi bi-check"></i> | {{userFalseTimes}}<i class="bi bi-x"></i> | {{totalTestNumbers.length}} jami
 </p>
 <p>
-    Bu nima?
+    Bu so`zning ma`nosi nima?
 </p>
 <h2 *ngIf="test; else elseBlock">
   <span *ngIf="UZ_AR; else AR_UZ">
@@ -15,8 +15,8 @@
 </h2>
 <ng-template #elseBlock>
     <h2>Server bilan aloqa yo'q. Lokal DB dan foydalanib ko'ring</h2>
-</ng-template>
-<p>Javoblar:</p>
+</ng-template><br>
+<p>Quyidagi javoblardan birini tanlang:</p>
 <span *ngIf="UZ_AR; else AR_UZ">
 <button *ngFor="let ans of answers; index as i;" id="ans{{i}}" class="ans-btn btn btn-light" (click)="submitAnswer(i)"><i class="bi"></i>
   {{ans.uzbek}}
@@ -31,7 +31,7 @@
 
 
 <br>
-<button (click)="generateTest()" class="btn btn-primary" >Yangi test</button>
-
-<button (click)="changeUzbArab()" class="btn btn-primary" >Arab <-> O`zbek</button>
+<button (click)="generateTest()" class="btn btn-primary" title="Keyingi testni yuklash">Keyingi</button>
+<br>
+<button (click)="changeUzbArab()" class="btn btn-info" title="Tilni almashtirish">Arab <i class="bi bi-arrow-left-right"></i> O`zbek</button>
 

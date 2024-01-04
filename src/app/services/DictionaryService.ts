@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -29,5 +30,17 @@ export class DictionaryService {
 
   findWordById(id:number){
     return this.httpClient.get<any>(this.API_Url_Server + "/" + id);
+  }
+
+  fileExists(url: string): Observable<boolean>{
+    return this.httpClient.get(url, { observe: 'response' })
+      .pipe(
+        map(() => true),
+        catchError((error) => {
+          const status = (error as HttpErrorResponse).status;
+          if(status === 404) console.log("File not found");
+          return status === (200 || 304) ? of(true) : of(false);
+        })
+      );
   }
 }

@@ -11,12 +11,13 @@ import { DictionaryService } from 'src/app/services/DictionaryService';
 export class WordComponent implements OnInit, OnChanges{
   word:any = "";
   constructor(private dictService: DictionaryService, private route: ActivatedRoute) { }
+  fileExists:boolean = false;
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes['word']);
   }
   ngOnInit(): void {
-
+    this.fileExists = false;
     let id = Number(this.route.snapshot.paramMap.get('id'));
     let keyWord = this.route.snapshot.paramMap.get('searchKey');
     console.log("id: ", id);
@@ -26,10 +27,15 @@ export class WordComponent implements OnInit, OnChanges{
       return of(null);
     }))
     .subscribe((data) =>{
-      if(data)
+      if(data){
         this.word = data;
+        this.dictService.fileExists(`/assets/audio/${this.word._id}.m4a`)
+        .subscribe(exists => {
+          this.fileExists = exists;
+        })
+      }
     })
-    this.dictService.getDictionaryLocal()
+    keyWord?.length && this.dictService.getDictionaryLocal()
     .pipe(catchError(error => {
       console.log(error);
       return of(null);
@@ -38,11 +44,13 @@ export class WordComponent implements OnInit, OnChanges{
       data?.forEach(w =>{
         if(keyWord && (w.word + "").startsWith(keyWord)){
           this.word = w;
-          return;
+          this.dictService.fileExists(`assets/audio/${this.word._id}.m4a`)
+          .subscribe(exists => {
+            this.fileExists = exists;
+            return;
+          })
         }
       })
     })
   }
-
-
 }
