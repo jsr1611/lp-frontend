@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output } from "@angular/core";
-import { User } from "src/app/models/user";
+import { Currency, User } from "src/app/models/user";
 import { AuthService } from "src/app/services/AuthService";
 import { DatePipe } from "@angular/common";
 import { Expense } from "src/app/models/expense";
@@ -43,8 +43,12 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     lastname: "",
     is_activated: false,
     is_superuser: false,
+    currency: {
+      code: "UZS", name: "",
+      symbol: ""
+    },
   };
-  protected userInfo!: User; 
+  protected userInfo!: User;
   protected monthlyExpensesChart: any;
   protected detailedExpenseChart: any;
   protected token: string | null = null;
@@ -54,13 +58,13 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   protected monthAndYearChange = new EventEmitter<Date | null>();
   selectedFile: File | null = null;
   maxSizeInMB = 2;
-  displayInput:boolean = false;
+  displayInput: boolean = false;
   displayUpdateInput: boolean = false;
   displayUserModal: boolean = false;
   successMessage: string | null = null;
   errorMessage: string | null = null;
   selectedMonthStr!: string;
-  selectedYear:number = new Date().getFullYear();
+  selectedYear: number = new Date().getFullYear();
   today: Date = new Date();
   monthlyTotal = 0;
   protected readonly ONE: string = 'one';
@@ -71,21 +75,21 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     amount: 0,
     description: ''
   };
-  monthlyExpenses:{
+  monthlyExpenses: {
     month: string,
     total: string,
   }[] = [];
   currentMonthExpenses: Expense[] = [];
-  
-  isEditModalOpen = false;
-  editExpense: Expense = this.todaysExpense; 
 
-  popularCurrencies = [
+  isEditModalOpen = false;
+  editExpense: Expense = this.todaysExpense;
+
+  popularCurrencies: Currency[] = [
     { code: 'KRW', name: 'South Korean Won', symbol: '₩' },
     { code: 'UZS', name: 'Uzbek Som', symbol: 'soʻm' },
     { code: 'KZT', name: 'Kazakh Tenge', symbol: '₸' },
-    { code: 'TJS', name: 'Tajik Somoni', symbol: 'SM' }, 
-    { code: 'KGS', name: 'Kyrgyz Som', symbol: 'с' }, 
+    { code: 'TJS', name: 'Tajik Somoni', symbol: 'SM' },
+    { code: 'KGS', name: 'Kyrgyz Som', symbol: 'с' },
     { code: 'RUB', name: 'Russian Ruble', symbol: '₽' },
     { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
     { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
@@ -99,7 +103,8 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     // Add more currencies as needed
   ];
 
-  selectedCurrency: string = 'KRW';
+  selectedCurrency: string = 'UZS';
+
 
   constructor(
     private authService: AuthService,
@@ -109,26 +114,31 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngAfterViewInit(): void {
-    this.viewExpenses(this.ONE); 
+    this.viewExpenses(this.ONE);
     this.viewExpenses(this.ALL);
   }
 
   ngOnInit(): void {
     let savedCurrency = localStorage.getItem('currency');
-    if(savedCurrency){
+    if (savedCurrency) {
       this.selectedCurrency = savedCurrency;
     }
-    this.selectedMonthStr = this.datePipe.transform(new Date(this.monthAndYear), "MMMM yyyy")!;    
+    this.selectedMonthStr = this.datePipe.transform(new Date(this.monthAndYear), "MMMM yyyy")!;
     this.token = this.authService.getToken();
     this.getUser();
   }
 
 
-  getUser(){
+  getUser() {
     try {
       this.authService.getUserProfile(this.ONE).subscribe({
         next: (data: any) => {
           this.user = data.user;
+          console.log('user info from db: ', this.user);
+          if (this.user.currency == null) {
+            this.user.currency = this.popularCurrencies[1];
+          }
+          this.selectedCurrency = this.user.currency.code;
         },
         error: (err: HttpErrorResponse) => {
           console.log(
@@ -148,24 +158,34 @@ export class UserPageComponent implements OnInit, AfterViewInit {
 
   onAmountChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const value = input.value.replace(/[^0-9.-]+/g, ''); 
-    this.todaysExpense.amount = value ? parseFloat(value) : 0; 
+    const value = input.value.replace(/[^0-9.-]+/g, '');
+    this.todaysExpense.amount = value ? parseFloat(value) : 0;
   }
 
-  onCurrencyChange(currencyCode: string){
+  onCurrencyChange(currencyCode: string) {
     localStorage.setItem('currency', currencyCode);
-    if(this.monthlyExpensesChart && this.monthlyExpensesChart.data && this.monthlyExpensesChart.data.datasets){
+    if (this.monthlyExpensesChart && this.monthlyExpensesChart.data && this.monthlyExpensesChart.data.datasets) {
       const dataset = this.monthlyExpensesChart.data.datasets[0];
-      dataset.label = `Total monthly expenses for ${this.selectedYear} in ${this.selectedCurrency}`; 
+      dataset.label = `Total monthly expenses for ${this.selectedYear} in ${this.selectedCurrency}`;
       this.monthlyExpensesChart.update();
     }
+    this.popularCurrencies.forEach((currency) => {
+      if (currency.code === currencyCode) {
+        console.log(`this.userInfo.currency = currency;`, this.userInfo?.currency);
+        this.user.currency = currency;
+        this.userInfo = this.user;
+        this.userInfo.profilePicture = "";
+      }
+    });
+    console.log("updating user currency:", this.userInfo);
+    this.updateUserInfo(event, true);
   }
 
-  calculateMonthlyTotal(){
+  calculateMonthlyTotal() {
     this.monthlyTotal = 0;
     this.currentMonthExpenses.map(item => {
       this.monthlyTotal += item.amount;
-  });
+    });
   }
 
 
@@ -207,12 +227,12 @@ export class UserPageComponent implements OnInit, AfterViewInit {
       acc[category.category].amount += category.amount;
       return acc;
     }, {});
-    
+
     // Step 2: Extract labels and data
     const labels = Object.keys(groupedExpenses);
     const data = Object.values(groupedExpenses).map(expense => expense.amount);
     const backgroundColors = labels.map(() => this.getRandomColor());
-    
+
     // Now you can use labels and data to create your chart
     const totalAmount = data.reduce((acc, amount) => acc + amount, 0);
 
@@ -266,23 +286,23 @@ export class UserPageComponent implements OnInit, AfterViewInit {
 
     this.selectedMonthStr = this.datePipe.transform(new Date(value), "MMMM yyyy")!;
     this.viewExpenses(this.ONE);
-    if(currentYear !== this.selectedYear){
+    if (currentYear !== this.selectedYear) {
       this.viewExpenses(this.ALL);
     }
     widget.close();
   }
-  
+
   viewExpenses(all: string): void {
     try {
       const monthYearStr = `${this.monthAndYear.getMonth()},${this.monthAndYear.getFullYear()}`;
       this.secureService.getExpense(monthYearStr, all).subscribe({
         next: (data: any) => {
-          if(all === 'all'){
+          if (all === 'all') {
             this.monthlyExpenses = data.expenses;
             this.createMonthlyExpensesChart();
-          }else{
+          } else {
             this.currentMonthExpenses = data.expenses;
-            this.currentMonthExpenses.sort((a,b) => new Date(a.date) < new Date(b.date) ? 1 : (new Date(a.date) == new Date(b.date) ? 0 : -1 ));
+            this.currentMonthExpenses.sort((a, b) => new Date(a.date) < new Date(b.date) ? 1 : (new Date(a.date) == new Date(b.date) ? 0 : -1));
             this.calculateMonthlyTotal();
             this.createDetailedExpenseChart();
           }
@@ -299,12 +319,12 @@ export class UserPageComponent implements OnInit, AfterViewInit {
       console.error(err);
     }
   }
-  showAddNewExpense(action: string){
+  showAddNewExpense(action: string) {
     document.addEventListener('keydown', this.handleEscapePress.bind(this));
-    if(action === 'update'){
+    if (action === 'update') {
       this.displayUpdateInput = true;
       this.displayInput = true;
-    }else{
+    } else {
       this.displayUpdateInput = false;
       this.displayInput = !this.displayInput;
     }
@@ -328,16 +348,16 @@ export class UserPageComponent implements OnInit, AfterViewInit {
         // Handle success
         console.log(response);
         let currentMonth = new Date().getMonth();
-        let selectedMonth = new Date(this.todaysExpense.date).getMonth(); 
-        this.todaysExpense = response.data; 
-        console.log(currentMonth+ " , ", selectedMonth, ", ", currentMonth === selectedMonth);
-        if(currentMonth == selectedMonth){
+        let selectedMonth = new Date(this.todaysExpense.date).getMonth();
+        this.todaysExpense = response.data;
+        console.log(currentMonth + " , ", selectedMonth, ", ", currentMonth === selectedMonth);
+        if (currentMonth == selectedMonth) {
           this.currentMonthExpenses.push(this.todaysExpense);
           this.monthlyTotal += this.todaysExpense.amount;
-          this.currentMonthExpenses.sort((a,b) => new Date(a.date) < new Date(b.date) ? 1 : (new Date(a.date) == new Date(b.date) ? 0 : -1));
+          this.currentMonthExpenses.sort((a, b) => new Date(a.date) < new Date(b.date) ? 1 : (new Date(a.date) == new Date(b.date) ? 0 : -1));
         }
         this.closeEditModal(event, "expense");
-        if(currentMonth == selectedMonth && this.detailedExpenseChart){
+        if (currentMonth == selectedMonth && this.detailedExpenseChart) {
           this.createDetailedExpenseChart();
         }
         this.viewExpenses(this.ALL);
@@ -359,21 +379,21 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     this.todaysExpense.date = new Date(expense.date).toISOString().split('T')[0];
     this.showAddNewExpense('update');
   }
-  cleanEditor(){
+  cleanEditor() {
     this.todaysExpense = {
       amount: 0,
       category: '',
-      date: new Date().toISOString().split('T')[0], 
+      date: new Date().toISOString().split('T')[0],
     };
   }
   // Close the modal
   closeEditModal(evt: any, modalName: string) {
     evt.preventDefault();
     document.removeEventListener('keydown', this.handleEscapePress.bind(this));
-    if(modalName === this.USER_CONST.EXPENSE){
-      this.cleanEditor(); 
+    if (modalName === this.USER_CONST.EXPENSE) {
+      this.cleanEditor();
       this.showAddNewExpense('close');
-    }else if(modalName === this.USER_CONST.USER){
+    } else if (modalName === this.USER_CONST.USER) {
       this.openUserModal();
       this.successMessage = null;
       this.errorMessage = null;
@@ -394,16 +414,18 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   }
 
   // Update user info
-  updateUserInfo(evt: any) {
+  updateUserInfo(evt: any, isInternal: boolean) {
     evt.preventDefault();
     this.authService.updateUserInfo(this.user._id, this.userInfo).subscribe({
-      next: (data: any) =>{
+      next: (data: any) => {
         console.log(data);
-        this.successMessage = data.message;
         this.getUser();
-        setTimeout(()=>{
-          this.closeEditModal(evt, this.USER_CONST.USER);
-        }, 1000);
+        if (!isInternal) {
+          this.successMessage = data.message;
+          setTimeout(() => {
+            this.closeEditModal(evt, this.USER_CONST.USER);
+          }, 1000);
+        }
       },
       error: (err: HttpErrorResponse) => {
         console.error(err);
@@ -425,15 +447,15 @@ export class UserPageComponent implements OnInit, AfterViewInit {
       error: (error: any) => {
         console.error("Error updating expense data:", error);
       },
-     });
+    });
   }
 
   // Delete the expense
   deleteExpense(expenseId: string | undefined, evt: any) {
     evt.preventDefault();
-    if(expenseId){
+    if (expenseId) {
       this.secureService.deleteExpense(expenseId).subscribe({
-        next: (data)=> {
+        next: (data) => {
           console.log(data);
           this.closeEditModal(event, this.USER_CONST.EXPENSE);
           this.viewExpenses(this.ONE);
