@@ -1,0 +1,41 @@
+<h2>GitHub Repo Manager</h2>
+
+<input type="password" placeholder="Paste GitHub Token" [(ngModel)]="token" />
+<label for="self_repos">Only self</label><input type="checkbox" id="self_repos" (change)="saveShowOnlySelf($event)"
+    [(ngModel)]="showSelf">
+<button (click)="saveToken()">Load Repos</button>
+
+
+<div *ngIf="loading">Loading repositories...</div>
+
+<table *ngIf="repos.length">
+    <tr>
+        <th>Name</th>
+        <th>Owner id</th>
+        <th>Visibility</th>
+        <th>Private</th>
+        <th>Public</th>
+        <th>Delete</th>
+    </tr>
+
+    <tr *ngFor="let repo of repos">
+        <td>{{ repo.name }}</td>
+        <td>{{ repo.owner?.login }}</td>
+        <td>{{ repo.private ? 'Private' : 'Public' }}</td>
+
+        <td>
+            <input type="checkbox" (change)="toggleAction(repo, 'makePrivate')" [disabled]="repo.private" />
+        </td>
+
+        <td>
+            <input type="checkbox" (change)="toggleAction(repo, 'makePublic')" [disabled]="!repo.private" />
+        </td>
+
+        <td>
+            <input type="checkbox" (change)="toggleAction(repo, 'delete')" />
+        </td>
+    </tr>
+</table>
+
+<button (click)="save()">Save</button>
+<button (click)="cancel()">Cancel</button>

@@ -31,9 +31,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { GithubRepoManagerComponent } from './components/github-repo-manager/github-repo-manager.component';
+import { GithubService } from './services/GithubService';
 
 
-@NgModule({ 
+@NgModule({
     declarations: [
         AppComponent,
         WordsComponent,
@@ -48,9 +50,10 @@ import { MatSelectModule } from '@angular/material/select';
         SignupComponent,
         ResetPasswordComponent,
         UserPageComponent,
-        DashboardComponent
+        DashboardComponent,
+        GithubRepoManagerComponent
     ],
-    bootstrap: [AppComponent], 
+    bootstrap: [AppComponent],
     imports: [
         BrowserModule,
         FormsModule,
@@ -77,13 +80,14 @@ import { MatSelectModule } from '@angular/material/select';
             { path: 'search/:searchKey', component: WordComponent },
             { path: '**', component: NotFoundComponent },
         ])
-    ], 
+    ],
     providers: [
-        DictionaryService, NavBarService, UserService, AuthService, SecureService, DatePipe, CurrencyPipe,
-        { 
-            provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, 
-            provideHttpClient(withInterceptorsFromDi()), provideAnimationsAsync(),
+        DictionaryService, NavBarService, UserService, AuthService, SecureService, GithubService, DatePipe, CurrencyPipe,
+        {
+            provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
+        },
+        provideHttpClient(withInterceptorsFromDi()), provideAnimationsAsync(),
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    })
+})
 export class AppModule { }
