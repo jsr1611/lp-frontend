@@ -17,6 +17,9 @@
           <a class="nav-link" href="/tests">Test yechish</a>
         </li>
         <li class="nav-item" *ngIf="authService.getToken()">
+          <a class="nav-link" href="/downloader">Downloader</a>
+        </li>
+        <li class="nav-item" *ngIf="authService.getToken()">
           <a class="nav-link" href="/dashboard">Dashboard</a>
         </li>
       </ul>
@@ -28,8 +31,8 @@
         <!-- <button id="theme-changer" class="btn btn-light" (click)="changeThem()"><i class="bi bi-sun-fill"></i></button> -->
         <ul class="navbar-nav ms-auto">
           <li *ngIf="!authService.getToken()" class="nav-item dropdown d-flex align-items-center">
-            <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" 
-            data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
               <i class="bi bi-three-dots-vertical"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="loginDropdown">
