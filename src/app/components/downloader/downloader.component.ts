@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { HttpResponse } from '@angular/common/http';
+import { SecureService } from 'src/app/services/SercureService';
 
 @Component({
   selector: 'app-downloader',
@@ -12,6 +13,8 @@ export class DownloaderComponent {
   status = 'Ready.';
   isSubmitting = false;
 
+  constructor(private readonly secureService: SecureService) { }
+
   get isValidUrl(): boolean {
     return this.isSupportedUrl(this.videoUrl);
   }
@@ -22,32 +25,61 @@ export class DownloaderComponent {
       return;
     }
 
-    this.status = this.isValidUrl ? 'Ready to download.' : 'Enter a valid YouTube URL.';
+    this.status = this.isValidUrl ? 'Ready to download.' : 'Enter a valid YouTube or Instagram URL.';
   }
 
   download(): void {
     if (!this.isValidUrl) {
-      this.status = 'Enter a valid YouTube URL.';
+      this.status = 'Enter a valid YouTube or Instagram URL.';
       return;
     }
 
     this.isSubmitting = true;
     this.status = this.convertToMp3 ? 'Preparing MP3 download...' : 'Preparing MP4 download...';
 
-    const downloadUrl = this.buildDownloadUrl(this.videoUrl, this.convertToMp3 ? 'mp3' : 'mp4');
-    const popup = window.open(downloadUrl, '_blank', 'noopener');
-    if (!popup) {
-      window.location.href = downloadUrl;
-    }
 
-    this.isSubmitting = false;
-    this.status = 'Download started. Keep this tab open.';
+    const payload = {
+      url: this.videoUrl.trim(),
+      format: this.convertToMp3 ? 'mp3' : 'mp4',
+    };
+
+    this.secureService.download(payload)
+      .subscribe({
+        next: (response: HttpResponse<Blob>) => {
+          this.saveBlob(response.body, this.getFilename(response));
+          this.status = 'Download started. Keep this tab open.';
+          this.isSubmitting = false;
+        },
+        error: () => {
+          this.status = 'Download failed. Please try again.';
+          this.isSubmitting = false;
+        },
+      });
   }
 
-  private buildDownloadUrl(url: string, format: 'mp3' | 'mp4'): string {
-    const cleanedUrl = url.trim();
-    const params = new URLSearchParams({ url: cleanedUrl, format });
-    return `${environment.baseUrl_download}/download?${params.toString()}`;
+  private saveBlob(blob: Blob | null, filename: string): void {
+    if (!blob) {
+      this.status = 'Download failed. Empty response.';
+      return;
+    }
+
+    const objectUrl = window.URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = objectUrl;
+    anchor.download = filename;
+    anchor.rel = 'noopener';
+    anchor.click();
+    window.URL.revokeObjectURL(objectUrl);
+  }
+
+  private getFilename(response: HttpResponse<Blob>): string {
+    const contentDisposition = response.headers.get('content-disposition') ?? '';
+    const match = /filename\*?=(?:UTF-8''|")?([^\";\n]+)/i.exec(contentDisposition);
+    if (match?.[1]) {
+      return decodeURIComponent(match[1].replace(/\"/g, '').trim());
+    }
+
+    return this.convertToMp3 ? 'download.mp3' : 'download.mp4';
   }
 
   private isSupportedUrl(value: string): boolean {

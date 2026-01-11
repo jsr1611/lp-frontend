@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { DownloaderComponent } from './downloader.component';
 
@@ -10,7 +11,7 @@ describe('DownloaderComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DownloaderComponent],
-      imports: [FormsModule]
+      imports: [FormsModule, HttpClientTestingModule]
     })
     .compileComponents();
 
