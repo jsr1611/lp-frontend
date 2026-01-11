@@ -33,6 +33,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { GithubRepoManagerComponent } from './components/github-repo-manager/github-repo-manager.component';
 import { GithubService } from './services/GithubService';
+import { DownloaderComponent } from './components/downloader/downloader.component';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { GithubService } from './services/GithubService';
         ResetPasswordComponent,
         UserPageComponent,
         DashboardComponent,
-        GithubRepoManagerComponent
+        GithubRepoManagerComponent,
+        DownloaderComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -77,6 +79,7 @@ import { GithubService } from './services/GithubService';
             { path: 'words', component: WordsComponent },
             { path: 'words/:searchKey', component: WordComponent },
             { path: 'tests', component: TestsComponent },
+            { path: 'downloader', component: DownloaderComponent },
             { path: 'search/:searchKey', component: WordComponent },
             { path: '**', component: NotFoundComponent },
         ])
