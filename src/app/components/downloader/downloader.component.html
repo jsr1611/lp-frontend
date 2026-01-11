@@ -2,8 +2,7 @@
     <div class="noise" aria-hidden="true"></div>
     <main class="page">
         <header class="hero">
-            <p class="eyebrow">TubeDrop</p>
-            <h1>Download YouTube clips without the fuss.</h1>
+            <h1>Download YouTube/Instagram clips without the fuss.</h1>
             <p class="lead">
                 Paste a link, pick your format, and the file drops straight to your
                 machine.
@@ -13,25 +12,15 @@
         <section class="card">
             <label class="field">
                 <span>Video URL</span>
-                <input
-                    type="url"
-                    name="videoUrl"
+                <input type="url" name="videoUrl"
                     placeholder="https://www.youtube.com/watch?v=... or https://www.instagram.com/reel/..."
-                    autocomplete="off"
-                    [(ngModel)]="videoUrl"
-                    (input)="onUrlChange()"
-                    [attr.aria-invalid]="videoUrl && !isValidUrl ? 'true' : 'false'"
-                    required
-                />
+                    autocomplete="off" [(ngModel)]="videoUrl" (input)="onUrlChange()"
+                    [attr.aria-invalid]="videoUrl && !isValidUrl ? 'true' : 'false'" required />
             </label>
 
             <div class="row">
                 <label class="toggle">
-                    <input
-                        type="checkbox"
-                        name="convertToMp3"
-                        [(ngModel)]="convertToMp3"
-                    />
+                    <input type="checkbox" name="convertToMp3" [(ngModel)]="convertToMp3" />
                     <span>Convert to MP3</span>
                 </label>
 
