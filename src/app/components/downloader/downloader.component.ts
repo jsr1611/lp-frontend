@@ -47,7 +47,7 @@ export class DownloaderComponent {
   private buildDownloadUrl(url: string, format: 'mp3' | 'mp4'): string {
     const cleanedUrl = url.trim();
     const params = new URLSearchParams({ url: cleanedUrl, format });
-    return `${environment.baseUrl_download}/api/download?${params.toString()}`;
+    return `${environment.baseUrl_download}/download?${params.toString()}`;
   }
 
   private isSupportedUrl(value: string): boolean {
