@@ -44,8 +44,8 @@
           </thead>
           <tbody>
             <tr *ngFor="let userObj of users; let i = index">
-              <td>{{ i + 1 }}</td>
-              <td>
+              <td data-label="Tr">{{ i + 1 }}</td>
+              <td data-label="Picture">
                 <img *ngIf="userObj.profilePicture; else noImage" [src]="
                   'data:image/jpeg;base64,' +
                   convertImage(userObj.profilePicture)
@@ -54,18 +54,18 @@
                   <img src="/assets/images/default-profile-image.jpg" alt="Default Profile Image" />
                 </ng-template>
               </td>
-              <td>{{ userObj.firstname + " " + userObj.lastname }}</td>
-              <td>{{ userObj.username }}</td>
-              <td>{{ userObj.email }}</td>
-              <td>{{ userObj.is_superuser ? "Admin" : "User" }}</td>
-              <td>
+              <td data-label="Name">{{ userObj.firstname + " " + userObj.lastname }}</td>
+              <td data-label="Username">{{ userObj.username }}</td>
+              <td data-label="Email">{{ userObj.email }}</td>
+              <td data-label="Role">{{ userObj.is_superuser ? "Admin" : "User" }}</td>
+              <td data-label="Status">
                 <button class="btn btn-primary" (click)="changeStatus(i, userObj._id, userObj.is_activated)"
                   [title]="userObj.is_activated ? 'Deactivate?'  : 'Activate?'">
                   {{ userObj.is_activated ? "Active" : "Inactive" }}
                 </button>
               </td>
-              <td>{{ displayDate(userObj.created_at) | date }}</td>
-              <td>{{ (displayDate(userObj.last_session) | date) ?? "--" }}</td>
+              <td data-label="Signup date">{{ displayDate(userObj.created_at) | date }}</td>
+              <td data-label="Last login">{{ (displayDate(userObj.last_session) | date) ?? "--" }}</td>
             </tr>
           </tbody>
         </table>

@@ -9,10 +9,10 @@ import { jwtDecode } from "jwt-decode";
   providedIn: "root",
 })
 export class AuthService {
-  
+
   private baseUrl = environment.baseUrl + "/api/auth";
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient) { }
 
   uploadPicture(fromData: FormData) {
     return this.http.post(this.baseUrl + "/profile/upload-picture", fromData);
@@ -33,12 +33,12 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/signup`, { user });
   }
 
-  changeUserStatus(userId: string|undefined, newStatus: boolean|undefined) {
-   return this.http.post(`${this.baseUrl}/update-status`, {userId, newStatus}); 
+  changeUserStatus(userId: string | undefined, newStatus: boolean | undefined) {
+    return this.http.post(`${this.baseUrl}/update-status`, { userId, newStatus });
   }
 
-  updateUserInfo(_id: string | undefined, user: User){
-    return this.http.put(`${this.baseUrl}/users/${_id}`, {"userInfo": user});
+  updateUserInfo(_id: string | undefined, user: User) {
+    return this.http.put(`${this.baseUrl}/users/${_id}`, { "userInfo": user });
   }
 
   getUserProfile(all: string): Observable<any> {
@@ -73,6 +73,7 @@ export class AuthService {
 
     if (decodedToken.exp < currentTime) {
       console.log("Token has already expired");
+      localStorage.removeItem("token");
       return true;
     }
     return false;

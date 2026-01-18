@@ -8,10 +8,15 @@
 .chart-item {
   text-align: center;
   position: relative;
-  min-width: 300px;
+  flex: 1 1 320px;
+  min-width: 260px;
+  max-width: 100%;
 }
+
 .chart-item canvas {
   max-width: 100%;
+  width: 100% !important;
+  height: auto !important;
 }
 
 /* app.component.css */
@@ -44,6 +49,7 @@ table {
   border-collapse: collapse;
   background-color: #fff;
   margin-bottom: 20px;
+  table-layout: fixed;
 }
 
 thead.thead-dark th {
@@ -65,6 +71,7 @@ tbody td {
   padding: 12px;
   text-align: center;
   vertical-align: middle;
+  word-wrap: break-word;
 }
 
 img {
@@ -97,6 +104,18 @@ button.btn-primary:hover {
     padding: 15px;
   }
 
+  .dashboard-container {
+    padding: 10px;
+  }
+
+  .chart-container {
+    gap: 16px;
+  }
+
+  .chart-item {
+    min-width: 220px;
+  }
+
   table {
     font-size: 14px;
   }
@@ -118,6 +137,14 @@ button.btn-primary:hover {
 }
 
 @media (max-width: 480px) {
+  .chart-item {
+    min-width: 100%;
+  }
+
+  .table-responsive {
+    padding: 0 6px;
+  }
+
   table,
   thead,
   tbody,
@@ -134,13 +161,18 @@ button.btn-primary:hover {
 
   tr {
     margin-bottom: 15px;
-    border-bottom: 2px solid #ddd;
+    background: #ffffff;
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    padding: 8px 10px 12px;
   }
 
   td {
     text-align: right;
     padding-left: 50%;
     position: relative;
+    border-bottom: 1px solid #f1f1f1;
   }
 
   td:before {
@@ -153,11 +185,15 @@ button.btn-primary:hover {
     text-align: left;
   }
 
+  tr td:last-child {
+    border-bottom: none;
+  }
+
   img {
     margin-bottom: 10px;
   }
 
   button.btn {
-    width: 100%;
+    width: 40%;
   }
 }
