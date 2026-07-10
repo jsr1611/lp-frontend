@@ -4,9 +4,10 @@ import { Category, Word } from 'src/app/models/word';
 import { DictionaryService } from 'src/app/services/DictionaryService';
 
 @Component({
-  selector: 'app-words',
-  templateUrl: './words.component.html',
-  styleUrls: ['./words.component.css']
+    selector: 'app-words',
+    templateUrl: './words.component.html',
+    styleUrls: ['./words.component.css'],
+    standalone: false
 })
 export class WordsComponent implements OnInit{
   dict:Word[] = [];

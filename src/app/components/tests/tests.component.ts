@@ -6,9 +6,10 @@ import { Word } from "src/app/models/word";
 import { TestingLangulages } from "src/app/mappings/category-mapping";
 
 @Component({
-  selector: "app-tests",
-  templateUrl: "./tests.component.html",
-  styleUrls: ["./tests.component.css"],
+    selector: "app-tests",
+    templateUrl: "./tests.component.html",
+    styleUrls: ["./tests.component.css"],
+    standalone: false
 })
 export class TestsComponent implements OnInit {
   [x: string]: any;

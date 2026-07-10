@@ -3,9 +3,10 @@ import { HttpResponse } from '@angular/common/http';
 import { SecureService } from 'src/app/services/SercureService';
 
 @Component({
-  selector: 'app-downloader',
-  templateUrl: './downloader.component.html',
-  styleUrls: ['./downloader.component.css']
+    selector: 'app-downloader',
+    templateUrl: './downloader.component.html',
+    styleUrls: ['./downloader.component.css'],
+    standalone: false
 })
 export class DownloaderComponent {
   videoUrl = '';

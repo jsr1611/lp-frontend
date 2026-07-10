@@ -35,9 +35,10 @@ interface DetailTotal {
 }
 
 @Component({
-  selector: "app-loan-tracker",
-  templateUrl: "./loan-tracker.component.html",
-  styleUrls: ["./loan-tracker.component.css"],
+    selector: "app-loan-tracker",
+    templateUrl: "./loan-tracker.component.html",
+    styleUrls: ["./loan-tracker.component.css"],
+    standalone: false
 })
 export class LoanTrackerComponent implements OnInit {
   protected token: string | null = null;

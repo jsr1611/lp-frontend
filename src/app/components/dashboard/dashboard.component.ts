@@ -7,9 +7,10 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 Chart.register(...registerables)
 @Component({
-  selector: "app-dashboard",
-  templateUrl: "./dashboard.component.html",
-  styleUrls: ["./dashboard.component.css"],
+    selector: "app-dashboard",
+    templateUrl: "./dashboard.component.html",
+    styleUrls: ["./dashboard.component.css"],
+    standalone: false
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
   numWeeks: number = 2;

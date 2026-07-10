@@ -19,16 +19,17 @@ interface GroupedExpense {
 
 
 @Component({
-  selector: "app-user-page",
-  templateUrl: "./user-page.component.html",
-  styleUrls: ["./user-page.component.css"],
-  providers: [
-    {
-      provide: DateAdapter,
-      useClass: MonthpickerDateAdapter,
-      deps: [MAT_DATE_LOCALE, Platform],
-    },
-  ],
+    selector: "app-user-page",
+    templateUrl: "./user-page.component.html",
+    styleUrls: ["./user-page.component.css"],
+    providers: [
+        {
+            provide: DateAdapter,
+            useClass: MonthpickerDateAdapter,
+            deps: [MAT_DATE_LOCALE, Platform],
+        },
+    ],
+    standalone: false
 })
 export class UserPageComponent implements OnInit, AfterViewInit {
   private USER_CONST = {

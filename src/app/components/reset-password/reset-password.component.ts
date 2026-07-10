@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/AuthService';
 
 @Component({
-  selector: 'app-reset-password',
-  templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.css']
+    selector: 'app-reset-password',
+    templateUrl: './reset-password.component.html',
+    styleUrls: ['./reset-password.component.css'],
+    standalone: false
 })
 export class ResetPasswordComponent {
   email: string = '';
