@@ -1,58 +1,67 @@
 <div class="profile-container">
-  <h2>User Profile <a *ngIf="token" (click)="openUserModal()" class="edit-user-btn" title="Update user info"><i
-        class="bi bi-pencil-square"></i></a> </h2>
+  <h2>User Profile @if (token) {
+    <a (click)="openUserModal()" class="edit-user-btn" title="Update user info"><i
+    class="bi bi-pencil-square"></i></a>
+  } </h2>
   <div class="profile-content">
     <div class="profile-picture">
       <label for="file-upload" class="profile-picture-label">
         <div class="profile-picture-container">
-          <img *ngIf="user.profilePicture; else noImage" [src]="'data:image/jpeg;base64,' + user.profilePicture"
-            alt="Profile Picture" />
-          <ng-template #noImage>
+          @if (user.profilePicture) {
+            <img [src]="'data:image/jpeg;base64,' + user.profilePicture"
+              alt="Profile Picture" />
+          } @else {
             <img src="/assets/images/default-profile-image.jpg" alt="Default Profile Image" />
-          </ng-template>
+          }
           <div class="overlay-text">Change Picture</div>
         </div>
       </label>
       <input type="file" (change)="onFileSelected($event)" id="file-upload" style="display: none" />
     </div>
     <div class="profile-details">
-      <p><strong>Name:</strong> {{ user.firstname + " " + user.lastname }}<i *ngIf="user.is_superuser"
-          class="bi bi-database-fill-gear mx-2" title="Site Admininistrator"></i></p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Username:</strong> {{ user.username }}</p>
-      <p><strong>Activated:</strong> {{ user.is_activated ? "Yes" : "No" }}</p>
-    </div>
+      <p><strong>Name:</strong> {{ user.firstname + " " + user.lastname }}@if (user.is_superuser) {
+      <i
+      class="bi bi-database-fill-gear mx-2" title="Site Admininistrator"></i>
+    }</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Activated:</strong> {{ user.is_activated ? "Yes" : "No" }}</p>
   </div>
+</div>
 </div>
 
 <!-- Edit User Info Modal -->
-<div class="modal" *ngIf="displayUserModal" (click)="onBackgroundClick($event, 'user')">
-  <div class="modal-content">
-    <span class="close" (click)="closeEditModal($event, 'user')">&times;</span>
-    <form (submit)="updateUserInfo($event, false)">
-      <div class="form-group">
-        <label for="firstname">Firstname:</label>
-        <input type="text" id="firstname" name="firstname" required [(ngModel)]="userInfo.firstname" />
-      </div>
-
-      <div class="form-group">
-        <label for="lastname">Lastname:</label>
-        <input type="text" id="lastname" name="lastname" required [(ngModel)]="userInfo.lastname" />
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required [(ngModel)]="userInfo.email" />
-      </div>
-      <div *ngIf="errorMessage" class="alert alert-danger mt-2">{{ errorMessage }}</div>
-      <div *ngIf="successMessage" class="alert alert-danger mt-2">{{ successMessage }}</div>
-      <div class="btn-align-horizontal d-flex justify-content-center">
-        <button class="btn btn-primary" (click)="updateUserInfo($event, false)">Update</button>
-        <button class="btn btn-primary" (click)="closeEditModal($event, 'user')">Close</button>
-      </div>
-    </form>
+@if (displayUserModal) {
+  <div class="modal" (click)="onBackgroundClick($event, 'user')">
+    <div class="modal-content">
+      <span class="close" (click)="closeEditModal($event, 'user')">&times;</span>
+      <form (submit)="updateUserInfo($event, false)">
+        <div class="form-group">
+          <label for="firstname">Firstname:</label>
+          <input type="text" id="firstname" name="firstname" required [(ngModel)]="userInfo.firstname" />
+        </div>
+        <div class="form-group">
+          <label for="lastname">Lastname:</label>
+          <input type="text" id="lastname" name="lastname" required [(ngModel)]="userInfo.lastname" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required [(ngModel)]="userInfo.email" />
+        </div>
+        @if (errorMessage) {
+          <div class="alert alert-danger mt-2">{{ errorMessage }}</div>
+        }
+        @if (successMessage) {
+          <div class="alert alert-danger mt-2">{{ successMessage }}</div>
+        }
+        <div class="btn-align-horizontal d-flex justify-content-center">
+          <button class="btn btn-primary" (click)="updateUserInfo($event, false)">Update</button>
+          <button class="btn btn-primary" (click)="closeEditModal($event, 'user')">Close</button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
+}
 
 <hr />
 <div class="expense-container">
@@ -64,125 +73,133 @@
       <mat-form-field appearance="fill" class="flex-item month-selector-item">
         <input matInput [(ngModel)]="monthAndYear" [matDatepicker]="picker" [max]="today"
           (dateChange)="emitDateChange($event)" />
-        <mat-datepicker-toggle matSuffix [for]="picker">
-        </mat-datepicker-toggle>
-        <mat-datepicker #picker [startView]="'year'" (monthSelected)="monthChanged($event, picker)">
-        </mat-datepicker>
-      </mat-form-field>
+          <mat-datepicker-toggle matSuffix [for]="picker">
+          </mat-datepicker-toggle>
+          <mat-datepicker #picker [startView]="'year'" (monthSelected)="monthChanged($event, picker)">
+          </mat-datepicker>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill" class="flex-item">
-        <mat-select placeholder="Select Currency" [(value)]="selectedCurrency"
-          (selectionChange)="onCurrencyChange($event.value)">
-          <mat-option *ngFor="let currency of popularCurrencies" [value]="currency.code">
-            {{ currency.name }} ({{ currency.symbol }})
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button type="button" class="btn btn-primary flex-item" (click)="showAddNewExpense('create')">
-        Add New
-      </button>
-      <!-- <button type="button" class="btn btn-primary flex-item" (click)="viewExpenses(ONE)">
+        <mat-form-field appearance="fill" class="flex-item">
+          <mat-select placeholder="Select Currency" [(value)]="selectedCurrency"
+            (selectionChange)="onCurrencyChange($event.value)">
+            @for (currency of popularCurrencies; track currency) {
+              <mat-option [value]="currency.code">
+                {{ currency.name }} ({{ currency.symbol }})
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <button type="button" class="btn btn-primary flex-item" (click)="showAddNewExpense('create')">
+          Add New
+        </button>
+        <!-- <button type="button" class="btn btn-primary flex-item" (click)="viewExpenses(ONE)">
         View Expenses
       </button> -->
     </div>
   </div>
 
   <!-- Expense Form Modal -->
-  <div class="modal" *ngIf="displayInput" (click)="onBackgroundClick($event, 'expense')">
-    <div class="modal-content">
-      <span class="close" (click)="closeEditModal($event, 'expense')">&times;</span>
-      <form (submit)="addExpense()">
-        <div class="form-group">
-          <label for="date">Date:</label>
-          <input type="date" id="date" name="date" required [(ngModel)]="todaysExpense.date" />
+  @if (displayInput) {
+    <div class="modal" (click)="onBackgroundClick($event, 'expense')">
+      <div class="modal-content">
+        <span class="close" (click)="closeEditModal($event, 'expense')">&times;</span>
+        <form (submit)="addExpense()">
+          <div class="form-group">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required [(ngModel)]="todaysExpense.date" />
+          </div>
+          <div class="form-group">
+            <label for="category">Category:</label>
+            <input type="text" id="category" name="category" placeholder="E.g., Food, Transport" required
+              [(ngModel)]="todaysExpense.category" />
+            </div>
+            <div class="form-group">
+              <label for="amount">Amount:</label>
+              <input type="text" id="amount" name="amount" placeholder="Enter amount" required
+                [value]="todaysExpense.amount !== 0 ? (todaysExpense.amount | currency : selectedCurrency : 'symbol' : '1.0-0') : '' "
+                (input)="onAmountChange($event)" />
+              </div>
+              <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" placeholder="Add a note..." rows="3"
+                [(ngModel)]="todaysExpense.description"></textarea>
+              </div>
+              @if (!displayUpdateInput) {
+                <button type="submit" class="btn-submit">Add Expense</button>
+              }
+              @if (displayUpdateInput) {
+                <div class="btn-align-horizontal d-flex justify-content-center">
+                  <button class="btn btn-primary" (click)="updateExpense(todaysExpense, $event)">Update</button>
+                  <button class="btn btn-danger" (click)="deleteExpense(todaysExpense._id, $event)">Delete</button>
+                  <button class="btn btn-primary" (click)="closeEditModal($event, 'expense')">Close</button>
+                </div>
+              }
+            </form>
+          </div>
         </div>
+      }
 
-        <div class="form-group">
-          <label for="category">Category:</label>
-          <input type="text" id="category" name="category" placeholder="E.g., Food, Transport" required
-            [(ngModel)]="todaysExpense.category" />
-        </div>
 
-        <div class="form-group">
-          <label for="amount">Amount:</label>
-          <input type="text" id="amount" name="amount" placeholder="Enter amount" required
-            [value]="todaysExpense.amount !== 0 ? (todaysExpense.amount | currency : selectedCurrency : 'symbol' : '1.0-0') : '' "
-            (input)="onAmountChange($event)" />
-        </div>
+      <!-- Expenses Table -->
+      <div class="expense-table">
+        <h3>
+          Expenses for <span id="selected-month">{{ selectedMonthStr }}</span>
+        </h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Description</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (expense of currentMonthExpenses; track expense) {
+              <tr>
+                <td>{{ expense.date | date }}</td>
+                <td>{{ expense.category }}</td>
+                <td>{{ (expense.amount | currency : selectedCurrency : 'symbol' : '1.0-0') }}</td>
+                <td>{{ expense.description }}</td>
+                <td><button class="btn btn-primary" (click)="openEditModal(expense)">Edit</button></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
 
-        <div class="form-group">
-          <label for="description">Description:</label>
-          <textarea id="description" name="description" placeholder="Add a note..." rows="3"
-            [(ngModel)]="todaysExpense.description"></textarea>
-        </div>
+      <div class="expense-cards">
+        @for (expense of currentMonthExpenses; track expense) {
+          <div class="expense-card">
+            <div class="expense-card-header">
+              <span class="expense-date">{{ expense.date | date }}</span>
+              <span class="expense-amount">{{ expense.amount | currency: selectedCurrency: 'symbol': '1.0-0' }}</span>
+            </div>
+            <div class="expense-card-body">
+              <p><strong>Category:</strong> {{ expense.category }}</p>
+              <p><strong>Description:</strong> {{ expense.description }}</p>
+            </div>
+            <div class="expense-card-actions">
+              <button class="btn btn-primary" (click)="openEditModal(expense)">Edit</button>
+            </div>
+          </div>
+        }
+      </div>
 
-        <button *ngIf="!displayUpdateInput" type="submit" class="btn-submit">Add Expense</button>
-        <div *ngIf="displayUpdateInput" class="btn-align-horizontal d-flex justify-content-center">
-          <button class="btn btn-primary" (click)="updateExpense(todaysExpense, $event)">Update</button>
-          <button class="btn btn-danger" (click)="deleteExpense(todaysExpense._id, $event)">Delete</button>
-          <button class="btn btn-primary" (click)="closeEditModal($event, 'expense')">Close</button>
-        </div>
-      </form>
+
+      <!-- Monthly Summary -->
+      <div class="expense-summary">
+        <h3>Summary for {{ selectedMonthStr }}</h3>
+        <p>
+          Total: <span>{{ (monthlyTotal | currency : selectedCurrency : 'symbol' : '1.0-0') }}</span>
+        </p>
+      </div>
     </div>
-  </div>
 
-
-  <!-- Expenses Table -->
-  <div class="expense-table">
-    <h3>
-      Expenses for <span id="selected-month">{{ selectedMonthStr }}</span>
-    </h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Category</th>
-          <th>Amount</th>
-          <th>Description</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let expense of currentMonthExpenses">
-          <td>{{ expense.date | date }}</td>
-          <td>{{ expense.category }}</td>
-          <td>{{ (expense.amount | currency : selectedCurrency : 'symbol' : '1.0-0') }}</td>
-          <td>{{ expense.description }}</td>
-          <td><button class="btn btn-primary" (click)="openEditModal(expense)">Edit</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="expense-cards">
-    <div class="expense-card" *ngFor="let expense of currentMonthExpenses">
-      <div class="expense-card-header">
-        <span class="expense-date">{{ expense.date | date }}</span>
-        <span class="expense-amount">{{ expense.amount | currency: selectedCurrency: 'symbol': '1.0-0' }}</span>
-      </div>
-      <div class="expense-card-body">
-        <p><strong>Category:</strong> {{ expense.category }}</p>
-        <p><strong>Description:</strong> {{ expense.description }}</p>
-      </div>
-      <div class="expense-card-actions">
-        <button class="btn btn-primary" (click)="openEditModal(expense)">Edit</button>
-      </div>
+    <div class="chart-container">
+      <canvas id="detailedExpenseChart"></canvas>
     </div>
-  </div>
-
-
-  <!-- Monthly Summary -->
-  <div class="expense-summary">
-    <h3>Summary for {{ selectedMonthStr }}</h3>
-    <p>
-      Total: <span>{{ (monthlyTotal | currency : selectedCurrency : 'symbol' : '1.0-0') }}</span>
-    </p>
-  </div>
-</div>
-
-<div class="chart-container">
-  <canvas id="detailedExpenseChart"></canvas>
-</div>
-<div class="chart-container">
-  <canvas id="monthlyExpensesChart"></canvas>
-</div>
+    <div class="chart-container">
+      <canvas id="monthlyExpensesChart"></canvas>
+    </div>

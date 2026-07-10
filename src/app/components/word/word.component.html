@@ -1,21 +1,24 @@
 <h2 class="search-heading">Qidirilgan so`z: {{ searchKey }}</h2>
-<div *ngIf="word; else elseBlock" class="word-container">
-  <div class="word-header">
-    <span class="word-arabic-pronunciation">
-      {{ word.arabic }} <span class="word-pronunciation">/{{ word.pronunciation }}/</span>
-    </span>
-    <i class="bi bi-arrow-left-right mx-4"></i>
-    <span class="word-uzbek"> {{ word.uzbek }}</span>
-    <i class="bi bi-arrow-left-right mx-4"></i>
-    <span class="word-uzbek">{{ word.english }}</span>
+@if (word) {
+  <div class="word-container">
+    <div class="word-header">
+      <span class="word-arabic-pronunciation">
+        {{ word.arabic }} <span class="word-pronunciation">/{{ word.pronunciation }}/</span>
+      </span>
+      <i class="bi bi-arrow-left-right mx-4"></i>
+      <span class="word-uzbek"> {{ word.uzbek }}</span>
+      <i class="bi bi-arrow-left-right mx-4"></i>
+      <span class="word-uzbek">{{ word.english }}</span>
+    </div>
+    @if (fileExists) {
+      <audio [id]="word._id" controls class="word-audio">
+        <source [src]="'/assets/audio/' + word._id + '.m4a'" />
+        Your browser does not support the audio element.
+      </audio>
+    }
   </div>
-  <audio *ngIf="fileExists" [id]="word._id" controls class="word-audio">
-    <source [src]="'/assets/audio/' + word._id + '.m4a'" />
-    Your browser does not support the audio element.
-  </audio>
-</div>
-<ng-template #elseBlock>
+} @else {
   <div class="no-word-found">
     <i class="bi bi-exclamation-circle"></i> So'z topilmadi!
   </div>
-</ng-template>
+}
