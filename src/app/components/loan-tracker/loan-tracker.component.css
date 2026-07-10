@@ -1,0 +1,46 @@
+.loan-tracker {
+  max-width: 1000px;
+}
+
+/* Simple modal overlay (matches the app's custom modal approach, not Bootstrap's JS modal). */
+.lt-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem;
+  z-index: 1050;
+  overflow-y: auto;
+}
+
+.lt-modal-content {
+  background: #fff;
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* The global `.btn { margin: 10px }` rule in styles.css would break tight button groups here. */
+.loan-tracker .btn,
+.lt-modal .btn {
+  margin: 0;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+.lt-modal-wide {
+  max-width: 760px;
+}
+
+/* Constrain chart height so chart.js (maintainAspectRatio:false) doesn't grow unbounded. */
+.chart-box {
+  position: relative;
+  height: 260px;
+}

@@ -34,6 +34,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { GithubRepoManagerComponent } from './components/github-repo-manager/github-repo-manager.component';
 import { GithubService } from './services/GithubService';
 import { DownloaderComponent } from './components/downloader/downloader.component';
+import { LoanTrackerComponent } from './components/loan-tracker/loan-tracker.component';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { DownloaderComponent } from './components/downloader/downloader.componen
         UserPageComponent,
         DashboardComponent,
         GithubRepoManagerComponent,
-        DownloaderComponent
+        DownloaderComponent,
+        LoanTrackerComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -74,6 +76,7 @@ import { DownloaderComponent } from './components/downloader/downloader.componen
             { path: 'reset-password', component: ResetPasswordComponent },
             { path: 'profile', component: UserPageComponent, canActivate: [authGuard] },
             { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
+            { path: 'loans', component: LoanTrackerComponent, canActivate: [authGuard] },
             { path: 'home', component: HomeComponent },
             { path: 'add-word', component: AddWordComponent },
             { path: 'words', component: WordsComponent },
