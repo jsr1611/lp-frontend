@@ -34,3 +34,13 @@
 .table th {
   vertical-align: middle;
 }
+
+.lt-modal-wide {
+  max-width: 760px;
+}
+
+/* Constrain chart height so chart.js (maintainAspectRatio:false) doesn't grow unbounded. */
+.chart-box {
+  position: relative;
+  height: 260px;
+}

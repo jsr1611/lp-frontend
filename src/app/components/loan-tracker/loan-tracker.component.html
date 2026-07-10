@@ -38,6 +38,43 @@
     </div>
   </div>
 
+  <!-- ===================== CHARTS ===================== -->
+  <div class="row g-3 mb-3" *ngIf="summary.byCurrency.length">
+    <div class="col-12" *ngIf="chartCurrencies.length > 1">
+      <label class="form-label small mb-1">Chart currency</label>
+      <select class="form-select form-select-sm w-auto" [(ngModel)]="chartCurrencyCode" (change)="drawCharts()">
+        <option *ngFor="let code of chartCurrencies" [value]="code">{{ code }}</option>
+      </select>
+    </div>
+    <div class="col-12 col-md-5">
+      <div class="card shadow-sm h-100">
+        <div class="card-body chart-box"><canvas id="loanBalanceChart"></canvas></div>
+      </div>
+    </div>
+    <div class="col-12 col-md-7">
+      <div class="card shadow-sm h-100">
+        <div class="card-body chart-box"><canvas id="loanPersonChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== BALANCES BY PERSON ===================== -->
+  <div class="card shadow-sm mb-3" *ngIf="summary.byContact.length">
+    <div class="card-body">
+      <h6 class="text-muted mb-2">Balances by person</h6>
+      <div class="list-group list-group-flush">
+        <button type="button"
+          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center px-0"
+          *ngFor="let b of summary.byContact" (click)="openContactDetail(b.contactId)">
+          <span>{{ b.name }} <span class="text-muted small">· {{ b.currency.code }}</span></span>
+          <span [class.text-success]="b.net >= 0" [class.text-danger]="b.net < 0">
+            {{ b.net | currency: b.currency.code : 'symbol' : '1.0-2' }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ===================== OVERDUE / DUE SOON ===================== -->
   <div class="alert alert-danger" *ngIf="summary.overdue.length">
     <strong><i class="bi bi-exclamation-triangle me-1"></i>Overdue ({{ summary.overdue.length }})</strong>
@@ -101,7 +138,17 @@
           <td colspan="7" class="text-center text-muted py-3">No loans match these filters.</td>
         </tr>
         <tr *ngFor="let loan of loans" [class.table-danger]="isOverdue(loan)" [class.table-warning]="!isOverdue(loan) && isDueSoon(loan)">
-          <td>{{ loan.contactName }}</td>
+          <td>
+            <button type="button" class="btn btn-link p-0 text-start text-decoration-none" (click)="openContactDetail(loan.contactId)">
+              {{ loan.contactName }}
+            </button>
+            <span class="ms-2 text-nowrap">
+              <a *ngFor="let link of contactLinks(contactById(loan.contactId))" [href]="link.url" target="_blank"
+                rel="noopener" class="me-1" [class]="link.cls" [title]="link.title">
+                <i class="bi" [ngClass]="link.icon"></i>
+              </a>
+            </span>
+          </td>
           <td>
             <span class="badge" [class.bg-danger]="loan.direction === 'borrowed'" [class.bg-success]="loan.direction === 'lent'">
               {{ directionLabel(loan.direction) }}
@@ -294,5 +341,87 @@
         <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Add repayment</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- ===================== PER-PERSON DETAIL MODAL ===================== -->
+<div class="lt-modal" *ngIf="showContactDetail && detailContact" (click)="closeContactDetail()">
+  <div class="lt-modal-content lt-modal-wide" (click)="$event.stopPropagation()">
+    <div class="d-flex justify-content-between align-items-start mb-2">
+      <div>
+        <h5 class="mb-1">{{ detailContact.name }}</h5>
+        <div class="text-nowrap">
+          <a *ngFor="let link of contactLinks(detailContact)" [href]="link.url" target="_blank" rel="noopener"
+            class="me-2 fs-5" [class]="link.cls" [title]="link.title">
+            <i class="bi" [ngClass]="link.icon"></i>
+          </a>
+          <span *ngIf="contactLinks(detailContact).length === 0" class="text-muted small">No contact channels saved</span>
+        </div>
+      </div>
+      <button class="btn-close" (click)="closeContactDetail()"></button>
+    </div>
+
+    <!-- running balances -->
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      <div class="border rounded px-3 py-2" *ngFor="let t of detailTotals">
+        <div class="small text-muted">{{ t.currency.code }}</div>
+        <div class="small text-danger">I owe: {{ t.borrowed | currency: t.currency.code : 'symbol' : '1.0-2' }}</div>
+        <div class="small text-success">Owed to me: {{ t.lent | currency: t.currency.code : 'symbol' : '1.0-2' }}</div>
+        <div class="fw-semibold" [class.text-success]="t.net >= 0" [class.text-danger]="t.net < 0">
+          Net: {{ t.net | currency: t.currency.code : 'symbol' : '1.0-2' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- all their loans -->
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Direction</th>
+            <th class="text-end">Principal</th>
+            <th class="text-end">Remaining</th>
+            <th>Taken</th>
+            <th>Due</th>
+            <th>Status</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="detailLoans.length === 0">
+            <td colspan="7" class="text-center text-muted py-2">No loans with this contact.</td>
+          </tr>
+          <tr *ngFor="let loan of detailLoans">
+            <td>
+              <span class="badge" [class.bg-danger]="loan.direction === 'borrowed'" [class.bg-success]="loan.direction === 'lent'">
+                {{ directionLabel(loan.direction) }}
+              </span>
+            </td>
+            <td class="text-end">{{ loan.principal | currency: loan.currency.code : 'symbol' : '1.0-2' }}</td>
+            <td class="text-end fw-semibold">{{ remaining(loan) | currency: loan.currency.code : 'symbol' : '1.0-2' }}</td>
+            <td class="text-nowrap small">{{ loan.dateTaken | date: 'mediumDate' }}</td>
+            <td class="text-nowrap small">
+              <span *ngIf="loan.dueDate" [class.text-danger]="isOverdue(loan)">{{ loan.dueDate | date: 'mediumDate' }}</span>
+              <span *ngIf="!loan.dueDate" class="text-muted">—</span>
+            </td>
+            <td>
+              <span class="badge rounded-pill"
+                [class.bg-secondary]="loan.status === 'open'"
+                [class.bg-info]="loan.status === 'partial'"
+                [class.bg-success]="loan.status === 'paid'">{{ loan.status }}</span>
+            </td>
+            <td class="text-end text-nowrap">
+              <button class="btn btn-sm btn-outline-success me-1" title="Add repayment"
+                [disabled]="loan.status === 'paid'" (click)="detailAddRepayment(loan)">
+                <i class="bi bi-cash"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-primary" title="Edit" (click)="detailEditLoan(loan)">
+                <i class="bi bi-pencil"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

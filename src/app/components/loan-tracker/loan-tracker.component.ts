@@ -13,6 +13,26 @@ import {
 } from "src/app/models/loan";
 import { Currency } from "src/app/models/user";
 import { popularCurrencies, findCurrency } from "src/app/mappings/currencies";
+import { Chart, registerables } from "chart.js";
+
+Chart.register(...registerables);
+
+// A quick-contact link (WhatsApp / Telegram / call / email).
+interface ContactLink {
+  icon: string;
+  url: string;
+  title: string;
+  cls: string;
+}
+
+// Per-currency running balance for one contact's whole history.
+interface DetailTotal {
+  code: string;
+  currency: Currency;
+  borrowed: number;
+  lent: number;
+  net: number;
+}
 
 @Component({
   selector: "app-loan-tracker",
@@ -47,6 +67,17 @@ export class LoanTrackerComponent implements OnInit {
   showRepaymentModal = false;
   repaymentLoan: Loan | null = null;
   newRepayment: Repayment = { date: this.todayIso(), amount: 0, note: "" };
+
+  // Per-person detail modal
+  showContactDetail = false;
+  detailContact: Contact | null = null;
+  detailLoans: Loan[] = [];
+  detailTotals: DetailTotal[] = [];
+
+  // Charts (typed as any, matching the dashboard/user-page chart pattern)
+  chartCurrencyCode = "";
+  private balanceChart: any = null;
+  private personChart: any = null;
 
   errorMessage: string | null = null;
 
@@ -127,6 +158,151 @@ export class LoanTrackerComponent implements OnInit {
     return direction === "borrowed" ? "I owe" : "Owed to me";
   }
 
+  // ---------- contact deep-links ----------
+  contactById(id: string): Contact | undefined {
+    return this.contacts.find((c) => c._id === id);
+  }
+
+  // Build the available quick-contact links for a contact (only channels that exist).
+  contactLinks(contact: Contact | undefined): ContactLink[] {
+    if (!contact) return [];
+    const links: ContactLink[] = [];
+    const waNumber = (contact.whatsapp || contact.phone || "").replace(/[^\d]/g, "");
+    if (waNumber) {
+      links.push({ icon: "bi-whatsapp", url: `https://wa.me/${waNumber}`, title: "WhatsApp", cls: "text-success" });
+    }
+    const tg = (contact.telegram || "").replace(/^@/, "").trim();
+    if (tg) {
+      links.push({ icon: "bi-telegram", url: `https://t.me/${tg}`, title: "Telegram", cls: "text-primary" });
+    }
+    const tel = (contact.phone || "").replace(/[^\d+]/g, "");
+    if (tel) {
+      links.push({ icon: "bi-telephone", url: `tel:${tel}`, title: "Call", cls: "text-secondary" });
+    }
+    if (contact.email) {
+      links.push({ icon: "bi-envelope", url: `mailto:${contact.email}`, title: "Email", cls: "text-secondary" });
+    }
+    return links;
+  }
+
+  // ---------- per-person detail ----------
+  openContactDetail(contactId: string): void {
+    this.errorMessage = null;
+    this.detailContact = this.contactById(contactId) || null;
+    this.secureService.getLoans({ contactId, status: "all" }).subscribe({
+      next: (data: any) => {
+        this.detailLoans = data.loans || [];
+        this.computeDetailTotals();
+        this.showContactDetail = true;
+      },
+      error: (err: HttpErrorResponse) => this.handleAuthError(err),
+    });
+  }
+
+  closeContactDetail(): void {
+    this.showContactDetail = false;
+    this.detailContact = null;
+    this.detailLoans = [];
+    this.detailTotals = [];
+  }
+
+  private computeDetailTotals(): void {
+    const map: { [code: string]: DetailTotal } = {};
+    this.detailLoans.forEach((loan) => {
+      const code = loan.currency.code;
+      if (!map[code]) {
+        map[code] = { code, currency: loan.currency, borrowed: 0, lent: 0, net: 0 };
+      }
+      if (loan.status !== "paid") {
+        const rem = this.remaining(loan);
+        if (loan.direction === "borrowed") {
+          map[code].borrowed = Math.round((map[code].borrowed + rem) * 100) / 100;
+        } else {
+          map[code].lent = Math.round((map[code].lent + rem) * 100) / 100;
+        }
+        map[code].net = Math.round((map[code].lent - map[code].borrowed) * 100) / 100;
+      }
+    });
+    this.detailTotals = Object.values(map);
+  }
+
+  // From the detail modal, jump to repayment/edit without stacking modals.
+  detailAddRepayment(loan: Loan): void {
+    this.closeContactDetail();
+    this.openRepaymentModal(loan);
+  }
+
+  detailEditLoan(loan: Loan): void {
+    this.closeContactDetail();
+    this.openLoanModal(loan);
+  }
+
+  // ---------- charts ----------
+  get chartCurrencies(): string[] {
+    return this.summary.byCurrency.map((c) => c.currency.code);
+  }
+
+  drawCharts(): void {
+    if (!this.summary.byCurrency.length) return;
+
+    // Default to the currency with the largest outstanding total.
+    if (!this.chartCurrencyCode || !this.chartCurrencies.includes(this.chartCurrencyCode)) {
+      this.chartCurrencyCode = [...this.summary.byCurrency].sort(
+        (a, b) => b.borrowedOutstanding + b.lentOutstanding - (a.borrowedOutstanding + a.lentOutstanding)
+      )[0].currency.code;
+    }
+    const cur = this.summary.byCurrency.find((c) => c.currency.code === this.chartCurrencyCode);
+    if (!cur) return;
+
+    // Chart 1: borrowed vs lent outstanding.
+    const ctx1 = document.getElementById("loanBalanceChart") as HTMLCanvasElement | null;
+    if (ctx1) {
+      if (this.balanceChart) this.balanceChart.destroy();
+      this.balanceChart = new Chart(ctx1, {
+        type: "doughnut",
+        data: {
+          labels: ["I owe", "Owed to me"],
+          datasets: [{ data: [cur.borrowedOutstanding, cur.lentOutstanding], backgroundColor: ["#dc3545", "#198754"] }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "bottom" },
+            title: { display: true, text: `Outstanding (${this.chartCurrencyCode})` },
+          },
+        },
+      });
+    }
+
+    // Chart 2: net balance per person for this currency.
+    const people = this.summary.byContact.filter((b) => b.currency.code === this.chartCurrencyCode);
+    const ctx2 = document.getElementById("loanPersonChart") as HTMLCanvasElement | null;
+    if (ctx2) {
+      if (this.personChart) this.personChart.destroy();
+      this.personChart = new Chart(ctx2, {
+        type: "bar",
+        data: {
+          labels: people.map((p) => p.name),
+          datasets: [
+            {
+              label: `Net balance (${this.chartCurrencyCode})`,
+              data: people.map((p) => p.net),
+              backgroundColor: people.map((p) => (p.net >= 0 ? "#198754" : "#dc3545")),
+            },
+          ],
+        },
+        options: {
+          indexAxis: "y",
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { x: { beginAtZero: true } },
+          plugins: { legend: { display: false } },
+        },
+      });
+    }
+  }
+
   // ---------- loaders ----------
   loadUserCurrency(): void {
     this.authService.getUserProfile("one").subscribe({
@@ -158,7 +334,11 @@ export class LoanTrackerComponent implements OnInit {
 
   loadSummary(): void {
     this.secureService.getLoanSummary().subscribe({
-      next: (data: any) => (this.summary = data),
+      next: (data: any) => {
+        this.summary = data;
+        // Defer so the *ngIf'd canvases exist in the DOM before drawing.
+        setTimeout(() => this.drawCharts(), 0);
+      },
       error: (err: HttpErrorResponse) => this.handleAuthError(err),
     });
   }
