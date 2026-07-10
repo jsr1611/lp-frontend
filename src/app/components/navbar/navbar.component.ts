@@ -1,4 +1,4 @@
-import { Component, Inject, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Inject, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { NavBarService } from './navbar.service';
 import { AuthService } from 'src/app/services/AuthService';
 import { Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
     selector: 'app-navbar',
     templateUrl: './navbar.component.html',
     styleUrls: ['./navbar.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class NavbarComponent implements OnChanges{

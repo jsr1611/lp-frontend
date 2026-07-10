@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output } from "@angular/core";
+import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output, ChangeDetectionStrategy } from "@angular/core";
 import { Currency, User } from "src/app/models/user";
 import { AuthService } from "src/app/services/AuthService";
 import { DatePipe } from "@angular/common";
@@ -29,6 +29,7 @@ interface GroupedExpense {
             deps: [MAT_DATE_LOCALE, Platform],
         },
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class UserPageComponent implements OnInit, AfterViewInit {

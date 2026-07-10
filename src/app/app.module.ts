@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { DictionaryService } from './services/DictionaryService';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { WordsComponent } from './components/words/words.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { TestsComponent } from './components/tests/tests.component';
@@ -92,7 +92,7 @@ import { LoanTrackerComponent } from './components/loan-tracker/loan-tracker.com
         {
             provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
         },
-        provideHttpClient(withInterceptorsFromDi()), provideAnimationsAsync(),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()), provideAnimationsAsync(),
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
