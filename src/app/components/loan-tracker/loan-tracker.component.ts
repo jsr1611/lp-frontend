@@ -166,8 +166,20 @@ export class LoanTrackerComponent implements OnInit {
   }
 
   // Build the available quick-contact links for a contact (only channels that exist).
+  //
+  // Memoised by contact object. This is bound inside `@for (... ; track link)` in the
+  // loans table, so it runs on EVERY change-detection pass. Returning a fresh array of
+  // fresh objects each pass makes the @for's tracked collection look "changed" every
+  // time, which re-renders the views and destabilises change detection into an infinite
+  // loop — freezing the page as soon as any loan row is shown. A stable reference per
+  // contact fixes it. Cache auto-invalidates when contacts reload (new objects, WeakMap).
+  private static readonly NO_LINKS: ContactLink[] = [];
+  private linkCache = new WeakMap<Contact, ContactLink[]>();
+
   contactLinks(contact: Contact | undefined): ContactLink[] {
-    if (!contact) return [];
+    if (!contact) return LoanTrackerComponent.NO_LINKS;
+    const cached = this.linkCache.get(contact);
+    if (cached) return cached;
     const links: ContactLink[] = [];
     const waNumber = (contact.whatsapp || contact.phone || "").replace(/[^\d]/g, "");
     if (waNumber) {
@@ -184,6 +196,7 @@ export class LoanTrackerComponent implements OnInit {
     if (contact.email) {
       links.push({ icon: "bi-envelope", url: `mailto:${contact.email}`, title: "Email", cls: "text-secondary" });
     }
+    this.linkCache.set(contact, links);
     return links;
   }
 
