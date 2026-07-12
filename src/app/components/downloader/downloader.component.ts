@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { SecureService } from 'src/app/services/SercureService';
 
 @Component({
-  selector: 'app-downloader',
-  templateUrl: './downloader.component.html',
-  styleUrls: ['./downloader.component.css']
+    selector: 'app-downloader',
+    templateUrl: './downloader.component.html',
+    styleUrls: ['./downloader.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DownloaderComponent {
   videoUrl = '';

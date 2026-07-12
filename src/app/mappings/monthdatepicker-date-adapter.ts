@@ -1,10 +1,9 @@
 import { NativeDateAdapter } from "@angular/material/core";
 
 export class MonthpickerDateAdapter extends NativeDateAdapter {
-    constructor(matDateLocale: string) {
-      super(matDateLocale);
-    }
-  
+    // Angular Material v22+ resolves the locale via inject() inside NativeDateAdapter,
+    // so no constructor/locale argument is needed here anymore.
+
     override parse(value: string): Date | null {
       const monthAndYearRegex = /(10|11|12|0\d|\d)\/[\d]{4}/;
       if (value?.match(monthAndYearRegex)) {

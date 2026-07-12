@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, OnInit } from "@angular/core";
+import { AfterViewInit, Component, Inject, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { SecureService } from "src/app/services/SercureService";
 import { Chart, registerables } from "chart.js";
 import { User } from "src/app/models/user";
@@ -7,9 +7,11 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 Chart.register(...registerables)
 @Component({
-  selector: "app-dashboard",
-  templateUrl: "./dashboard.component.html",
-  styleUrls: ["./dashboard.component.css"],
+    selector: "app-dashboard",
+    templateUrl: "./dashboard.component.html",
+    styleUrls: ["./dashboard.component.css"],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
   numWeeks: number = 2;

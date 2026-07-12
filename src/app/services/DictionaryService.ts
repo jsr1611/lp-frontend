@@ -61,7 +61,7 @@ export class DictionaryService {
         catchError((error) => {
           const status = (error as HttpErrorResponse).status;
           if(status === 404) console.log("File not found");
-          return status === (200 || 304) ? of(true) : of(false);
+          return status === 200 || status === 304 ? of(true) : of(false);
         })
       );
   }

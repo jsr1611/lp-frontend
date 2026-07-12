@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { Subscription, catchError, of } from "rxjs";
 import { DictionaryService } from "src/app/services/DictionaryService";
 import { NavBarService } from "../navbar/navbar.service";
@@ -6,9 +6,11 @@ import { Word } from "src/app/models/word";
 import { TestingLangulages } from "src/app/mappings/category-mapping";
 
 @Component({
-  selector: "app-tests",
-  templateUrl: "./tests.component.html",
-  styleUrls: ["./tests.component.css"],
+    selector: "app-tests",
+    templateUrl: "./tests.component.html",
+    styleUrls: ["./tests.component.css"],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TestsComponent implements OnInit {
   [x: string]: any;

@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { catchError, of } from 'rxjs';
 import { Category, Word } from 'src/app/models/word';
 import { CategoryMapping } from 'src/app/mappings/category-mapping';
 import { DictionaryService } from 'src/app/services/DictionaryService';
 
 @Component({
-  selector: 'app-add-word',
-  templateUrl: './add-word.component.html',
-  styleUrls: ['./add-word.component.css']
+    selector: 'app-add-word',
+    templateUrl: './add-word.component.html',
+    styleUrls: ['./add-word.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AddWordComponent {
   public newWord: Word = {

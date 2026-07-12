@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { GithubService } from 'src/app/services/GithubService';
 
 @Component({
@@ -6,6 +6,7 @@ import { GithubService } from 'src/app/services/GithubService';
   standalone: false,
   // imports: [],
   templateUrl: './github-repo-manager.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './github-repo-manager.component.css'
 })
 export class GithubRepoManagerComponent implements OnInit {

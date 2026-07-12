@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { catchError, of, Subscription } from 'rxjs';
 import { Word } from 'src/app/models/word';
 import { DictionaryService } from 'src/app/services/DictionaryService';
 
 @Component({
-  selector: 'app-word',
-  templateUrl: './word.component.html',
-  styleUrls: ['./word.component.css']
+    selector: 'app-word',
+    templateUrl: './word.component.html',
+    styleUrls: ['./word.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class WordComponent implements OnInit {
 

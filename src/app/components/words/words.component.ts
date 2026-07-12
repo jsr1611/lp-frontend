@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { catchError, of } from 'rxjs';
 import { Category, Word } from 'src/app/models/word';
 import { DictionaryService } from 'src/app/services/DictionaryService';
 
 @Component({
-  selector: 'app-words',
-  templateUrl: './words.component.html',
-  styleUrls: ['./words.component.css']
+    selector: 'app-words',
+    templateUrl: './words.component.html',
+    styleUrls: ['./words.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class WordsComponent implements OnInit{
   dict:Word[] = [];

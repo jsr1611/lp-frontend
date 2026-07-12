@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "src/app/services/AuthService";
 import { SecureService } from "src/app/services/SercureService";
@@ -35,9 +35,11 @@ interface DetailTotal {
 }
 
 @Component({
-  selector: "app-loan-tracker",
-  templateUrl: "./loan-tracker.component.html",
-  styleUrls: ["./loan-tracker.component.css"],
+    selector: "app-loan-tracker",
+    templateUrl: "./loan-tracker.component.html",
+    styleUrls: ["./loan-tracker.component.css"],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class LoanTrackerComponent implements OnInit {
   protected token: string | null = null;
