@@ -23,6 +23,8 @@ export interface Loan {
   repayments?: Repayment[];
   status?: LoanStatus;
   note?: string;
+  // Client-generated per new-loan; lets the backend dedupe double-submits/retries.
+  idempotencyKey?: string;
   // Virtuals returned by the backend:
   totalRepaid?: number;
   remaining?: number;

@@ -318,7 +318,7 @@
         </div>
         <div class="d-flex justify-content-end gap-2">
           <button type="button" class="btn btn-outline-secondary" (click)="closeLoanModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">{{ isEditingLoan ? 'Update' : 'Save' }}</button>
+          <button type="submit" class="btn btn-primary" [disabled]="isSaving">{{ isSaving ? 'Saving…' : (isEditingLoan ? 'Update' : 'Save') }}</button>
         </div>
       </form>
     </div>
