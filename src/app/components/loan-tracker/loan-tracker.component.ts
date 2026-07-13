@@ -58,6 +58,7 @@ export class LoanTrackerComponent implements OnInit {
   // Loan add/edit modal
   showLoanModal = false;
   isEditingLoan = false;
+  isSaving = false; // in-flight guard: disables Save and blocks re-entrant submits
   loanForm: Loan = this.blankLoan();
 
   // Contact selection inside the loan modal: pick existing or add new inline.
@@ -108,6 +109,13 @@ export class LoanTrackerComponent implements OnInit {
     return new Date().toISOString().split("T")[0];
   }
 
+  // A fresh idempotency key per new-loan form. The backend dedupes on it, so a
+  // double-click or retry of the same submission resolves to one loan, not many.
+  private newIdempotencyKey(): string {
+    const c = (globalThis as any).crypto;
+    return c?.randomUUID ? c.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  }
+
   private blankLoan(): Loan {
     return {
       direction: "borrowed",
@@ -118,6 +126,7 @@ export class LoanTrackerComponent implements OnInit {
       dueDate: "",
       note: "",
       repayments: [],
+      idempotencyKey: this.newIdempotencyKey(),
     };
   }
 
@@ -396,6 +405,7 @@ export class LoanTrackerComponent implements OnInit {
 
   closeLoanModal(): void {
     this.showLoanModal = false;
+    this.isSaving = false;
     this.errorMessage = null;
   }
 
@@ -405,6 +415,7 @@ export class LoanTrackerComponent implements OnInit {
 
   // Save loan: if adding a new contact inline, create it first, then the loan.
   saveLoan(): void {
+    if (this.isSaving) return; // guard against double-submit (double-click / Enter twice)
     this.errorMessage = null;
 
     if (this.contactMode === "new") {
@@ -412,6 +423,7 @@ export class LoanTrackerComponent implements OnInit {
         this.errorMessage = "Contact name is required.";
         return;
       }
+      this.isSaving = true;
       this.secureService.saveContact(this.newContact).subscribe({
         next: (data: any) => {
           const created: Contact = data.data;
@@ -419,7 +431,10 @@ export class LoanTrackerComponent implements OnInit {
           this.loanForm.contactId = created._id!;
           this.persistLoan();
         },
-        error: (err: HttpErrorResponse) => this.showError(err),
+        error: (err: HttpErrorResponse) => {
+          this.isSaving = false;
+          this.showError(err);
+        },
       });
     } else {
       if (!this.loanForm.contactId) {
@@ -433,18 +448,24 @@ export class LoanTrackerComponent implements OnInit {
   private persistLoan(): void {
     if (!this.loanForm.principal || this.loanForm.principal <= 0) {
       this.errorMessage = "Amount must be greater than 0.";
+      this.isSaving = false;
       return;
     }
+    this.isSaving = true;
     const request = this.isEditingLoan
       ? this.secureService.updateLoan(this.loanForm)
       : this.secureService.saveLoan(this.loanForm);
 
     request.subscribe({
       next: () => {
+        this.isSaving = false;
         this.closeLoanModal();
         this.refresh();
       },
-      error: (err: HttpErrorResponse) => this.showError(err),
+      error: (err: HttpErrorResponse) => {
+        this.isSaving = false;
+        this.showError(err);
+      },
     });
   }
 
