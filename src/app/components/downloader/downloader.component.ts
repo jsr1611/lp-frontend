@@ -12,7 +12,8 @@ import { SecureService } from 'src/app/services/SercureService';
 export class DownloaderComponent {
   videoUrl = '';
   convertToMp3 = false;
-  status = 'Ready.';
+  /** Holds a translation key, not text — the template pipes it through `translate`. */
+  statusKey = 'downloader.status.ready';
   isSubmitting = false;
 
   constructor(private readonly secureService: SecureService) { }
@@ -23,21 +24,21 @@ export class DownloaderComponent {
 
   onUrlChange(): void {
     if (!this.videoUrl) {
-      this.status = 'Ready.';
+      this.statusKey = 'downloader.status.ready';
       return;
     }
 
-    this.status = this.isValidUrl ? 'Ready to download.' : 'Enter a valid YouTube or Instagram URL.';
+    this.statusKey = this.isValidUrl ? 'downloader.status.readyToDownload' : 'downloader.status.invalidUrl';
   }
 
   download(): void {
     if (!this.isValidUrl) {
-      this.status = 'Enter a valid YouTube or Instagram URL.';
+      this.statusKey = 'downloader.status.invalidUrl';
       return;
     }
 
     this.isSubmitting = true;
-    this.status = this.convertToMp3 ? 'Preparing MP3 download...' : 'Preparing MP4 download...';
+    this.statusKey = this.convertToMp3 ? 'downloader.status.preparingMp3' : 'downloader.status.preparingMp4';
 
 
     const payload = {
@@ -49,11 +50,11 @@ export class DownloaderComponent {
       .subscribe({
         next: (response: HttpResponse<Blob>) => {
           this.saveBlob(response.body, this.getFilename(response));
-          this.status = 'Download started. Keep this tab open.';
+          this.statusKey = 'downloader.status.started';
           this.isSubmitting = false;
         },
         error: () => {
-          this.status = 'Download failed. Please try again.';
+          this.statusKey = 'downloader.status.failed';
           this.isSubmitting = false;
         },
       });
@@ -61,7 +62,7 @@ export class DownloaderComponent {
 
   private saveBlob(blob: Blob | null, filename: string): void {
     if (!blob) {
-      this.status = 'Download failed. Empty response.';
+      this.statusKey = 'downloader.status.emptyResponse';
       return;
     }
 

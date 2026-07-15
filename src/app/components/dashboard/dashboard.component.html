@@ -1,24 +1,24 @@
 <div class="container">
-  <h2>Website Visits Statistics</h2>
+  <h2>{{ 'dashboard.title' | translate }}</h2>
   <div class="dashboard-container">
     <div class="chart-container">
       <div class="chart-item">
-        <h3>Visits By Country</h3>
+        <h3>{{ 'dashboard.chart.visitsByCountry' | translate }}</h3>
         <canvas id="pieChart1" width="400" height="400"></canvas>
       </div>
 
       <div class="chart-item">
-        <h3>Device Information</h3>
+        <h3>{{ 'dashboard.chart.deviceInfo' | translate }}</h3>
         <canvas id="deviceChart" width="400" height="400"></canvas>
       </div>
 
       <div class="chart-item">
-        <h3>Total Visits Over Time</h3>
+        <h3>{{ 'dashboard.chart.totalVisitsOverTime' | translate }}</h3>
         <canvas id="barChart1" width="400" height="400"></canvas>
       </div>
 
       <div class="chart-item">
-        <h3>Unique Visits Over Time</h3>
+        <h3>{{ 'dashboard.chart.uniqueVisitsOverTime' | translate }}</h3>
         <canvas id="barChart2" width="400" height="400"></canvas>
       </div>
     </div>
@@ -26,49 +26,49 @@
 
   @if (token != null && token.length > 1 && haveAdminRight) {
     <div>
-      <h2>User Management</h2>
+      <h2>{{ 'dashboard.users.title' | translate }}</h2>
       <div class="dashboard-container">
         <div class="table-responsive">
           <table class="table table-hover table-bordered text-center">
             <thead class="thead-dark">
               <tr>
-                <th>Tr</th>
-                <th scope="col">Picture</th>
-                <th scope="col">Name</th>
-                <th scope="col">Username</th>
-                <th scope="col">Email</th>
-                <th>Role</th>
-                <th scope="col">Status</th>
-                <th scope="col">Signup date</th>
-                <th scope="col">Last login</th>
+                <th>{{ 'dashboard.table.no' | translate }}</th>
+                <th scope="col">{{ 'dashboard.table.picture' | translate }}</th>
+                <th scope="col">{{ 'dashboard.table.name' | translate }}</th>
+                <th scope="col">{{ 'dashboard.table.username' | translate }}</th>
+                <th scope="col">{{ 'dashboard.table.email' | translate }}</th>
+                <th>{{ 'dashboard.table.role' | translate }}</th>
+                <th scope="col">{{ 'dashboard.table.status' | translate }}</th>
+                <th scope="col">{{ 'dashboard.table.signupDate' | translate }}</th>
+                <th scope="col">{{ 'dashboard.table.lastLogin' | translate }}</th>
               </tr>
             </thead>
             <tbody>
               @for (userObj of users; track userObj; let i = $index) {
                 <tr>
-                  <td data-label="Tr">{{ i + 1 }}</td>
-                  <td data-label="Picture">
+                  <td [attr.data-label]="'dashboard.table.no' | translate">{{ i + 1 }}</td>
+                  <td [attr.data-label]="'dashboard.table.picture' | translate">
                     @if (userObj.profilePicture) {
 <img [src]="
                   'data:image/jpeg;base64,' +
                   convertImage(userObj.profilePicture)
-                " alt="Photo" />
+                " [attr.alt]="'dashboard.photoAlt' | translate" />
                     } @else {
-                      <img src="/assets/images/default-profile-image.jpg" alt="Default Profile Image" />
+                      <img src="/assets/images/default-profile-image.jpg" [attr.alt]="'dashboard.defaultPhotoAlt' | translate" />
                     }
                   </td>
-                  <td data-label="Name">{{ userObj.firstname + " " + userObj.lastname }}</td>
-                  <td data-label="Username">{{ userObj.username }}</td>
-                  <td data-label="Email">{{ userObj.email }}</td>
-                  <td data-label="Role">{{ userObj.is_superuser ? "Admin" : "User" }}</td>
-                  <td data-label="Status">
+                  <td [attr.data-label]="'dashboard.table.name' | translate">{{ userObj.firstname + " " + userObj.lastname }}</td>
+                  <td [attr.data-label]="'dashboard.table.username' | translate">{{ userObj.username }}</td>
+                  <td [attr.data-label]="'dashboard.table.email' | translate">{{ userObj.email }}</td>
+                  <td [attr.data-label]="'dashboard.table.role' | translate">{{ (userObj.is_superuser ? 'dashboard.role.admin' : 'dashboard.role.user') | translate }}</td>
+                  <td [attr.data-label]="'dashboard.table.status' | translate">
                     <button class="btn btn-primary" (click)="changeStatus(i, userObj._id, userObj.is_activated)"
-                      [title]="userObj.is_activated ? 'Deactivate?'  : 'Activate?'">
-                      {{ userObj.is_activated ? "Active" : "Inactive" }}
+                      [title]="(userObj.is_activated ? 'dashboard.action.deactivate' : 'dashboard.action.activate') | translate">
+                      {{ (userObj.is_activated ? 'dashboard.status.active' : 'dashboard.status.inactive') | translate }}
                     </button>
                   </td>
-                  <td data-label="Signup date">{{ displayDate(userObj.created_at) | date }}</td>
-                  <td data-label="Last login">{{ (displayDate(userObj.last_session) | date) ?? "--" }}</td>
+                  <td [attr.data-label]="'dashboard.table.signupDate' | translate">{{ displayDate(userObj.created_at) | date }}</td>
+                  <td [attr.data-label]="'dashboard.table.lastLogin' | translate">{{ (displayDate(userObj.last_session) | date) ?? "--" }}</td>
                 </tr>
               }
             </tbody>
