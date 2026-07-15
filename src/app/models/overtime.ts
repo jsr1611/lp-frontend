@@ -105,6 +105,7 @@ export interface OvertimeDay {
   rawOtMinutes: number;
   paidOtMinutes: number;
   qualified: boolean;
+  isRestDay?: boolean;
   earnings: number;
 }
 
@@ -118,6 +119,13 @@ export interface OvertimeSummary {
   daysLogged: number;
   daysQualified: number;
   currency: Currency | null;
+  // The rate the month's entries were priced at, or null when they disagree — a raise
+  // mid-month means no single rate applied. Falls back to live settings for an empty
+  // month.
+  hourlyRate: number | null;
+  otMultiplier: number | null;
+  mixedRates: boolean;
+  hasRestDays: boolean;
   byDay: OvertimeDay[];
 }
 
