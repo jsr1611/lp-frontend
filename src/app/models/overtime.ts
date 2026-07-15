@@ -34,9 +34,33 @@ export interface OvertimeSettings {
   // Whether clocking in before shiftStart counts toward overtime.
   countEarlyArrival: boolean;
   rounding: OtRounding;
+  // Contracted weekdays, 0 = Sunday. Anything outside is a rest day.
+  workDays: number[];
+  // 휴일근로수당 (근로기준법 §56②): 1.5x for the first 8 hours of rest-day work, 2.0x
+  // beyond. Settings rather than constants, for employers who pay a flat rate.
+  restDayFirst8Multiplier: number;
+  restDayBeyondMultiplier: number;
+  // Whether minimumOtMinutes also gates rest days. Usually not.
+  minimumOnRestDays: boolean;
   company?: CompanyInfo;
   created_at?: string;
   updated_at?: string;
+}
+
+// A Korean public holiday from the 공휴일 lookup.
+export interface Holiday {
+  date: string;  // ISO date (yyyy-MM-dd)
+  name: string;  // e.g. "광복절", "대체공휴일"
+}
+
+// `available: false` means the lookup could not be made (no service key, upstream
+// down) — NOT that the month has no holidays. Callers must not read an empty list as
+// an answer; the manual toggle is the fallback.
+export interface HolidayLookup {
+  month: string;
+  available: boolean;
+  holidays: Holiday[];
+  reason?: string;
 }
 
 export interface OvertimeEntry {
@@ -46,6 +70,11 @@ export interface OvertimeEntry {
   startTime: string;   // 출근 시간, "HH:MM"
   endTime: string;     // 퇴근 시간, "HH:MM"; earlier than startTime = ran past midnight
   note?: string;
+  // Weekend or 공휴일: every worked hour counts, at the 휴일근로 premium. Auto-detected
+  // but overridable. `undefined` on entries logged before rest days were supported,
+  // which is the signal to auto-detect on open.
+  isRestDay?: boolean;
+  restDayReason?: string;
   // Snapshot of the settings this day was logged under; the backend copies these in so
   // a later raise cannot rewrite what past months paid.
   hourlyRate?: number;
@@ -57,6 +86,9 @@ export interface OvertimeEntry {
   minimumOtMinutes?: number;
   countEarlyArrival?: boolean;
   rounding?: OtRounding;
+  restDayFirst8Multiplier?: number;
+  restDayBeyondMultiplier?: number;
+  minimumOnRestDays?: boolean;
   // Derived by the backend:
   rawOtMinutes?: number;   // overtime actually worked
   paidOtMinutes?: number;  // what pays out: 0 if under the minimum, else rounded down
