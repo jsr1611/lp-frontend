@@ -1,0 +1,525 @@
+{
+  "addWord": {
+    "arabic": "Arabchasi",
+    "arabicPlaceholder": "So'zni arabcha kiriting",
+    "category": "So`z turini tanlang",
+    "english": "Inglizchasi (ixtiyoriy)",
+    "englishPlaceholder": "So'zni inglizcha ma`nosini kiriting",
+    "errors": {
+      "saveFailed": "So'zni saqlashda muammoga duch kelindi.",
+      "saveFailedDetail": "So'zni saqlashda muammoga duch kelindi: {{detail}}"
+    },
+    "meaning": "Ma`nosi",
+    "meaningPlaceholder": "So'zni ma`nosini kiriting",
+    "pronunciation": "O'qilishi",
+    "pronunciationPlaceholder": "So'zni o'qilishini kiriting",
+    "remark": "Qo`shimcha ma`lumot (test uchun)",
+    "remarkPlaceholder": "Testni guruhlashda foydalanish uchun",
+    "saved": "So'z muvaffaqiyatli saqlandi...",
+    "title": "Yangi so`z qo`shish",
+    "viewWords": "Yangi so'zlarni ko'rish"
+  },
+  "auth": {
+    "createAccount": "Hisob yaratish",
+    "email": "Elektron pochta",
+    "errors": {
+      "resetPasswordFailed": "Parolni tiklab bo'lmadi"
+    },
+    "firstname": "Ism",
+    "forgotPassword": "Parolni unutdingizmi?",
+    "lastname": "Familiya",
+    "login": "Kirish",
+    "logout": "Chiqish",
+    "password": "Parol",
+    "resetPasswordSent": "Parolni tiklash bo'yicha ko'rsatmalar elektron pochtangizga yuborildi",
+    "resetPasswordSubmit": "Parolni tiklash",
+    "resetPasswordTitle": "Parolni tiklash",
+    "signup": "Ro'yxatdan o'tish",
+    "username": "Foydalanuvchi nomi"
+  },
+  "category": {
+    "adjective": "Sifat",
+    "adverb": "Hol",
+    "conjunction": "Bog`lovchi",
+    "noun": "Ot",
+    "number": "Raqam",
+    "other": "Boshqa",
+    "preposition": "Predlog",
+    "verb": "Fe’l"
+  },
+  "common": {
+    "cancel": "Bekor qilish",
+    "currency": "Valyuta",
+    "date": "Sana",
+    "delete": "O'chirish",
+    "save": "Saqlash",
+    "saving": "Saqlanmoqda…"
+  },
+  "currency": {
+    "AED": "BAA dirhami",
+    "CNY": "Xitoy yuani",
+    "EGP": "Misr funti",
+    "EUR": "Yevro",
+    "GBP": "Britaniya funt sterlingi",
+    "JPY": "Yaponiya iyenasi",
+    "KGS": "Qirg'iz somi",
+    "KRW": "Janubiy Koreya voni",
+    "KZT": "Qozog'iston tengesi",
+    "PKR": "Pokiston rupiysi",
+    "RUB": "Rossiya rubli",
+    "SAR": "Saudiya riyoli",
+    "TJS": "Tojik somoniysi",
+    "USD": "AQSH dollari",
+    "UZS": "O'zbek so'mi"
+  },
+  "dashboard": {
+    "action": {
+      "activate": "Faollashtirilsinmi?",
+      "deactivate": "Nofaol qilinsinmi?"
+    },
+    "chart": {
+      "deviceInfo": "Qurilma ma'lumotlari",
+      "totalVisitsOverTime": "Vaqt bo'yicha jami tashriflar",
+      "uniqueVisitsOverTime": "Vaqt bo'yicha noyob tashriflar",
+      "visitsByCountry": "Mamlakatlar bo'yicha tashriflar"
+    },
+    "defaultPhotoAlt": "Standart profil rasmi",
+    "photoAlt": "Rasm",
+    "role": {
+      "admin": "Admin",
+      "user": "Foydalanuvchi"
+    },
+    "status": {
+      "active": "Faol",
+      "inactive": "Nofaol"
+    },
+    "table": {
+      "email": "Email",
+      "lastLogin": "Oxirgi kirish",
+      "name": "Ism",
+      "no": "T/r",
+      "picture": "Rasm",
+      "role": "Rol",
+      "signupDate": "Ro'yxatdan o'tgan sana",
+      "status": "Holat",
+      "username": "Foydalanuvchi nomi"
+    },
+    "title": "Sayt tashriflari statistikasi",
+    "unknown": "Noma'lum",
+    "users": {
+      "title": "Foydalanuvchilarni boshqarish"
+    }
+  },
+  "downloader": {
+    "backendPill": "FastAPI backend",
+    "convertToMp3": "MP3 ga o'girish",
+    "download": "Yuklab olish",
+    "lead": "Havolani joylashtiring, formatni tanlang — fayl to'g'ridan-to'g'ri kompyuteringizga yuklanadi.",
+    "proTip": "Tez audio kerakmi? MP3 ni yoqing va yuklab olish boshlanguncha brauzer oynasini yopmang.",
+    "proTipTitle": "Foydali maslahat",
+    "status": {
+      "emptyResponse": "Yuklab olish amalga oshmadi. Javob bo'sh.",
+      "failed": "Yuklab olish amalga oshmadi. Qaytadan urinib ko'ring.",
+      "invalidUrl": "To'g'ri YouTube yoki Instagram havolasini kiriting.",
+      "preparingMp3": "MP3 yuklab olish tayyorlanmoqda…",
+      "preparingMp4": "MP4 yuklab olish tayyorlanmoqda…",
+      "ready": "Tayyor.",
+      "readyToDownload": "Yuklab olishga tayyor.",
+      "started": "Yuklab olish boshlandi. Bu oynani yopmang."
+    },
+    "title": "YouTube/Instagram videolarini ortiqcha ovoragarchiliksiz yuklab oling.",
+    "urlPlaceholder": "https://www.youtube.com/watch?v=... yoki https://www.instagram.com/reel/...",
+    "videoUrl": "Video havolasi"
+  },
+  "github": {
+    "actionsCompleted": "Amallar bajarildi",
+    "deleteConfirm": "Bu repozitoriyni O'CHIRISH uchun \"{{name}}\" deb yozing",
+    "loadRepos": "Repozitoriylarni yuklash",
+    "loading": "Repozitoriylar yuklanmoqda…",
+    "onlySelf": "Faqat o'zimniki",
+    "private": "Yopiq",
+    "public": "Ochiq",
+    "table": {
+      "name": "Nomi",
+      "ownerId": "Egasining ID si",
+      "visibility": "Ko'rinishi"
+    },
+    "title": "GitHub repozitoriy menejeri",
+    "tokenPlaceholder": "GitHub tokenini joylashtiring"
+  },
+  "home": {
+    "title": "Arab tilini o'rganamiz!",
+    "viewWords": "Yangi so'zlarni ko'rish"
+  },
+  "loans": {
+    "addLoan": "Qarz qo'shish",
+    "addRepayment": "To'lov qo'shish",
+    "amount": "Miqdor",
+    "balancesByPerson": "Shaxslar bo'yicha qoldiq",
+    "cancel": "Bekor qilish",
+    "chart": {
+      "currency": "Diagramma valyutasi",
+      "netBalance": "Sof qoldiq ({{code}})",
+      "outstanding": "To'lanmagan qarz ({{code}})"
+    },
+    "contact": "Kontakt",
+    "contactMode": {
+      "existing": "Mavjud",
+      "new": "Yangi kontakt"
+    },
+    "currency": "Valyuta",
+    "currencyBalance": "{{code}} bo'yicha qoldiq",
+    "date": "Sana",
+    "dateTaken": "Olingan sana",
+    "delete": "O'chirish",
+    "deleteConfirm": "{{name}} bilan bog'liq bu qarz o'chirilsinmi? Buni ortga qaytarib bo'lmaydi.",
+    "direction": {
+      "borrowed": "Men qarzdorman",
+      "borrowedLong": "Men qarzdorman (oldim)",
+      "label": "Yo'nalish",
+      "lent": "Menga qarzdor",
+      "lentLong": "Menga qarzdor (berdim)"
+    },
+    "dueDate": "Qaytarish muddati",
+    "dueOn": "(muddati: {{date}})",
+    "dueSoonCount": "Muddati yaqin ({{count}})",
+    "edit": "Tahrirlash",
+    "editLoan": "Qarzni tahrirlash",
+    "email": "E-pochta",
+    "empty": {
+      "noMatch": "Bu filtrlarga mos qarz topilmadi.",
+      "noOutstanding": "To'lanmagan qarzlar yo'q. Boshlash uchun bittasini qo'shing.",
+      "noneWithContact": "Bu kontakt bilan bog'liq qarzlar yo'q."
+    },
+    "errors": {
+      "amountPositive": "Miqdor 0 dan katta bo'lishi kerak.",
+      "generic": "Nimadir xato ketdi.",
+      "nameRequired": "Kontakt ismi kiritilishi shart.",
+      "repaymentPositive": "To'lov miqdori 0 dan katta bo'lishi kerak.",
+      "selectContact": "Iltimos, kontaktni tanlang."
+    },
+    "filters": {
+      "active": "Faol (yopilmagan)",
+      "all": "Hammasi"
+    },
+    "importFromPhone": "Telefondan import qilish",
+    "links": {
+      "call": "Qo'ng'iroq qilish",
+      "email": "E-pochta yuborish"
+    },
+    "namePlaceholder": "Ism (majburiy)",
+    "net": "Sof qoldiq",
+    "netPosition": "Sof qoldiq",
+    "noChannels": "Saqlangan aloqa kanallari yo'q",
+    "noRepayments": "Hozircha to'lovlar qayd etilmagan.",
+    "note": "Izoh",
+    "notePlaceholder": "Nima uchun olingan?",
+    "ofPrincipal": "{{principal}} dan",
+    "optional": "(ixtiyoriy)",
+    "overdueCount": "Muddati o'tgan ({{count}})",
+    "phone": "Telefon",
+    "remainingLabel": "Qoldiq:",
+    "repaymentsWith": "To'lovlar — {{name}}",
+    "save": "Saqlash",
+    "saving": "Saqlanmoqda…",
+    "selectContact": "— kontaktni tanlang —",
+    "status": {
+      "label": "Holat",
+      "open": "Ochiq",
+      "paid": "To'langan",
+      "partial": "Qisman to'langan"
+    },
+    "table": {
+      "actions": "Amallar",
+      "contact": "Kontakt",
+      "direction": "Yo'nalish",
+      "due": "Muddati",
+      "dueDate": "Qaytarish muddati",
+      "principal": "Asosiy summa",
+      "remaining": "Qoldiq",
+      "status": "Holat",
+      "taken": "Olingan"
+    },
+    "title": "Qarzlar hisobi",
+    "update": "Yangilash"
+  },
+  "nav": {
+    "addWord": "Yangi so'z qo'shish",
+    "dashboard": "Boshqaruv paneli",
+    "downloader": "Yuklovchi",
+    "language": "Til",
+    "loans": "Qarzlar",
+    "overtime": "Qo'shimcha ish",
+    "profile": "Profil",
+    "search": "Qidiruv",
+    "searchPlaceholder": "O'zbekcha so'z qidiruvi",
+    "tests": "Test yechish",
+    "toggle": "Menyuni ochish",
+    "userIcon": "Foydalanuvchi rasmi",
+    "words": "Yangi so'zlar"
+  },
+  "notFound": {
+    "redirecting": "Bosh sahifaga qaytmoqdamiz...",
+    "title": "Voy! Sahifa topilmadi."
+  },
+  "overtime": {
+    "baseHourlyRate": "Asosiy soatlik stavka",
+    "baseHourlyRateHelp": "Oddiy stavkangiz — koeffitsiyent uning ustiga qo'llanadi.",
+    "belowMinimumTitle": "Minimumdan past — hech narsa to'lanmaydi",
+    "chart": {
+      "dayOfMonth": "Oy kuni",
+      "hours": "Soat",
+      "paidOvertime": "To'langan qo'shimcha ish (soat)",
+      "title": "Kunlar bo'yicha qo'shimcha ish",
+      "unpaid": "To'lanmagan (soat)"
+    },
+    "companyIntro": "Hech qanday hisob-kitobda ishlatilmaydi. Keyinchalik statistika qo'shimcha ishni asosiy maoshingiz bilan solishtira olishi uchun saqlanadi.",
+    "companyName": "Kompaniya",
+    "contractEnd": "Shartnoma tugashi",
+    "contractSalary": "Shartnoma bo'yicha maosh",
+    "contractStart": "Shartnoma boshlanishi",
+    "contractedDays": "Shartnomadagi kunlar",
+    "contractedDaysAria": "Shartnomadagi ish kunlari",
+    "contractedDaysHelp": "Bulardan tashqari har qanday kun — dam olish kuni: ishlangan har bir soat quyidagi 휴일근로 stavkasida hisoblanadi.",
+    "countEarlyArrival": "Erta kelishni qo'shimcha ish deb hisoblash",
+    "countEarlyArrivalHelp": "Oddiy 8 soatlik kun uchun yoqing — unda undan tashqari hamma narsa hisoblanadi. Faqat kechqurungi qo'shimcha ish to'lansa, o'chiring.",
+    "deleteConfirm": "{{date}} uchun yozuv o'chirilsinmi?",
+    "deleteEntry": "Yozuvni o'chirish",
+    "editDay": "Kunni tahrirlash",
+    "editEntry": "Yozuvni tahrirlash",
+    "empty": "Bu oy uchun hali hech narsa qayd etilmagan.",
+    "endTime": "Tugash (퇴근 시간)",
+    "endTimeHelp": "Boshlanishdan erta = yarim tundan keyin tugagan.",
+    "errors": {
+      "entryFieldsRequired": "Sana, boshlanish va tugash vaqti — hammasi majburiy.",
+      "hourlyRateRequired": "Asosiy soatlik stavkangizni kiriting.",
+      "workDaysRequired": "Kamida bitta ish kunini tanlang."
+    },
+    "estimateHourly": "Shu asosda soatlik stavkamni hisoblash",
+    "estimateHourlyHelp": "통상시급 (odatiy soatlik ish haqi): oylik maosh ÷ {{hours}} soat ({{workHours}} soat × 5 kun + 주휴, × 4.345 hafta). Bu taxminiy — hisob varaqangiz bilan solishtiring.",
+    "getStarted": "Boshlash",
+    "holidayLookupUnavailable": "Davlat bayramlarini tekshirib bo'lmadi — dam olish kunlari baribir aniqlanadi, lekin 빨간날 uchun katakchani o'zingiz belgilang.",
+    "logADay": "Kunni qayd etish",
+    "logDay": "Kun qo'shish",
+    "lostToRounding": "Yaxlitlashda yo'qoldi",
+    "lunchMinutes": "Tushlik (daq)",
+    "minimumHelp": "Shundan kam qolsangiz, kun umuman to'lanmaydi.",
+    "minimumOnRestDays": "Minimum dam olish kunlariga ham qo'llansin",
+    "minimumOnRestDaysHelp": "Odatda o'chiq — dam olish kunida umuman ishga chiqishning o'zi katta gap.",
+    "minimumToQualify": "Hisobga olinishi uchun minimum",
+    "minimums": {
+      "h1": "1 soat",
+      "h1m30": "1 soat 30 daqiqa",
+      "h2": "2 soat",
+      "h3": "3 soat",
+      "h4": "4 soat",
+      "m30": "30 daqiqa",
+      "none": "Minimumsiz — har bir daqiqa hisoblanadi"
+    },
+    "multiplier15Flat": "1.5× — yagona, bo'linishsiz",
+    "multiplier15Statutory": "1.5× — qonuniy",
+    "multiplier20": "2.0×",
+    "multiplier20Statutory": "2.0× — qonuniy",
+    "nextDayBadge": "+1 k",
+    "nextMonth": "Keyingi oy",
+    "note": "Izoh",
+    "optional": "— ixtiyoriy",
+    "otRate": "Qo'shimcha ish koeffitsiyenti",
+    "otRate15": "1.5× — standart qo'shimcha ish",
+    "otRate20": "2.0× — tungi ish (22:00–06:00)",
+    "otRateHelp": "Koreya qonuni qo'shimcha ishni 1.5× belgilaydi; tungi ish yana 0.5× qo'shadi.",
+    "pastMidnight": "Smena yarim tundan o'tdi",
+    "position": "Lavozim",
+    "prevMonth": "Oldingi oy",
+    "preview": {
+      "countsAs": "Hisobga olinadi",
+      "earn": "Siz olasiz",
+      "nothing": "hech narsa — minimumdan kam",
+      "restDayHelp": "Dam olish kuni — har bir soat hisoblanadi. Dastlabki 8 soat {{first8}}×, undan keyin {{beyond}}×. Tanaffuslar 근로기준법 §54 ga muvofiq ayiriladi.",
+      "startsAt": "Qo'shimcha ish {{time}} dan boshlanadi.",
+      "worked": "Ishlangan qo'shimcha ish"
+    },
+    "rates": {
+      "base": "{{rate}}/soat asosiy",
+      "mixed": "Bu oyda stavkalar har xil",
+      "mixedTitle": "Bu oydagi yozuvlar turli stavkalarda qayd etilgan",
+      "overtime": "{{rate}}/soat qo'shimcha ish",
+      "restDays": "Dam olish kunlari {{first8}}× / {{beyond}}×."
+    },
+    "resnapshot": "Joriy sozlamalarni shu kunga qayta qo'llash",
+    "resnapshotHelp": "Odatda o'chiq — kun o'zi qayd etilgan stavka va qoidalarni saqlab qoladi.",
+    "restDay": "Dam olish kuni",
+    "restDayBeyond": "8 soatdan keyin",
+    "restDayBeyondHelp": "Koreya qonuni dam olish kunida 8 soatdan keyin yana 50% qo'shadi.",
+    "restDayCheckbox": "Dam olish kuni (휴일/주말)",
+    "restDayFirst8": "Dastlabki 8 soat",
+    "restDayNotice": "{{reason}} — har bir soat 휴일근로 (dam olish kuni ishi) stavkasida hisoblanadi.",
+    "restDayNoticeGeneric": "Har bir soat 휴일근로 (dam olish kuni ishi) stavkasida hisoblanadi.",
+    "restDaysIntro": "Dam olish kunlari va 공휴일. Oshib ketadigan rejali kun yo'q, shuning uchun ishlangan har bir soat birinchi daqiqadan qo'shimcha ish hisoblanadi.",
+    "retry": "Qayta urinish",
+    "rounding": "Yaxlitlash",
+    "roundingDown30": "30 daqiqagacha kamaytirib",
+    "roundingDown60": "To'liq soatgacha kamaytirib",
+    "roundingExact": "Aniq daqiqalar",
+    "rule": {
+      "earlyArrival": "erta kelish hisoblanadi",
+      "lunch": "{{duration}} tushlik",
+      "minimum": "min {{duration}}",
+      "multiplier": "{{value}}×",
+      "overtimeAfter": "{{time}} dan keyin qo'shimcha ish",
+      "schedule": "{{start}} + {{hours}} soat"
+    },
+    "salaryAnnual": "Yillik (연봉)",
+    "salaryMonthly": "Oylik (월급)",
+    "salaryPeriod": "Maosh davri",
+    "saveSettings": "Sozlamalarni saqlash",
+    "scheduledStart": "Rejadagi boshlanish (출근 시간)",
+    "sections": {
+      "company": "Kompaniya",
+      "counting": "Qo'shimcha ish qanday hisoblanadi",
+      "pay": "To'lov",
+      "restDays": "Dam olish kunlari (휴일근로)",
+      "workingDay": "Ish kuningiz"
+    },
+    "settings": "Sozlamalar",
+    "settingsIntro": "O'zgarishlar bundan keyin qayd etadigan kunlarga taalluqli. Allaqachon qayd etilgan kunlar o'zining dastlabki stavkasi va qoidalarini saqlab qoladi.",
+    "setupIntro": "Soatlik stavkangizni va ish beruvchingiz qo'shimcha ishni qanday hisoblashini kiriting. Bularning barchasini keyin o'zgartirishingiz mumkin — avval qayd etilgan kunlar o'z stavkasida qoladi.",
+    "setupTitle": "Qo'shimcha ishni sozlang",
+    "shift": "Smena",
+    "shiftDay": "Kunduzgi smena",
+    "shiftNight": "Tungi smena",
+    "startTime": "Boshlanish (출근 시간)",
+    "stats": {
+      "daysLogged": "Qayd etilgan kunlar",
+      "daysPaid": "({{count}} ta to'lanadi)",
+      "paid": "To'lanadigan qo'shimcha ish",
+      "pay": "Qo'shimcha ish haqi",
+      "unpaid": "Ishlangan, lekin to'lanmagan",
+      "unpaidHelp": "Minimumdan kam yoki yaxlitlashda yo'qolgan."
+    },
+    "table": {
+      "clockIn": "Kelish (출근)",
+      "clockOut": "Ketish (퇴근)",
+      "dateFormat": "d MMM (EEE)",
+      "earned": "Ishlab topildi",
+      "overtime": "Qo'shimcha",
+      "paid": "To'lanadi"
+    },
+    "title": "Qo'shimcha ish",
+    "underMinimum": "minimumdan kam",
+    "units": {
+      "hours": "{{h}} soat",
+      "hoursMinutes": "{{h}} soat {{m}} daq",
+      "minutes": "{{m}} daq"
+    },
+    "weekdays": {
+      "fri": "Ju",
+      "mon": "Du",
+      "sat": "Sh",
+      "sun": "Ya",
+      "thu": "Pa",
+      "tue": "Se",
+      "wed": "Ch"
+    },
+    "workHours": "Ish soatlari"
+  },
+  "profile": {
+    "activated": "Faollashtirilgan:",
+    "addNew": "Yangi qo'shish",
+    "changePicture": "Rasmni o'zgartirish",
+    "chart": {
+      "monthlyTotal": "{{year}} yil uchun oylik jami xarajatlar ({{currency}})",
+      "tooltip": "{{label}}: {{amount}} ({{percent}})"
+    },
+    "close": "Yopish",
+    "defaultPictureAlt": "Standart profil rasmi",
+    "delete": "O'chirish",
+    "edit": "Tahrirlash",
+    "editUser": "Foydalanuvchi ma'lumotlarini yangilash",
+    "email": "Elektron pochta:",
+    "errors": {
+      "fileTooLarge": "Fayl juda katta. Ruxsat etilgan eng katta hajm — {{size}} MB."
+    },
+    "expenses": {
+      "forMonth": "{{month}} uchun xarajatlar",
+      "summaryFor": "{{month}} uchun hisobot",
+      "title": "Oylik xarajatlarni boshqarish"
+    },
+    "firstname": "Ism:",
+    "form": {
+      "addExpense": "Xarajat qo'shish",
+      "amount": "Miqdor:",
+      "amountPlaceholder": "Miqdorni kiriting",
+      "category": "Toifa:",
+      "categoryPlaceholder": "Masalan: Oziq-ovqat, Transport",
+      "date": "Sana:",
+      "description": "Izoh:",
+      "descriptionPlaceholder": "Izoh qo'shing…"
+    },
+    "lastname": "Familiya:",
+    "name": "Ism:",
+    "no": "Yo'q",
+    "pictureAlt": "Profil rasmi",
+    "selectCurrency": "Valyutani tanlang",
+    "siteAdmin": "Sayt administratori",
+    "table": {
+      "action": "Amal",
+      "amount": "Miqdor",
+      "category": "Toifa",
+      "date": "Sana",
+      "description": "Izoh"
+    },
+    "title": "Foydalanuvchi profili",
+    "total": "Jami:",
+    "update": "Yangilash",
+    "username": "Foydalanuvchi nomi:",
+    "yes": "Ha"
+  },
+  "shell": {
+    "dailyVisits": "Kunlik tashriflar soni: {{count}}"
+  },
+  "tests": {
+    "bestResult": "Eng yaxshi natijangiz",
+    "correctCount": "{{count}} ta to'g'ri",
+    "incorrectCount": "{{count}} ta xato",
+    "langPair": {
+      "arEn": "Arabcha-Inglizcha",
+      "arUz": "Arabcha-O`zbekcha",
+      "enAr": "Inglizcha-Arabcha",
+      "enUz": "Inglizcha-O`zbekcha",
+      "uzAr": "O`zbekcha-Arabcha",
+      "uzEn": "O`zbekcha-Inglizcha"
+    },
+    "next": "Keyingi",
+    "nextTitle": "Keyingi testni yuklash",
+    "noConnection": "Server bilan aloqa yo'q. Iltimos, biroz sabr qiling yoki birozdan keyin yana qayta kirib ko'ring. Rahmat",
+    "numberOfTests": "Testlar soni",
+    "questionAfter": "Quyidagi javoblardan birini tanlang",
+    "questionBefore": "Bu so'zning ma'nosi nima?",
+    "result": "Natija",
+    "resultAlert": "Siz {{total}} ta testdan {{correct}} tasini to'g'ri yechdingiz. Yana urinib ko'ring!",
+    "stop": "Testni yakunlash",
+    "stopTitle": "Testni shu yerda yakunlaysizmi?",
+    "testNumber": "Test raqami"
+  },
+  "word": {
+    "audioUnsupported": "Brauzeringiz audio ijro etishni qo'llab-quvvatlamaydi.",
+    "notFound": "So'z topilmadi!",
+    "searchedWord": "Qidirilgan so`z"
+  },
+  "words": {
+    "addWord": "Yangi so'z qo'shish",
+    "back": "Orqaga qaytish",
+    "table": {
+      "arabic": "Arabcha",
+      "english": "Inglizcha",
+      "nr": "Tr",
+      "pronunciation": "Talaffuz",
+      "remark": "Ilova",
+      "update": "Yangilash tugmasi",
+      "uzbek": "O'zbekcha"
+    },
+    "title": "Yangi so'zlar",
+    "update": "Yangilash"
+  }
+}

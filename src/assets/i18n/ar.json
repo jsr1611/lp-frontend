@@ -1,0 +1,525 @@
+{
+  "addWord": {
+    "arabic": "العربية",
+    "arabicPlaceholder": "أدخل الكلمة بالعربية",
+    "category": "اختر نوع الكلمة",
+    "english": "الإنجليزية (اختياري)",
+    "englishPlaceholder": "أدخل معنى الكلمة بالإنجليزية",
+    "errors": {
+      "saveFailed": "حدثت مشكلة أثناء حفظ الكلمة.",
+      "saveFailedDetail": "حدثت مشكلة أثناء حفظ الكلمة: {{detail}}"
+    },
+    "meaning": "المعنى",
+    "meaningPlaceholder": "أدخل معنى الكلمة",
+    "pronunciation": "النطق",
+    "pronunciationPlaceholder": "أدخل نطق الكلمة",
+    "remark": "معلومات إضافية (للاختبار)",
+    "remarkPlaceholder": "تُستخدم لتصنيف الاختبارات",
+    "saved": "تم حفظ الكلمة بنجاح…",
+    "title": "إضافة كلمة جديدة",
+    "viewWords": "عرض الكلمات الجديدة"
+  },
+  "auth": {
+    "createAccount": "إنشاء حساب",
+    "email": "البريد الإلكتروني",
+    "errors": {
+      "resetPasswordFailed": "تعذّر إعادة تعيين كلمة المرور"
+    },
+    "firstname": "الاسم الأول",
+    "forgotPassword": "هل نسيت كلمة المرور؟",
+    "lastname": "اسم العائلة",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "password": "كلمة المرور",
+    "resetPasswordSent": "تم إرسال تعليمات إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
+    "resetPasswordSubmit": "إعادة تعيين كلمة المرور",
+    "resetPasswordTitle": "إعادة تعيين كلمة المرور",
+    "signup": "إنشاء حساب",
+    "username": "اسم المستخدم"
+  },
+  "category": {
+    "adjective": "صفة",
+    "adverb": "ظرف",
+    "conjunction": "حرف عطف",
+    "noun": "اسم",
+    "number": "عدد",
+    "other": "أخرى",
+    "preposition": "حرف جر",
+    "verb": "فِعل"
+  },
+  "common": {
+    "cancel": "إلغاء",
+    "currency": "العملة",
+    "date": "التاريخ",
+    "delete": "حذف",
+    "save": "حفظ",
+    "saving": "جارٍ الحفظ…"
+  },
+  "currency": {
+    "AED": "الدرهم الإماراتي",
+    "CNY": "اليوان الصيني",
+    "EGP": "الجنيه المصري",
+    "EUR": "اليورو",
+    "GBP": "الجنيه الإسترليني",
+    "JPY": "الين الياباني",
+    "KGS": "السوم القيرغيزي",
+    "KRW": "الوون الكوري الجنوبي",
+    "KZT": "التنغي الكازاخي",
+    "PKR": "الروبية الباكستانية",
+    "RUB": "الروبل الروسي",
+    "SAR": "الريال السعودي",
+    "TJS": "السوموني الطاجيكي",
+    "USD": "الدولار الأمريكي",
+    "UZS": "السوم الأوزبكي"
+  },
+  "dashboard": {
+    "action": {
+      "activate": "تفعيل؟",
+      "deactivate": "إلغاء التفعيل؟"
+    },
+    "chart": {
+      "deviceInfo": "معلومات الأجهزة",
+      "totalVisitsOverTime": "إجمالي الزيارات عبر الزمن",
+      "uniqueVisitsOverTime": "الزيارات الفريدة عبر الزمن",
+      "visitsByCountry": "الزيارات حسب الدولة"
+    },
+    "defaultPhotoAlt": "صورة الملف الشخصي الافتراضية",
+    "photoAlt": "صورة",
+    "role": {
+      "admin": "مدير",
+      "user": "مستخدم"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "table": {
+      "email": "البريد الإلكتروني",
+      "lastLogin": "آخر تسجيل دخول",
+      "name": "الاسم",
+      "no": "الرقم",
+      "picture": "الصورة",
+      "role": "الدور",
+      "signupDate": "تاريخ التسجيل",
+      "status": "الحالة",
+      "username": "اسم المستخدم"
+    },
+    "title": "إحصائيات زيارات الموقع",
+    "unknown": "غير معروف",
+    "users": {
+      "title": "إدارة المستخدمين"
+    }
+  },
+  "downloader": {
+    "backendPill": "خادم FastAPI",
+    "convertToMp3": "التحويل إلى MP3",
+    "download": "تنزيل",
+    "lead": "الصق الرابط، واختر الصيغة، وسينزل الملف مباشرة إلى جهازك.",
+    "proTip": "أتريد الصوت وحده بسرعة؟ فعّل MP3 وأبقِ تبويب المتصفح مفتوحًا حتى يبدأ التنزيل.",
+    "proTipTitle": "نصيحة مفيدة",
+    "status": {
+      "emptyResponse": "فشل التنزيل. الاستجابة فارغة.",
+      "failed": "فشل التنزيل. حاول مرة أخرى.",
+      "invalidUrl": "أدخل رابط YouTube أو Instagram صحيحًا.",
+      "preparingMp3": "جارٍ تحضير تنزيل MP3…",
+      "preparingMp4": "جارٍ تحضير تنزيل MP4…",
+      "ready": "جاهز.",
+      "readyToDownload": "جاهز للتنزيل.",
+      "started": "بدأ التنزيل. أبقِ هذا التبويب مفتوحًا."
+    },
+    "title": "نزّل مقاطع YouTube/Instagram دون عناء.",
+    "urlPlaceholder": "https://www.youtube.com/watch?v=... أو https://www.instagram.com/reel/...",
+    "videoUrl": "رابط الفيديو"
+  },
+  "github": {
+    "actionsCompleted": "اكتملت العمليات",
+    "deleteConfirm": "اكتب \"{{name}}\" لحذف هذا المستودع",
+    "loadRepos": "تحميل المستودعات",
+    "loading": "جارٍ تحميل المستودعات…",
+    "onlySelf": "مستودعاتي فقط",
+    "private": "خاص",
+    "public": "عام",
+    "table": {
+      "name": "الاسم",
+      "ownerId": "معرّف المالك",
+      "visibility": "مستوى الظهور"
+    },
+    "title": "مدير مستودعات GitHub",
+    "tokenPlaceholder": "الصق رمز GitHub"
+  },
+  "home": {
+    "title": "لنتعلّم اللغة العربية!",
+    "viewWords": "استعراض الكلمات الجديدة"
+  },
+  "loans": {
+    "addLoan": "إضافة دين",
+    "addRepayment": "إضافة سداد",
+    "amount": "المبلغ",
+    "balancesByPerson": "الأرصدة حسب الشخص",
+    "cancel": "إلغاء",
+    "chart": {
+      "currency": "عملة الرسم البياني",
+      "netBalance": "الرصيد الصافي ({{code}})",
+      "outstanding": "المبلغ القائم ({{code}})"
+    },
+    "contact": "جهة الاتصال",
+    "contactMode": {
+      "existing": "موجودة",
+      "new": "جهة اتصال جديدة"
+    },
+    "currency": "العملة",
+    "currencyBalance": "رصيد {{code}}",
+    "date": "التاريخ",
+    "dateTaken": "تاريخ البدء",
+    "delete": "حذف",
+    "deleteConfirm": "هل تريد حذف هذا الدين مع {{name}}؟ لا يمكن التراجع عن هذا الإجراء.",
+    "direction": {
+      "borrowed": "عليَّ دين",
+      "borrowedLong": "عليَّ دين (اقترضت)",
+      "label": "النوع",
+      "lent": "لي دين",
+      "lentLong": "لي دين (أقرضت)"
+    },
+    "dueDate": "تاريخ الاستحقاق",
+    "dueOn": "(تاريخ الاستحقاق: {{date}})",
+    "dueSoonCount": "تستحق قريبًا ({{count}})",
+    "edit": "تعديل",
+    "editLoan": "تعديل الدين",
+    "email": "البريد الإلكتروني",
+    "empty": {
+      "noMatch": "لا توجد ديون مطابقة لهذه المرشِّحات.",
+      "noOutstanding": "لا توجد ديون قائمة. أضف واحدًا للبدء.",
+      "noneWithContact": "لا توجد ديون مع جهة الاتصال هذه."
+    },
+    "errors": {
+      "amountPositive": "يجب أن يكون المبلغ أكبر من 0.",
+      "generic": "حدث خطأ ما.",
+      "nameRequired": "اسم جهة الاتصال مطلوب.",
+      "repaymentPositive": "يجب أن يكون مبلغ السداد أكبر من 0.",
+      "selectContact": "يرجى اختيار جهة اتصال."
+    },
+    "filters": {
+      "active": "نشطة (غير مسوَّاة)",
+      "all": "الكل"
+    },
+    "importFromPhone": "استيراد من الهاتف",
+    "links": {
+      "call": "اتصال",
+      "email": "إرسال بريد"
+    },
+    "namePlaceholder": "الاسم (مطلوب)",
+    "net": "الصافي",
+    "netPosition": "الرصيد الصافي",
+    "noChannels": "لا توجد قنوات اتصال محفوظة",
+    "noRepayments": "لا توجد مدفوعات مسجَّلة بعد.",
+    "note": "ملاحظة",
+    "notePlaceholder": "فيمَ استُخدم المبلغ؟",
+    "ofPrincipal": "من {{principal}}",
+    "optional": "(اختياري)",
+    "overdueCount": "متأخرة ({{count}})",
+    "phone": "الهاتف",
+    "remainingLabel": "المتبقي:",
+    "repaymentsWith": "المدفوعات — {{name}}",
+    "save": "حفظ",
+    "saving": "جارٍ الحفظ…",
+    "selectContact": "— اختر جهة اتصال —",
+    "status": {
+      "label": "الحالة",
+      "open": "مفتوح",
+      "paid": "مسدَّد",
+      "partial": "مسدَّد جزئيًا"
+    },
+    "table": {
+      "actions": "الإجراءات",
+      "contact": "جهة الاتصال",
+      "direction": "النوع",
+      "due": "الاستحقاق",
+      "dueDate": "تاريخ الاستحقاق",
+      "principal": "أصل المبلغ",
+      "remaining": "المتبقي",
+      "status": "الحالة",
+      "taken": "البدء"
+    },
+    "title": "متتبع الديون والقروض",
+    "update": "تحديث"
+  },
+  "nav": {
+    "addWord": "إضافة كلمة",
+    "dashboard": "لوحة التحكم",
+    "downloader": "أداة التنزيل",
+    "language": "اللغة",
+    "loans": "الديون",
+    "overtime": "العمل الإضافي",
+    "profile": "الملف الشخصي",
+    "search": "بحث",
+    "searchPlaceholder": "البحث عن كلمة أوزبكية",
+    "tests": "إجراء اختبار",
+    "toggle": "فتح القائمة",
+    "userIcon": "صورة المستخدم",
+    "words": "كلمات جديدة"
+  },
+  "notFound": {
+    "redirecting": "جارٍ العودة إلى الصفحة الرئيسية...",
+    "title": "عذرًا! الصفحة غير موجودة."
+  },
+  "overtime": {
+    "baseHourlyRate": "الأجر الأساسي بالساعة",
+    "baseHourlyRateHelp": "أجرك المعتاد، ويُطبَّق المُعامِل فوقه.",
+    "belowMinimumTitle": "دون الحد الأدنى — لا يُدفع عنه شيء",
+    "chart": {
+      "dayOfMonth": "يوم الشهر",
+      "hours": "ساعات",
+      "paidOvertime": "العمل الإضافي المدفوع (ساعة)",
+      "title": "العمل الإضافي حسب اليوم",
+      "unpaid": "غير المدفوع (ساعة)"
+    },
+    "companyIntro": "لا تُستخدم في أي حساب. تُحفظ لتتمكن الإحصاءات لاحقًا من مقارنة العمل الإضافي بأجرك الأساسي.",
+    "companyName": "الشركة",
+    "contractEnd": "نهاية العقد",
+    "contractSalary": "راتب العقد",
+    "contractStart": "بداية العقد",
+    "contractedDays": "أيام العمل التعاقدية",
+    "contractedDaysAria": "أيام العمل التعاقدية",
+    "contractedDaysHelp": "أي يوم خارج هذه الأيام يُعد يوم راحة، وتُحتسب كل ساعة عمل فيه بمعامل 휴일근로 أدناه.",
+    "countEarlyArrival": "احتساب الحضور المبكر عملًا إضافيًا",
+    "countEarlyArrivalHelp": "فعِّله في يوم عمل عادي من 8 ساعات يُحتسب فيه كل ما هو خارجها. عطِّله إذا كان العمل الإضافي المسائي وحده هو المدفوع.",
+    "deleteConfirm": "هل تريد حذف إدخال {{date}}؟",
+    "deleteEntry": "حذف الإدخال",
+    "editDay": "تعديل اليوم",
+    "editEntry": "تعديل الإدخال",
+    "empty": "لم يُسجَّل شيء لهذا الشهر بعد.",
+    "endTime": "النهاية (퇴근 시간)",
+    "endTimeHelp": "أبكر من وقت البداية = انتهت الوردية بعد منتصف الليل.",
+    "errors": {
+      "entryFieldsRequired": "التاريخ ووقت البداية ووقت النهاية كلها مطلوبة.",
+      "hourlyRateRequired": "أدخل أجرك الأساسي بالساعة.",
+      "workDaysRequired": "اختر يوم عمل واحدًا على الأقل."
+    },
+    "estimateHourly": "استخدم هذا لتقدير أجري بالساعة",
+    "estimateHourlyHelp": "통상시급 (الأجر العادي بالساعة): الراتب الشهري ÷ {{hours}} ساعة ({{workHours}} ساعة × 5 أيام + 주휴، × 4.345 أسبوع). تقدير تقريبي — قارنه بقسيمة راتبك.",
+    "getStarted": "لنبدأ",
+    "holidayLookupUnavailable": "تعذَّر التحقق من العطلات الرسمية — لا تزال عطلات نهاية الأسبوع تُكتشف تلقائيًا، لكن ضع العلامة بنفسك في حالة 빨간날.",
+    "logADay": "تسجيل يوم عمل",
+    "logDay": "تسجيل يوم",
+    "lostToRounding": "ضاع في التقريب",
+    "lunchMinutes": "الغداء (دقيقة)",
+    "minimumHelp": "إذا بقيت أقل من ذلك، فلا يُدفع عن اليوم شيء إطلاقًا.",
+    "minimumOnRestDays": "تطبيق الحد الأدنى على أيام الراحة أيضًا",
+    "minimumOnRestDaysHelp": "يكون معطَّلًا عادةً — فالحضور أصلًا في يوم راحة هو الالتزام الأكبر.",
+    "minimumToQualify": "الحد الأدنى للاستحقاق",
+    "minimums": {
+      "h1": "ساعة واحدة",
+      "h1m30": "ساعة و30 دقيقة",
+      "h2": "ساعتان",
+      "h3": "3 ساعات",
+      "h4": "4 ساعات",
+      "m30": "30 دقيقة",
+      "none": "بلا حد أدنى — كل دقيقة تُحتسب"
+    },
+    "multiplier15Flat": "1.5× — موحّد بلا تقسيم",
+    "multiplier15Statutory": "1.5× — قانوني",
+    "multiplier20": "2.0×",
+    "multiplier20Statutory": "2.0× — قانوني",
+    "nextDayBadge": "+1 ي",
+    "nextMonth": "الشهر التالي",
+    "note": "ملاحظة",
+    "optional": "— اختياري",
+    "otRate": "معامل العمل الإضافي",
+    "otRate15": "1.5× — عمل إضافي عادي",
+    "otRate20": "2.0× — عمل ليلي (22:00–06:00)",
+    "otRateHelp": "يحدد القانون الكوري العمل الإضافي بـ 1.5×، ويضيف العمل الليلي 0.5× أخرى.",
+    "pastMidnight": "امتدت الوردية إلى ما بعد منتصف الليل",
+    "position": "المنصب",
+    "prevMonth": "الشهر السابق",
+    "preview": {
+      "countsAs": "يُحتسب كـ",
+      "earn": "ستكسب",
+      "nothing": "لا شيء — دون الحد الأدنى",
+      "restDayHelp": "يوم راحة — كل ساعة تُحتسب. أول 8 ساعات بمعامل {{first8}}×، وما بعدها {{beyond}}×. تُخصم فترات الراحة وفق 근로기준법 §54.",
+      "startsAt": "يبدأ العمل الإضافي عند {{time}}.",
+      "worked": "العمل الإضافي المنجز"
+    },
+    "rates": {
+      "base": "{{rate}}/ساعة أساسي",
+      "mixed": "أجور متعددة هذا الشهر",
+      "mixedTitle": "سُجِّلت إدخالات هذا الشهر بأجور مختلفة",
+      "overtime": "{{rate}}/ساعة عمل إضافي",
+      "restDays": "أيام الراحة بمعامل {{first8}}× / {{beyond}}×."
+    },
+    "resnapshot": "إعادة تطبيق الإعدادات الحالية على هذا اليوم",
+    "resnapshotHelp": "معطَّل افتراضيًا — يحتفظ اليوم بالأجر والقواعد التي سُجِّل بها.",
+    "restDay": "يوم راحة",
+    "restDayBeyond": "ما بعد 8 ساعات",
+    "restDayBeyondHelp": "يضيف القانون الكوري 50% أخرى لما بعد 8 ساعات في يوم الراحة.",
+    "restDayCheckbox": "يوم راحة (휴일/주말)",
+    "restDayFirst8": "أول 8 ساعات",
+    "restDayNotice": "{{reason}} — كل ساعة عمل تُحتسب بأجر 휴일근로 (العمل في يوم الراحة).",
+    "restDayNoticeGeneric": "كل ساعة عمل تُحتسب بأجر 휴일근로 (العمل في يوم الراحة).",
+    "restDaysIntro": "عطلات نهاية الأسبوع و공휴일. لا توجد ساعات مقررة يجب تجاوزها، لذا تُعد كل ساعة عمل عملًا إضافيًا من الدقيقة الأولى.",
+    "retry": "إعادة المحاولة",
+    "rounding": "التقريب",
+    "roundingDown30": "تقريب لأسفل إلى 30 دقيقة",
+    "roundingDown60": "تقريب لأسفل إلى ساعات كاملة",
+    "roundingExact": "بالدقائق تمامًا",
+    "rule": {
+      "earlyArrival": "الحضور المبكر يُحتسب",
+      "lunch": "غداء {{duration}}",
+      "minimum": "حد أدنى {{duration}}",
+      "multiplier": "{{value}}×",
+      "overtimeAfter": "عمل إضافي بعد {{time}}",
+      "schedule": "{{start}} + {{hours}} س"
+    },
+    "salaryAnnual": "سنوي (연봉)",
+    "salaryMonthly": "شهري (월급)",
+    "salaryPeriod": "فترة الراتب",
+    "saveSettings": "حفظ الإعدادات",
+    "scheduledStart": "بداية الوردية المقررة (출근 시간)",
+    "sections": {
+      "company": "الشركة",
+      "counting": "طريقة احتساب العمل الإضافي",
+      "pay": "الأجر",
+      "restDays": "أيام الراحة (휴일근로)",
+      "workingDay": "يوم عملك"
+    },
+    "settings": "الإعدادات",
+    "settingsIntro": "تنطبق التغييرات على الأيام التي تسجّلها من الآن فصاعدًا. أما الأيام المسجَّلة من قبل فتحتفظ بأجرها وقواعدها الأصلية.",
+    "setupIntro": "أدخل أجرك بالساعة وطريقة احتساب صاحب العمل للعمل الإضافي. يمكنك تغيير ذلك كله لاحقًا، وتحتفظ الأيام المسجَّلة سابقًا بالأجر الذي سُجِّلت به.",
+    "setupTitle": "إعداد العمل الإضافي",
+    "shift": "الوردية",
+    "shiftDay": "وردية نهارية",
+    "shiftNight": "وردية ليلية",
+    "startTime": "البداية (출근 시간)",
+    "stats": {
+      "daysLogged": "الأيام المسجَّلة",
+      "daysPaid": "({{count}} مدفوعة)",
+      "paid": "العمل الإضافي المدفوع",
+      "pay": "أجر العمل الإضافي",
+      "unpaid": "ساعات عُمِلت ولم تُدفع",
+      "unpaidHelp": "دون الحد الأدنى أو ضاعت في التقريب."
+    },
+    "table": {
+      "clockIn": "الحضور (출근)",
+      "clockOut": "الانصراف (퇴근)",
+      "dateFormat": "d MMM (EEE)",
+      "earned": "المكتسب",
+      "overtime": "العمل الإضافي",
+      "paid": "المدفوع"
+    },
+    "title": "العمل الإضافي",
+    "underMinimum": "دون الحد الأدنى",
+    "units": {
+      "hours": "{{h}} س",
+      "hoursMinutes": "{{h}} س {{m}} د",
+      "minutes": "{{m}} د"
+    },
+    "weekdays": {
+      "fri": "ج",
+      "mon": "ن",
+      "sat": "س",
+      "sun": "ح",
+      "thu": "خ",
+      "tue": "ث",
+      "wed": "ر"
+    },
+    "workHours": "ساعات العمل"
+  },
+  "profile": {
+    "activated": "مُفعَّل:",
+    "addNew": "إضافة جديد",
+    "changePicture": "تغيير الصورة",
+    "chart": {
+      "monthlyTotal": "إجمالي المصروفات الشهرية لعام {{year}} بعملة {{currency}}",
+      "tooltip": "{{label}}: {{amount}} ({{percent}})"
+    },
+    "close": "إغلاق",
+    "defaultPictureAlt": "صورة الملف الشخصي الافتراضية",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "editUser": "تحديث معلومات المستخدم",
+    "email": "البريد الإلكتروني:",
+    "errors": {
+      "fileTooLarge": "حجم الملف كبير جدًا. الحد الأقصى المسموح به هو {{size}} ميجابايت."
+    },
+    "expenses": {
+      "forMonth": "مصروفات {{month}}",
+      "summaryFor": "ملخص {{month}}",
+      "title": "إدارة المصروفات الشهرية"
+    },
+    "firstname": "الاسم الأول:",
+    "form": {
+      "addExpense": "إضافة مصروف",
+      "amount": "المبلغ:",
+      "amountPlaceholder": "أدخل المبلغ",
+      "category": "الفئة:",
+      "categoryPlaceholder": "مثال: طعام، مواصلات",
+      "date": "التاريخ:",
+      "description": "الوصف:",
+      "descriptionPlaceholder": "أضف ملاحظة…"
+    },
+    "lastname": "اسم العائلة:",
+    "name": "الاسم:",
+    "no": "لا",
+    "pictureAlt": "صورة الملف الشخصي",
+    "selectCurrency": "اختر العملة",
+    "siteAdmin": "مدير الموقع",
+    "table": {
+      "action": "الإجراء",
+      "amount": "المبلغ",
+      "category": "الفئة",
+      "date": "التاريخ",
+      "description": "الوصف"
+    },
+    "title": "الملف الشخصي للمستخدم",
+    "total": "الإجمالي:",
+    "update": "تحديث",
+    "username": "اسم المستخدم:",
+    "yes": "نعم"
+  },
+  "shell": {
+    "dailyVisits": "عدد الزيارات اليومية: {{count}}"
+  },
+  "tests": {
+    "bestResult": "أفضل نتيجة لك",
+    "correctCount": "{{count}} صحيحة",
+    "incorrectCount": "{{count}} خاطئة",
+    "langPair": {
+      "arEn": "عربي–إنجليزي",
+      "arUz": "عربي–أوزبكي",
+      "enAr": "إنجليزي–عربي",
+      "enUz": "إنجليزي–أوزبكي",
+      "uzAr": "أوزبكي–عربي",
+      "uzEn": "أوزبكي–إنجليزي"
+    },
+    "next": "التالي",
+    "nextTitle": "تحميل الاختبار التالي",
+    "noConnection": "لا يوجد اتصال بالخادم. يُرجى الانتظار قليلاً والمحاولة مرة أخرى بعد قليل. شكرًا لك",
+    "numberOfTests": "عدد الاختبارات",
+    "questionAfter": "اختر واحدة من الإجابات أدناه",
+    "questionBefore": "ما معنى هذه الكلمة؟",
+    "result": "النتيجة",
+    "resultAlert": "لقد أجبت إجابة صحيحة على {{correct}} من {{total}} اختبارًا. حاول مرة أخرى!",
+    "stop": "إنهاء الاختبار",
+    "stopTitle": "هل تريد إنهاء الاختبار هنا؟",
+    "testNumber": "رقم الاختبار"
+  },
+  "word": {
+    "audioUnsupported": "متصفحك لا يدعم تشغيل الصوت.",
+    "notFound": "لم يتم العثور على الكلمة!",
+    "searchedWord": "الكلمة المطلوبة"
+  },
+  "words": {
+    "addWord": "إضافة كلمة جديدة",
+    "back": "رجوع",
+    "table": {
+      "arabic": "العربية",
+      "english": "الإنجليزية",
+      "nr": "الرقم",
+      "pronunciation": "النطق",
+      "remark": "ملاحظة",
+      "update": "التحديث",
+      "uzbek": "الأوزبكية"
+    },
+    "title": "الكلمات الجديدة",
+    "update": "تحديث"
+  }
+}
