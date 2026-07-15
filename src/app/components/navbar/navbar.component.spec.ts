@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NavbarComponent } from './navbar.component';
+import { translateTestingImports, translateTestingProviders } from '../../testing/translate-testing';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -8,7 +9,9 @@ describe('NavbarComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [NavbarComponent]
+      declarations: [NavbarComponent],
+      imports: [...translateTestingImports],
+      providers: [...translateTestingProviders]
     });
     fixture = TestBed.createComponent(NavbarComponent);
     component = fixture.componentInstance;

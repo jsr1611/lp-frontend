@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SignupComponent } from './signup.component';
+import { translateTestingImports, translateTestingProviders } from '../../testing/translate-testing';
 
 describe('SgnupComponent', () => {
   let component: SignupComponent;
@@ -8,7 +9,9 @@ describe('SgnupComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SignupComponent]
+      declarations: [SignupComponent],
+      imports: [...translateTestingImports],
+      providers: [...translateTestingProviders]
     });
     fixture = TestBed.createComponent(SignupComponent);
     component = fixture.componentInstance;
