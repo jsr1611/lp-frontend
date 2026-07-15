@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/AuthService';
 
 @Component({
@@ -13,15 +14,17 @@ export class ResetPasswordComponent {
   successMessage: string = '';
   errorMessage: string = '';
 
+  private readonly translate = inject(TranslateService);
+
   constructor(private authService: AuthService) {}
 
   resetPassword(): void {
     this.authService.resetPassword(this.email).subscribe({
       next: () => {
-        this.successMessage = 'Password reset instructions sent to your email';
+        this.successMessage = this.translate.instant('auth.resetPasswordSent');
       },
       error: (err) => {
-        this.errorMessage = 'Failed to reset password';
+        this.errorMessage = this.translate.instant('auth.errors.resetPasswordFailed');
       },
     });
   }

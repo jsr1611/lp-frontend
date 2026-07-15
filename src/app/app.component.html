@@ -3,6 +3,6 @@
   <router-outlet></router-outlet>
 </div>
 <footer class="footer">
-  <p class="visit-count">Kunlik tashriflar soni: {{ dailyVisitCount}}</p>
+  <p class="visit-count">{{ 'shell.dailyVisits' | translate:{ count: dailyVisitCount } }}</p>
   <app-footer></app-footer>
 </footer>

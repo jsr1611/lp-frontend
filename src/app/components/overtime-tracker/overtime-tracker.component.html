@@ -1,14 +1,14 @@
 <div class="overtime-tracker container py-4">
 
   <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-    <h2 class="mb-0"><i class="bi bi-clock-history me-2"></i>Overtime</h2>
+    <h2 class="mb-0"><i class="bi bi-clock-history me-2"></i>{{ 'overtime.title' | translate }}</h2>
     @if (settings && !showSettings) {
       <div class="d-flex gap-2">
         <button class="btn btn-outline-secondary" (click)="openSettings()">
-          <i class="bi bi-gear me-1"></i>Settings
+          <i class="bi bi-gear me-1"></i>{{ 'overtime.settings' | translate }}
         </button>
         <button class="btn btn-primary" (click)="openEntryModal()">
-          <i class="bi bi-plus-lg me-1"></i>Log day
+          <i class="bi bi-plus-lg me-1"></i>{{ 'overtime.logDay' | translate }}
         </button>
       </div>
     }
@@ -21,7 +21,7 @@
       <!-- A failed settings load leaves nothing else on screen, so offer the way back. -->
       @if (!settings) {
         <button class="btn btn-sm btn-outline-danger text-nowrap" (click)="loadSettings()">
-          <i class="bi bi-arrow-clockwise me-1"></i>Retry
+          <i class="bi bi-arrow-clockwise me-1"></i>{{ 'overtime.retry' | translate }}
         </button>
       }
     </div>
@@ -32,66 +32,66 @@
     <div class="card shadow-sm mb-4">
       <div class="card-body">
         @if (!settings) {
-          <h5 class="card-title">Set up your overtime</h5>
-          <p class="text-muted small">
-            Tell us your hourly rate and how your employer counts overtime. You can change
-            all of this later — past entries keep the rate they were logged under.
-          </p>
+          <h5 class="card-title">{{ 'overtime.setupTitle' | translate }}</h5>
+          <p class="text-muted small">{{ 'overtime.setupIntro' | translate }}</p>
         } @else {
-          <h5 class="card-title">Settings</h5>
-          <p class="text-muted small">
-            Changes apply to days you log from now on. Already-logged days keep their
-            original rate and rules.
-          </p>
+          <h5 class="card-title">{{ 'overtime.settings' | translate }}</h5>
+          <p class="text-muted small">{{ 'overtime.settingsIntro' | translate }}</p>
         }
 
         <form (ngSubmit)="saveSettings()" #settingsFormRef="ngForm">
 
-          <h6 class="text-muted text-uppercase small mt-3">Pay</h6>
+          <h6 class="text-muted text-uppercase small mt-3">
+            {{ 'overtime.sections.pay' | translate }}
+          </h6>
           <div class="row g-3">
             <div class="col-12 col-md-4">
-              <label class="form-label" for="hourlyRate">Base hourly rate</label>
+              <label class="form-label" for="hourlyRate">
+                {{ 'overtime.baseHourlyRate' | translate }}
+              </label>
               <input id="hourlyRate" name="hourlyRate" type="number" min="0" step="any"
                      class="form-control" required
                      [(ngModel)]="settingsForm.hourlyRate" />
-              <div class="form-text">Your normal rate — the multiplier is applied on top.</div>
+              <div class="form-text">{{ 'overtime.baseHourlyRateHelp' | translate }}</div>
             </div>
             <div class="col-12 col-md-4">
-              <label class="form-label" for="currency">Currency</label>
+              <label class="form-label" for="currency">{{ 'common.currency' | translate }}</label>
               <select id="currency" name="currency" class="form-select"
                       [ngModel]="settingsForm.currency.code"
                       (ngModelChange)="onCurrencyChange($event)">
                 @for (c of popularCurrencies; track c.code) {
-                  <option [value]="c.code">{{ c.code }} — {{ c.name }}</option>
+                  <option [value]="c.code">{{ c.code }} — {{ currencyNameKey(c.code) | translate }}</option>
                 }
               </select>
             </div>
             <div class="col-12 col-md-4">
-              <label class="form-label" for="otMultiplier">Overtime rate</label>
+              <label class="form-label" for="otMultiplier">{{ 'overtime.otRate' | translate }}</label>
               <select id="otMultiplier" name="otMultiplier" class="form-select"
                       [(ngModel)]="settingsForm.otMultiplier">
-                <option [ngValue]="1.5">1.5× — standard overtime</option>
-                <option [ngValue]="2">2.0× — night work (22:00–06:00)</option>
+                <option [ngValue]="1.5">{{ 'overtime.otRate15' | translate }}</option>
+                <option [ngValue]="2">{{ 'overtime.otRate20' | translate }}</option>
               </select>
-              <div class="form-text">
-                Korean law sets overtime at 1.5×; night work adds another 0.5×.
-              </div>
+              <div class="form-text">{{ 'overtime.otRateHelp' | translate }}</div>
             </div>
           </div>
 
-          <h6 class="text-muted text-uppercase small mt-4">Your working day</h6>
+          <h6 class="text-muted text-uppercase small mt-4">
+            {{ 'overtime.sections.workingDay' | translate }}
+          </h6>
           <div class="row g-3">
             <div class="col-12 col-md-4">
-              <label class="form-label" for="shiftType">Shift</label>
+              <label class="form-label" for="shiftType">{{ 'overtime.shift' | translate }}</label>
               <select id="shiftType" name="shiftType" class="form-select"
                       [(ngModel)]="settingsForm.shiftType"
                       (ngModelChange)="onShiftTypeChange()">
-                <option value="day">Day shift</option>
-                <option value="night">Night shift</option>
+                <option value="day">{{ 'overtime.shiftDay' | translate }}</option>
+                <option value="night">{{ 'overtime.shiftNight' | translate }}</option>
               </select>
             </div>
             <div class="col-12 col-md-4">
-              <label class="form-label" for="shiftStart">Scheduled start (출근 시간)</label>
+              <label class="form-label" for="shiftStart">
+                {{ 'overtime.scheduledStart' | translate }}
+              </label>
               <select id="shiftStart" name="shiftStart" class="form-select"
                       [(ngModel)]="settingsForm.shiftStart">
                 @for (t of shiftStartOptions; track t) {
@@ -100,54 +100,56 @@
               </select>
             </div>
             <div class="col-6 col-md-2">
-              <label class="form-label" for="workHours">Work hours</label>
+              <label class="form-label" for="workHours">{{ 'overtime.workHours' | translate }}</label>
               <input id="workHours" name="workHours" type="number" min="0" max="24" step="0.5"
                      class="form-control" [(ngModel)]="settingsForm.workHours" />
             </div>
             <div class="col-6 col-md-2">
-              <label class="form-label" for="lunchBreakMinutes">Lunch (min)</label>
+              <label class="form-label" for="lunchBreakMinutes">
+                {{ 'overtime.lunchMinutes' | translate }}
+              </label>
               <input id="lunchBreakMinutes" name="lunchBreakMinutes" type="number" min="0" step="5"
                      class="form-control" [(ngModel)]="settingsForm.lunchBreakMinutes" />
             </div>
             <div class="col-12">
-              <label class="form-label d-block">Contracted days</label>
-              <div class="btn-group flex-wrap" role="group" aria-label="Contracted working days">
+              <label class="form-label d-block">{{ 'overtime.contractedDays' | translate }}</label>
+              <div class="btn-group flex-wrap" role="group"
+                   [attr.aria-label]="'overtime.contractedDaysAria' | translate">
                 @for (d of weekDayOptions; track d.value) {
                   <input type="checkbox" class="btn-check" [id]="'workDay' + d.value"
                          [checked]="isWorkDay(d.value)" (change)="toggleWorkDay(d.value)" />
                   <label class="btn btn-outline-primary btn-sm" [for]="'workDay' + d.value">
-                    {{ d.label }}
+                    {{ d.labelKey | translate }}
                   </label>
                 }
               </div>
-              <div class="form-text">
-                Any day outside these is a rest day — every hour worked counts, at the
-                휴일근로 rate below.
-              </div>
+              <div class="form-text">{{ 'overtime.contractedDaysHelp' | translate }}</div>
             </div>
           </div>
 
-          <h6 class="text-muted text-uppercase small mt-4">How overtime is counted</h6>
+          <h6 class="text-muted text-uppercase small mt-4">
+            {{ 'overtime.sections.counting' | translate }}
+          </h6>
           <div class="row g-3">
             <div class="col-12 col-md-6">
-              <label class="form-label" for="minimumOtMinutes">Minimum to qualify</label>
+              <label class="form-label" for="minimumOtMinutes">
+                {{ 'overtime.minimumToQualify' | translate }}
+              </label>
               <select id="minimumOtMinutes" name="minimumOtMinutes" class="form-select"
                       [(ngModel)]="settingsForm.minimumOtMinutes">
                 @for (opt of minimumOptions; track opt.minutes) {
-                  <option [ngValue]="opt.minutes">{{ opt.label }}</option>
+                  <option [ngValue]="opt.minutes">{{ opt.labelKey | translate }}</option>
                 }
               </select>
-              <div class="form-text">
-                Stay less than this and the day pays nothing at all.
-              </div>
+              <div class="form-text">{{ 'overtime.minimumHelp' | translate }}</div>
             </div>
             <div class="col-12 col-md-6">
-              <label class="form-label" for="rounding">Rounding</label>
+              <label class="form-label" for="rounding">{{ 'overtime.rounding' | translate }}</label>
               <select id="rounding" name="rounding" class="form-select"
                       [(ngModel)]="settingsForm.rounding">
-                <option value="down60">Down to whole hours</option>
-                <option value="down30">Down to 30 minutes</option>
-                <option value="exact">Exact minutes</option>
+                <option value="down60">{{ 'overtime.roundingDown60' | translate }}</option>
+                <option value="down30">{{ 'overtime.roundingDown30' | translate }}</option>
+                <option value="exact">{{ 'overtime.roundingExact' | translate }}</option>
               </select>
             </div>
             <div class="col-12">
@@ -155,49 +157,9 @@
                 <input class="form-check-input" type="checkbox" id="countEarlyArrival"
                        name="countEarlyArrival" [(ngModel)]="settingsForm.countEarlyArrival" />
                 <label class="form-check-label" for="countEarlyArrival">
-                  Count early arrival as overtime
+                  {{ 'overtime.countEarlyArrival' | translate }}
                   <span class="text-muted small d-block">
-                    On for a plain 8-hour day where anything outside it counts. Off where only
-                    evening overtime is paid.
-                  </span>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <h6 class="text-muted text-uppercase small mt-4">Rest days (휴일근로)</h6>
-          <p class="text-muted small mb-2">
-            Weekends and 공휴일. There is no scheduled day to exceed, so every hour worked
-            is overtime from the first minute.
-          </p>
-          <div class="row g-3">
-            <div class="col-12 col-md-4">
-              <label class="form-label" for="restDayFirst8Multiplier">First 8 hours</label>
-              <select id="restDayFirst8Multiplier" name="restDayFirst8Multiplier"
-                      class="form-select" [(ngModel)]="settingsForm.restDayFirst8Multiplier">
-                <option [ngValue]="1.5">1.5× — statutory</option>
-                <option [ngValue]="2">2.0×</option>
-              </select>
-            </div>
-            <div class="col-12 col-md-4">
-              <label class="form-label" for="restDayBeyondMultiplier">Beyond 8 hours</label>
-              <select id="restDayBeyondMultiplier" name="restDayBeyondMultiplier"
-                      class="form-select" [(ngModel)]="settingsForm.restDayBeyondMultiplier">
-                <option [ngValue]="1.5">1.5× — flat, no split</option>
-                <option [ngValue]="2">2.0× — statutory</option>
-              </select>
-              <div class="form-text">
-                Korean law adds a further 50% past 8 hours on a rest day.
-              </div>
-            </div>
-            <div class="col-12 col-md-4 d-flex align-items-center">
-              <div class="form-check mt-3">
-                <input class="form-check-input" type="checkbox" id="minimumOnRestDays"
-                       name="minimumOnRestDays" [(ngModel)]="settingsForm.minimumOnRestDays" />
-                <label class="form-check-label" for="minimumOnRestDays">
-                  Apply the minimum on rest days too
-                  <span class="text-muted small d-block">
-                    Usually off — coming in at all on a day off is the commitment.
+                    {{ 'overtime.countEarlyArrivalHelp' | translate }}
                   </span>
                 </label>
               </div>
@@ -205,57 +167,104 @@
           </div>
 
           <h6 class="text-muted text-uppercase small mt-4">
-            Company <span class="text-lowercase fw-normal">— optional</span>
+            {{ 'overtime.sections.restDays' | translate }}
           </h6>
-          <p class="text-muted small mb-2">
-            Not used in any calculation. Stored so later stats can compare overtime against
-            your base pay.
-          </p>
+          <p class="text-muted small mb-2">{{ 'overtime.restDaysIntro' | translate }}</p>
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label class="form-label" for="restDayFirst8Multiplier">
+                {{ 'overtime.restDayFirst8' | translate }}
+              </label>
+              <select id="restDayFirst8Multiplier" name="restDayFirst8Multiplier"
+                      class="form-select" [(ngModel)]="settingsForm.restDayFirst8Multiplier">
+                <option [ngValue]="1.5">{{ 'overtime.multiplier15Statutory' | translate }}</option>
+                <option [ngValue]="2">{{ 'overtime.multiplier20' | translate }}</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label" for="restDayBeyondMultiplier">
+                {{ 'overtime.restDayBeyond' | translate }}
+              </label>
+              <select id="restDayBeyondMultiplier" name="restDayBeyondMultiplier"
+                      class="form-select" [(ngModel)]="settingsForm.restDayBeyondMultiplier">
+                <option [ngValue]="1.5">{{ 'overtime.multiplier15Flat' | translate }}</option>
+                <option [ngValue]="2">{{ 'overtime.multiplier20Statutory' | translate }}</option>
+              </select>
+              <div class="form-text">{{ 'overtime.restDayBeyondHelp' | translate }}</div>
+            </div>
+            <div class="col-12 col-md-4 d-flex align-items-center">
+              <div class="form-check mt-3">
+                <input class="form-check-input" type="checkbox" id="minimumOnRestDays"
+                       name="minimumOnRestDays" [(ngModel)]="settingsForm.minimumOnRestDays" />
+                <label class="form-check-label" for="minimumOnRestDays">
+                  {{ 'overtime.minimumOnRestDays' | translate }}
+                  <span class="text-muted small d-block">
+                    {{ 'overtime.minimumOnRestDaysHelp' | translate }}
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <h6 class="text-muted text-uppercase small mt-4">
+            {{ 'overtime.sections.company' | translate }}
+            <span class="text-lowercase fw-normal">{{ 'overtime.optional' | translate }}</span>
+          </h6>
+          <p class="text-muted small mb-2">{{ 'overtime.companyIntro' | translate }}</p>
           @if (settingsForm.company) {
             <div class="row g-3">
               <div class="col-12 col-md-6">
-                <label class="form-label" for="companyName">Company</label>
+                <label class="form-label" for="companyName">
+                  {{ 'overtime.companyName' | translate }}
+                </label>
                 <input id="companyName" name="companyName" type="text" class="form-control"
                        [(ngModel)]="settingsForm.company.name" />
               </div>
               <div class="col-12 col-md-6">
-                <label class="form-label" for="position">Position</label>
+                <label class="form-label" for="position">{{ 'overtime.position' | translate }}</label>
                 <input id="position" name="position" type="text" class="form-control"
                        [(ngModel)]="settingsForm.company.position" />
               </div>
               <div class="col-12 col-md-3">
-                <label class="form-label" for="contractStart">Contract start</label>
+                <label class="form-label" for="contractStart">
+                  {{ 'overtime.contractStart' | translate }}
+                </label>
                 <input id="contractStart" name="contractStart" type="date" class="form-control"
                        [(ngModel)]="settingsForm.company.contractStart" />
               </div>
               <div class="col-12 col-md-3">
-                <label class="form-label" for="contractEnd">Contract end</label>
+                <label class="form-label" for="contractEnd">
+                  {{ 'overtime.contractEnd' | translate }}
+                </label>
                 <input id="contractEnd" name="contractEnd" type="date" class="form-control"
                        [(ngModel)]="settingsForm.company.contractEnd" />
               </div>
               <div class="col-12 col-md-3">
-                <label class="form-label" for="contractSalary">Contract salary</label>
+                <label class="form-label" for="contractSalary">
+                  {{ 'overtime.contractSalary' | translate }}
+                </label>
                 <input id="contractSalary" name="contractSalary" type="number" min="0" step="any"
                        class="form-control" [(ngModel)]="settingsForm.company.contractSalary" />
               </div>
               <div class="col-12 col-md-3">
-                <label class="form-label" for="salaryPeriod">Salary period</label>
+                <label class="form-label" for="salaryPeriod">
+                  {{ 'overtime.salaryPeriod' | translate }}
+                </label>
                 <select id="salaryPeriod" name="salaryPeriod" class="form-select"
                         [(ngModel)]="settingsForm.company.salaryPeriod">
-                  <option value="monthly">Monthly (월급)</option>
-                  <option value="annual">Annual (연봉)</option>
+                  <option value="monthly">{{ 'overtime.salaryMonthly' | translate }}</option>
+                  <option value="annual">{{ 'overtime.salaryAnnual' | translate }}</option>
                 </select>
               </div>
               @if (canEstimateHourly) {
                 <div class="col-12">
                   <button type="button" class="btn btn-sm btn-outline-secondary"
                           (click)="estimateHourlyFromSalary()">
-                    <i class="bi bi-calculator me-1"></i>Use this to estimate my hourly rate
+                    <i class="bi bi-calculator me-1"></i>{{ 'overtime.estimateHourly' | translate }}
                   </button>
                   <span class="form-text ms-2">
-                    Korean 통상시급: monthly pay ÷ {{ monthlyPaidHours }} hours
-                    ({{ settingsForm.workHours }}h × 5 days + 주휴, × 4.345 weeks).
-                    An estimate — check it against your payslip.
+                    {{ 'overtime.estimateHourlyHelp' | translate: {
+                         hours: monthlyPaidHours, workHours: settingsForm.workHours } }}
                   </span>
                 </div>
               }
@@ -268,11 +277,13 @@
 
           <div class="d-flex gap-2 mt-4">
             <button type="submit" class="btn btn-primary" [disabled]="isSavingSettings">
-              {{ isSavingSettings ? "Saving…" : settings ? "Save settings" : "Get started" }}
+              {{ (isSavingSettings ? 'common.saving'
+                                   : settings ? 'overtime.saveSettings'
+                                              : 'overtime.getStarted') | translate }}
             </button>
             @if (settings) {
               <button type="button" class="btn btn-outline-secondary" (click)="closeSettings()">
-                Cancel
+                {{ 'common.cancel' | translate }}
               </button>
             }
           </div>
@@ -289,13 +300,13 @@
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
           <div class="d-flex align-items-center gap-2">
             <button class="btn btn-outline-secondary btn-sm" (click)="shiftMonth(-1)"
-                    aria-label="Previous month">
+                    [attr.aria-label]="'overtime.prevMonth' | translate">
               <i class="bi bi-chevron-left"></i>
             </button>
             <input type="month" class="form-control ot-month-input" name="month"
                    [(ngModel)]="month" (ngModelChange)="onMonthChange()" />
             <button class="btn btn-outline-secondary btn-sm" (click)="shiftMonth(1)"
-                    aria-label="Next month">
+                    [attr.aria-label]="'overtime.nextMonth' | translate">
               <i class="bi bi-chevron-right"></i>
             </button>
           </div>
@@ -309,26 +320,31 @@
         <div class="col-12 col-md-6 col-xl-3">
           <div class="card shadow-sm h-100">
             <div class="card-body">
-              <div class="text-muted small">Overtime pay</div>
+              <div class="text-muted small">{{ 'overtime.stats.pay' | translate }}</div>
               <div class="fs-4 fw-semibold text-success">
                 {{ summary.totalEarnings | currency: currencyCode : 'symbol' : '1.0-2' }}
               </div>
               @if (summary.mixedRates) {
-                <div class="form-text" title="Entries this month were logged at different rates">
-                  <i class="bi bi-info-circle me-1"></i>Mixed rates this month
+                <div class="form-text" [title]="'overtime.rates.mixedTitle' | translate">
+                  <i class="bi bi-info-circle me-1"></i>{{ 'overtime.rates.mixed' | translate }}
                 </div>
               } @else if (summary.hourlyRate) {
+                <!-- The rate and its "per hour" unit are one translatable phrase: the unit
+                     trails the figure in en but leads it in ko, so they cannot be spliced. -->
                 <div class="form-text">
-                  {{ summary.hourlyRate | currency: currencyCode : 'symbol' : '1.0-2' }}/h base
+                  {{ 'overtime.rates.base' | translate: {
+                       rate: (summary.hourlyRate | currency: currencyCode : 'symbol' : '1.0-2') } }}
                   @if (effectiveOtRate) {
-                    · <strong>{{ effectiveOtRate | currency: currencyCode : 'symbol' : '1.0-2' }}/h</strong>
-                    overtime
+                    ·
+                    <strong>{{ 'overtime.rates.overtime' | translate: {
+                                 rate: (effectiveOtRate | currency: currencyCode : 'symbol' : '1.0-2') } }}</strong>
                   }
                 </div>
                 @if (summary.hasRestDays) {
                   <div class="form-text">
-                    Rest days at
-                    {{ settings?.restDayFirst8Multiplier ?? 1.5 }}× / {{ settings?.restDayBeyondMultiplier ?? 2 }}×.
+                    {{ 'overtime.rates.restDays' | translate: {
+                         first8: settings?.restDayFirst8Multiplier ?? 1.5,
+                         beyond: settings?.restDayBeyondMultiplier ?? 2 } }}
                   </div>
                 }
               }
@@ -338,7 +354,7 @@
         <div class="col-12 col-md-6 col-xl-3">
           <div class="card shadow-sm h-100">
             <div class="card-body">
-              <div class="text-muted small">Paid overtime</div>
+              <div class="text-muted small">{{ 'overtime.stats.paid' | translate }}</div>
               <div class="fs-4 fw-semibold">{{ formatMinutes(summary.totalPaidMinutes) }}</div>
             </div>
           </div>
@@ -346,21 +362,23 @@
         <div class="col-12 col-md-6 col-xl-3">
           <div class="card shadow-sm h-100">
             <div class="card-body">
-              <div class="text-muted small">Worked but unpaid</div>
+              <div class="text-muted small">{{ 'overtime.stats.unpaid' | translate }}</div>
               <div class="fs-4 fw-semibold" [class.text-danger]="summary.unpaidMinutes > 0">
                 {{ formatMinutes(summary.unpaidMinutes) }}
               </div>
-              <div class="form-text">Under the minimum, or lost to rounding.</div>
+              <div class="form-text">{{ 'overtime.stats.unpaidHelp' | translate }}</div>
             </div>
           </div>
         </div>
         <div class="col-12 col-md-6 col-xl-3">
           <div class="card shadow-sm h-100">
             <div class="card-body">
-              <div class="text-muted small">Days logged</div>
+              <div class="text-muted small">{{ 'overtime.stats.daysLogged' | translate }}</div>
               <div class="fs-4 fw-semibold">
                 {{ summary.daysLogged }}
-                <span class="fs-6 text-muted">({{ summary.daysQualified }} paid)</span>
+                <span class="fs-6 text-muted">
+                  {{ 'overtime.stats.daysPaid' | translate: { count: summary.daysQualified } }}
+                </span>
               </div>
             </div>
           </div>
@@ -370,7 +388,7 @@
       @if (summary.byDay.length) {
         <div class="card shadow-sm mb-3">
           <div class="card-body">
-            <h6 class="card-title text-muted">Overtime by day</h6>
+            <h6 class="card-title text-muted">{{ 'overtime.chart.title' | translate }}</h6>
             <div class="chart-box">
               <canvas id="overtimeByDayChart"></canvas>
             </div>
@@ -384,10 +402,10 @@
         @if (!entries.length) {
           <div class="text-center text-muted py-4">
             <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
-            Nothing logged for this month yet.
+            {{ 'overtime.empty' | translate }}
             <div class="mt-3">
               <button class="btn btn-primary" (click)="openEntryModal()">
-                <i class="bi bi-plus-lg me-1"></i>Log a day
+                <i class="bi bi-plus-lg me-1"></i>{{ 'overtime.logADay' | translate }}
               </button>
             </div>
           </div>
@@ -396,12 +414,12 @@
             <table class="table table-hover align-middle mb-0">
               <thead>
                 <tr>
-                  <th>Date</th>
-                  <th>출근</th>
-                  <th>퇴근</th>
-                  <th class="text-end">Overtime</th>
-                  <th class="text-end">Paid</th>
-                  <th class="text-end">Earned</th>
+                  <th>{{ 'common.date' | translate }}</th>
+                  <th>{{ 'overtime.table.clockIn' | translate }}</th>
+                  <th>{{ 'overtime.table.clockOut' | translate }}</th>
+                  <th class="text-end">{{ 'overtime.table.overtime' | translate }}</th>
+                  <th class="text-end">{{ 'overtime.table.paid' | translate }}</th>
+                  <th class="text-end">{{ 'overtime.table.earned' | translate }}</th>
                   <th></th>
                 </tr>
               </thead>
@@ -409,11 +427,15 @@
                 @for (entry of entries; track entry._id) {
                   <tr [class.table-light]="!entry.qualified">
                     <td>
-                      {{ entry.date | date: 'MMM d (EEE)' : 'UTC' }}
+                      <!-- 'UTC' is deliberate: the backend stores the day at UTC midnight, so
+                           reading it in the viewer's zone would slide it by one. The pattern
+                           itself is translated — day/month order and the 월/일 markers differ
+                           per language. -->
+                      {{ entry.date | date: ('overtime.table.dateFormat' | translate) : 'UTC' }}
                       @if (entry.isRestDay) {
                         <span class="badge rounded-pill text-bg-info ms-1"
-                              [title]="entry.restDayReason || 'Rest day'">
-                          {{ entry.restDayReason || '휴일' }}
+                              [title]="entry.restDayReason || ('overtime.restDay' | translate)">
+                          {{ entry.restDayReason || ('overtime.restDay' | translate) }}
                         </span>
                       }
                     </td>
@@ -421,8 +443,9 @@
                     <td>
                       {{ entry.endTime }}
                       @if (crossesMidnight(entry)) {
-                        <span class="badge text-bg-secondary ms-1" title="Shift ran past midnight">
-                          +1d
+                        <span class="badge text-bg-secondary ms-1"
+                              [title]="'overtime.pastMidnight' | translate">
+                          {{ 'overtime.nextDayBadge' | translate }}
                         </span>
                       }
                     </td>
@@ -432,14 +455,14 @@
                         {{ formatMinutes(entry.paidOtMinutes) }}
                         @if (lostMinutes(entry) > 0) {
                           <span class="badge rounded-pill text-bg-warning ms-1"
-                                title="Lost to rounding">
+                                [title]="'overtime.lostToRounding' | translate">
                             −{{ formatMinutes(lostMinutes(entry)) }}
                           </span>
                         }
                       } @else if (entry.rawOtMinutes) {
                         <span class="badge rounded-pill text-bg-danger"
-                              title="Below the minimum — earns nothing">
-                          under minimum
+                              [title]="'overtime.belowMinimumTitle' | translate">
+                          {{ 'overtime.underMinimum' | translate }}
                         </span>
                       } @else {
                         <span class="text-muted">—</span>
@@ -450,11 +473,11 @@
                     </td>
                     <td class="text-end text-nowrap">
                       <button class="btn btn-sm btn-outline-secondary" (click)="openEntryModal(entry)"
-                              aria-label="Edit entry">
+                              [attr.aria-label]="'overtime.editEntry' | translate">
                         <i class="bi bi-pencil"></i>
                       </button>
                       <button class="btn btn-sm btn-outline-danger ms-1" (click)="deleteEntry(entry)"
-                              aria-label="Delete entry">
+                              [attr.aria-label]="'overtime.deleteEntry' | translate">
                         <i class="bi bi-trash"></i>
                       </button>
                     </td>
@@ -472,12 +495,14 @@
   @if (showEntryModal) {
     <div class="ot-modal" (click)="closeEntryModal()">
       <div class="ot-modal-content" (click)="$event.stopPropagation()">
-        <h5 class="mb-3">{{ isEditingEntry ? "Edit day" : "Log a day" }}</h5>
+        <h5 class="mb-3">
+          {{ (isEditingEntry ? 'overtime.editDay' : 'overtime.logADay') | translate }}
+        </h5>
 
         <form (ngSubmit)="saveEntry()">
           <div class="row g-3">
             <div class="col-12">
-              <label class="form-label" for="entryDate">Date</label>
+              <label class="form-label" for="entryDate">{{ 'common.date' | translate }}</label>
               <input id="entryDate" name="entryDate" type="date" class="form-control" required
                      [(ngModel)]="entryForm.date" (ngModelChange)="onEntryDateChange()" />
             </div>
@@ -486,7 +511,7 @@
                 <input class="form-check-input" type="checkbox" id="isRestDay" name="isRestDay"
                        [(ngModel)]="entryForm.isRestDay" (ngModelChange)="onRestDayToggle()" />
                 <label class="form-check-label" for="isRestDay">
-                  Rest day (휴일/주말)
+                  {{ 'overtime.restDayCheckbox' | translate }}
                 </label>
               </div>
               @if (restDayNote) {
@@ -497,24 +522,23 @@
               @if (holidayLookupUnavailable && !entryForm.isRestDay) {
                 <div class="form-text text-warning-emphasis">
                   <i class="bi bi-exclamation-triangle me-1"></i>
-                  Couldn't check public holidays — weekends are still detected, but tick the
-                  box yourself for a 빨간날.
+                  {{ 'overtime.holidayLookupUnavailable' | translate }}
                 </div>
               }
             </div>
             <div class="col-6">
-              <label class="form-label" for="startTime">Start (출근 시간)</label>
+              <label class="form-label" for="startTime">{{ 'overtime.startTime' | translate }}</label>
               <input id="startTime" name="startTime" type="time" class="form-control" required
                      [(ngModel)]="entryForm.startTime" (ngModelChange)="updatePreview()" />
             </div>
             <div class="col-6">
-              <label class="form-label" for="endTime">End (퇴근 시간)</label>
+              <label class="form-label" for="endTime">{{ 'overtime.endTime' | translate }}</label>
               <input id="endTime" name="endTime" type="time" class="form-control" required
                      [(ngModel)]="entryForm.endTime" (ngModelChange)="updatePreview()" />
-              <div class="form-text">Earlier than the start = finished after midnight.</div>
+              <div class="form-text">{{ 'overtime.endTimeHelp' | translate }}</div>
             </div>
             <div class="col-12">
-              <label class="form-label" for="entryNote">Note</label>
+              <label class="form-label" for="entryNote">{{ 'overtime.note' | translate }}</label>
               <input id="entryNote" name="entryNote" type="text" class="form-control"
                      [(ngModel)]="entryForm.note" />
             </div>
@@ -525,9 +549,9 @@
               <input class="form-check-input" type="checkbox" id="resnapshot" name="resnapshot"
                      [(ngModel)]="resnapshot" (ngModelChange)="updatePreview()" />
               <label class="form-check-label small" for="resnapshot">
-                Re-apply current settings to this day
+                {{ 'overtime.resnapshot' | translate }}
                 <span class="text-muted d-block">
-                  Off by default — the day keeps the rate and rules it was logged under.
+                  {{ 'overtime.resnapshotHelp' | translate }}
                 </span>
               </label>
             </div>
@@ -536,31 +560,34 @@
           @if (preview) {
             <div class="ot-preview mt-3">
               <div class="d-flex justify-content-between">
-                <span class="text-muted">Overtime worked</span>
+                <span class="text-muted">{{ 'overtime.preview.worked' | translate }}</span>
                 <strong>{{ formatMinutes(preview.rawOtMinutes) }}</strong>
               </div>
               <div class="d-flex justify-content-between">
-                <span class="text-muted">Counts as</span>
+                <span class="text-muted">{{ 'overtime.preview.countsAs' | translate }}</span>
                 <strong [class.text-danger]="!preview.qualified">
-                  {{ preview.qualified ? formatMinutes(preview.paidOtMinutes) : "nothing — under the minimum" }}
+                  {{ preview.qualified
+                       ? formatMinutes(preview.paidOtMinutes)
+                       : ('overtime.preview.nothing' | translate) }}
                 </strong>
               </div>
               <hr class="my-2" />
               <div class="d-flex justify-content-between">
-                <span class="text-muted">You earn</span>
+                <span class="text-muted">{{ 'overtime.preview.earn' | translate }}</span>
                 <strong class="text-success fs-5">
                   {{ preview.earnings | currency: currencyCode : 'symbol' : '1.0-2' }}
                 </strong>
               </div>
               @if (entryForm.isRestDay) {
                 <div class="form-text mt-1">
-                  Rest day — every hour counts. First 8h at
-                  {{ settings?.restDayFirst8Multiplier ?? 1.5 }}×, beyond at
-                  {{ settings?.restDayBeyondMultiplier ?? 2 }}×. Breaks are deducted per
-                  근로기준법 §54.
+                  {{ 'overtime.preview.restDayHelp' | translate: {
+                       first8: settings?.restDayFirst8Multiplier ?? 1.5,
+                       beyond: settings?.restDayBeyondMultiplier ?? 2 } }}
                 </div>
               } @else {
-                <div class="form-text mt-1">Overtime starts at {{ boundaryLabel }}.</div>
+                <div class="form-text mt-1">
+                  {{ 'overtime.preview.startsAt' | translate: { time: boundaryLabel } }}
+                </div>
               }
             </div>
           }
@@ -571,10 +598,10 @@
 
           <div class="d-flex gap-2 mt-4">
             <button type="submit" class="btn btn-primary" [disabled]="isSaving">
-              {{ isSaving ? "Saving…" : "Save" }}
+              {{ (isSaving ? 'common.saving' : 'common.save') | translate }}
             </button>
             <button type="button" class="btn btn-outline-secondary" (click)="closeEntryModal()">
-              Cancel
+              {{ 'common.cancel' | translate }}
             </button>
           </div>
         </form>

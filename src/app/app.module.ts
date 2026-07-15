@@ -1,5 +1,9 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, inject, provideAppInitializer } from '@angular/core';
+import { TranslateDirective, TranslatePipe, provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppComponent } from './app.component';
+import { DEFAULT_LANG, resolveInitialLang } from './mappings/languages';
+import { LanguageService, provideAppLocaleId, registerAppLocales } from './services/LanguageService';
 import { DictionaryService } from './services/DictionaryService';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { WordsComponent } from './components/words/words.component';
@@ -37,6 +41,7 @@ import { DownloaderComponent } from './components/downloader/downloader.componen
 import { LoanTrackerComponent } from './components/loan-tracker/loan-tracker.component';
 import { OvertimeTrackerComponent } from './components/overtime-tracker/overtime-tracker.component';
 
+registerAppLocales();
 
 @NgModule({
     declarations: [
@@ -64,6 +69,8 @@ import { OvertimeTrackerComponent } from './components/overtime-tracker/overtime
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
+        TranslatePipe,
+        TranslateDirective,
         MatDatepickerModule,
         MatNativeDateModule,
         MatInputModule,
@@ -96,6 +103,13 @@ import { OvertimeTrackerComponent } from './components/overtime-tracker/overtime
             provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
         },
         provideHttpClient(withXhr(), withInterceptorsFromDi()), provideAnimationsAsync(),
+        provideAppLocaleId(),
+        ...provideTranslateService({
+            lang: resolveInitialLang(),
+            fallbackLang: DEFAULT_LANG,
+            loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' }),
+        }),
+        provideAppInitializer(() => inject(LanguageService).init()),
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

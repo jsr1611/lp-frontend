@@ -9,20 +9,20 @@
 
   <body>
     <div class="container">
-      <h2 class="text-center mt-4 mb-4">Yangi so'zlar:</h2>
+      <h2 class="text-center mt-4 mb-4">{{ 'words.title' | translate }}:</h2>
 
       @if (token != null && token.length > 1) {
         <div class="table-responsive">
           <table class="table table-hover table-bordered text-center">
             <thead class="thead-dark">
               <tr>
-                <th scope="col">Tr</th>
-                <th scope="col">Arabcha</th>
-                <th scope="col">Talaffuz</th>
-                <th scope="col">O'zbekcha</th>
-                <th scope="col">Inglizcha</th>
-                <th scope="col">Yangilash tugmasi</th>
-                <th scope="col">Ilova</th>
+                <th scope="col">{{ 'words.table.nr' | translate }}</th>
+                <th scope="col">{{ 'words.table.arabic' | translate }}</th>
+                <th scope="col">{{ 'words.table.pronunciation' | translate }}</th>
+                <th scope="col">{{ 'words.table.uzbek' | translate }}</th>
+                <th scope="col">{{ 'words.table.english' | translate }}</th>
+                <th scope="col">{{ 'words.table.update' | translate }}</th>
+                <th scope="col">{{ 'words.table.remark' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -33,7 +33,7 @@
                   <td> <input type="text" name="pronunciation" id="{{i+'_pronunciation'}}" value="{{ item.pronunciation }}"></td>
                   <td> <input type="text" name="uzbek" id="{{i+'_uzbek'}}" value="{{ item.uzbek }}"></td>
                   <td> <input type="text" name="english" id="{{i+'_english'}}" value="{{ item.english }}"></td>
-                  <td> <button class="btn btn-primary" (click)="updateWord(i, item._id, item.category)">Yangilash</button></td>
+                  <td> <button class="btn btn-primary" (click)="updateWord(i, item._id, item.category)">{{ 'words.update' | translate }}</button></td>
                   <td> <input type="text" name="remark" id="{{i+'_remark'}}" value="{{ item.remark }}"></td>
                 </tr>
               }
@@ -44,11 +44,11 @@
         <table class="table table-hover table-bordered text-center">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">Tr</th>
-              <th scope="col">Arabcha</th>
-              <th scope="col">Talaffuz</th>
-              <th scope="col">O'zbekcha</th>
-              <th scope="col">Inglizcha</th>
+              <th scope="col">{{ 'words.table.nr' | translate }}</th>
+              <th scope="col">{{ 'words.table.arabic' | translate }}</th>
+              <th scope="col">{{ 'words.table.pronunciation' | translate }}</th>
+              <th scope="col">{{ 'words.table.uzbek' | translate }}</th>
+              <th scope="col">{{ 'words.table.english' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -70,8 +70,8 @@
       <hr />
 
       <div class="text-center mt-4">
-        <a href="/add-word" class="btn btn-success btn-lg mx-2">Yangi so'z qo'shish</a>
-        <a href="/" class="btn btn-secondary btn-lg mx-2">Orqaga qaytish</a>
+        <a href="/add-word" class="btn btn-success btn-lg mx-2">{{ 'words.addWord' | translate }}</a>
+        <a href="/" class="btn btn-secondary btn-lg mx-2">{{ 'words.back' | translate }}</a>
       </div>
     </div>
   </body>

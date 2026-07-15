@@ -2,18 +2,17 @@
     <div class="noise" aria-hidden="true"></div>
     <main class="page">
         <header class="hero">
-            <h1>Download YouTube/Instagram clips without the fuss.</h1>
+            <h1>{{ 'downloader.title' | translate }}</h1>
             <p class="lead">
-                Paste a link, pick your format, and the file drops straight to your
-                machine.
+                {{ 'downloader.lead' | translate }}
             </p>
         </header>
 
         <section class="card">
             <label class="field">
-                <span>Video URL</span>
+                <span>{{ 'downloader.videoUrl' | translate }}</span>
                 <input type="url" name="videoUrl"
-                    placeholder="https://www.youtube.com/watch?v=... or https://www.instagram.com/reel/..."
+                    [attr.placeholder]="'downloader.urlPlaceholder' | translate"
                     autocomplete="off" [(ngModel)]="videoUrl" (input)="onUrlChange()"
                     [attr.aria-invalid]="videoUrl && !isValidUrl ? 'true' : 'false'" required />
             </label>
@@ -21,28 +20,27 @@
             <div class="row">
                 <label class="toggle">
                     <input type="checkbox" name="convertToMp3" [(ngModel)]="convertToMp3" />
-                    <span>Convert to MP3</span>
+                    <span>{{ 'downloader.convertToMp3' | translate }}</span>
                 </label>
 
                 <button type="button" (click)="download()" [disabled]="isSubmitting || !isValidUrl">
-                    Download
+                    {{ 'downloader.download' | translate }}
                 </button>
             </div>
 
             <div class="status" role="status" aria-live="polite">
-                {{ status }}
+                {{ statusKey | translate }}
             </div>
         </section>
 
         <section class="tips">
             <div>
-                <h2>Pro tip</h2>
+                <h2>{{ 'downloader.proTipTitle' | translate }}</h2>
                 <p>
-                    Want a quick audio rip? Toggle MP3 and keep the browser tab open
-                    until the download starts.
+                    {{ 'downloader.proTip' | translate }}
                 </p>
             </div>
-            <div class="pill">FastAPI backend</div>
+            <div class="pill">{{ 'downloader.backendPill' | translate }}</div>
         </section>
     </main>
 </section>

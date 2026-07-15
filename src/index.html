@@ -1,11 +1,56 @@
 <!doctype html>
-<html lang="en">
+<html lang="uz" dir="ltr">
 <head>
   <meta charset="utf-8">
   <title>Learning Platform</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" integrity="sha512-b2QcS5SsA8tZodcDtGRELiGv5SaKSk1vDHDaQRda0htPYWZ6046lr3kJ5bAAQdpV2mmA/4v0wQF9MyU6/pDIAg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script>
+    // Resolves the language before first paint so Arabic never flashes left-to-right,
+    // and so Bootstrap's LTR or RTL build is the only one ever fetched.
+    // Mirrors resolveInitialLang() in src/app/mappings/languages.ts — keep the two in step.
+    (function () {
+      var DIRS = { uz: 'ltr', en: 'ltr', ru: 'ltr', ko: 'ltr', ar: 'rtl' };
+      var BOOTSTRAP = {
+        ltr: {
+          href: 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css',
+          integrity: 'sha512-b2QcS5SsA8tZodcDtGRELiGv5SaKSk1vDHDaQRda0htPYWZ6046lr3kJ5bAAQdpV2mmA/4v0wQF9MyU6/pDIAg=='
+        },
+        rtl: {
+          href: 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.rtl.min.css',
+          integrity: 'sha512-SRg0d/3qeXy0utrb7F4+4jkFHhzdyvqjAd2i9ub0zWrPS80PoRaAtzmbMeVRYtApxoEcE6tcFZaHRY5UbwrTaw=='
+        }
+      };
+
+      var lang = null;
+      try {
+        var stored = localStorage.getItem('app.lang');
+        if (stored && DIRS[stored]) lang = stored;
+      } catch (e) { /* storage disabled — fall through to the browser preference */ }
+
+      if (!lang) {
+        var preferred = navigator.languages || [navigator.language || ''];
+        for (var i = 0; i < preferred.length && !lang; i++) {
+          var base = (preferred[i] || '').split('-')[0].toLowerCase();
+          if (DIRS[base]) lang = base;
+        }
+      }
+      if (!lang) lang = 'uz';
+
+      var dir = DIRS[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = dir;
+
+      var css = BOOTSTRAP[dir];
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = css.href;
+      link.integrity = css.integrity;
+      link.crossOrigin = 'anonymous';
+      link.referrerPolicy = 'no-referrer';
+      document.head.appendChild(link);
+    })();
+  </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.2/font/bootstrap-icons.min.css" integrity="sha512-D1liES3uvDpPrgk7vXR/hR/sukGn7EtDWEyvpdLsyalQYq6v6YUsTUJmku7B4rcuQ21rf0UTksw2i/2Pdjbd3g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js" integrity="sha512-X/YkDZyjTf4wyc2Vy16YGCPHwAY8rZJY+POgokZjQB2mhIRFJCckEGc6YyX9eNsPfn0PzThEuNs+uaomE5CO6A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->

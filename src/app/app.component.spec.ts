@@ -1,9 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { translateTestingImports, translateTestingProviders } from './testing/translate-testing';
 
 describe('AppComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    declarations: [AppComponent]
+    declarations: [AppComponent],
+      imports: [...translateTestingImports],
+      providers: [...translateTestingProviders]
   }));
 
   it('should create the app', () => {

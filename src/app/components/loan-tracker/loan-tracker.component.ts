@@ -8,11 +8,13 @@ import {
   Loan,
   LoanDirection,
   LoanFilters,
+  LoanStatus,
   LoanSummary,
   Repayment,
 } from "src/app/models/loan";
 import { Currency } from "src/app/models/user";
 import { popularCurrencies, findCurrency } from "src/app/mappings/currencies";
+import { TranslateService } from "@ngx-translate/core";
 import { Chart, registerables } from "chart.js";
 
 Chart.register(...registerables);
@@ -87,7 +89,8 @@ export class LoanTrackerComponent implements OnInit {
   constructor(
     private authService: AuthService,
     @Inject(Router) private router: Router,
-    private secureService: SecureService
+    private secureService: SecureService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -165,8 +168,17 @@ export class LoanTrackerComponent implements OnInit {
     return due >= now && due <= soon;
   }
 
-  directionLabel(direction: LoanDirection): string {
-    return direction === "borrowed" ? "I owe" : "Owed to me";
+  // Returns the key, not the text: these are called from inside @for, and TranslatePipe
+  // is impure, so it re-runs on every change-detection pass. Resolving the key with
+  // instant() here would mean a full catalog lookup per row per pass; handing the key to
+  // the pipe instead costs a string compare, because the pipe caches on the key.
+  directionKey(direction: LoanDirection): string {
+    return direction === "borrowed" ? "loans.direction.borrowed" : "loans.direction.lent";
+  }
+
+  // `status` is a backend enum ('open' | 'partial' | 'paid'); never render it raw.
+  statusKey(status: LoanStatus | undefined): string | null {
+    return status ? `loans.status.${status}` : null;
   }
 
   // ---------- contact deep-links ----------
@@ -200,10 +212,20 @@ export class LoanTrackerComponent implements OnInit {
     }
     const tel = (contact.phone || "").replace(/[^\d+]/g, "");
     if (tel) {
-      links.push({ icon: "bi-telephone", url: `tel:${tel}`, title: "Call", cls: "text-secondary" });
+      links.push({
+        icon: "bi-telephone",
+        url: `tel:${tel}`,
+        title: this.translate.instant("loans.links.call"),
+        cls: "text-secondary",
+      });
     }
     if (contact.email) {
-      links.push({ icon: "bi-envelope", url: `mailto:${contact.email}`, title: "Email", cls: "text-secondary" });
+      links.push({
+        icon: "bi-envelope",
+        url: `mailto:${contact.email}`,
+        title: this.translate.instant("loans.links.email"),
+        cls: "text-secondary",
+      });
     }
     this.linkCache.set(contact, links);
     return links;
@@ -285,7 +307,10 @@ export class LoanTrackerComponent implements OnInit {
       this.balanceChart = new Chart(ctx1, {
         type: "doughnut",
         data: {
-          labels: ["I owe", "Owed to me"],
+          labels: [
+            this.translate.instant("loans.direction.borrowed"),
+            this.translate.instant("loans.direction.lent"),
+          ],
           datasets: [{ data: [cur.borrowedOutstanding, cur.lentOutstanding], backgroundColor: ["#dc3545", "#198754"] }],
         },
         options: {
@@ -293,7 +318,10 @@ export class LoanTrackerComponent implements OnInit {
           maintainAspectRatio: false,
           plugins: {
             legend: { position: "bottom" },
-            title: { display: true, text: `Outstanding (${this.chartCurrencyCode})` },
+            title: {
+              display: true,
+              text: this.translate.instant("loans.chart.outstanding", { code: this.chartCurrencyCode }),
+            },
           },
         },
       });
@@ -310,7 +338,7 @@ export class LoanTrackerComponent implements OnInit {
           labels: people.map((p) => p.name),
           datasets: [
             {
-              label: `Net balance (${this.chartCurrencyCode})`,
+              label: this.translate.instant("loans.chart.netBalance", { code: this.chartCurrencyCode }),
               data: people.map((p) => p.net),
               backgroundColor: people.map((p) => (p.net >= 0 ? "#198754" : "#dc3545")),
             },
@@ -420,7 +448,7 @@ export class LoanTrackerComponent implements OnInit {
 
     if (this.contactMode === "new") {
       if (!this.newContact.name || !this.newContact.name.trim()) {
-        this.errorMessage = "Contact name is required.";
+        this.errorMessage = this.translate.instant("loans.errors.nameRequired");
         return;
       }
       this.isSaving = true;
@@ -438,7 +466,7 @@ export class LoanTrackerComponent implements OnInit {
       });
     } else {
       if (!this.loanForm.contactId) {
-        this.errorMessage = "Please select a contact.";
+        this.errorMessage = this.translate.instant("loans.errors.selectContact");
         return;
       }
       this.persistLoan();
@@ -447,7 +475,7 @@ export class LoanTrackerComponent implements OnInit {
 
   private persistLoan(): void {
     if (!this.loanForm.principal || this.loanForm.principal <= 0) {
-      this.errorMessage = "Amount must be greater than 0.";
+      this.errorMessage = this.translate.instant("loans.errors.amountPositive");
       this.isSaving = false;
       return;
     }
@@ -470,13 +498,17 @@ export class LoanTrackerComponent implements OnInit {
   }
 
   private showError(err: HttpErrorResponse): void {
-    this.errorMessage = err.error?.message || err.message || "Something went wrong.";
+    this.errorMessage =
+      err.error?.message || err.message || this.translate.instant("loans.errors.generic");
     if (err.status === 401) this.handleAuthError(err);
   }
 
   deleteLoan(loan: Loan): void {
     if (!loan._id) return;
-    if (!confirm(`Delete this loan with ${loan.contactName}? This cannot be undone.`)) return;
+    const confirmMessage = this.translate.instant("loans.deleteConfirm", {
+      name: loan.contactName,
+    });
+    if (!confirm(confirmMessage)) return;
     this.secureService.deleteLoan(loan._id).subscribe({
       next: () => this.refresh(),
       error: (err: HttpErrorResponse) => this.showError(err),
@@ -519,7 +551,7 @@ export class LoanTrackerComponent implements OnInit {
   addRepayment(): void {
     if (!this.repaymentLoan?._id) return;
     if (!this.newRepayment.amount || this.newRepayment.amount <= 0) {
-      this.errorMessage = "Repayment amount must be greater than 0.";
+      this.errorMessage = this.translate.instant("loans.errors.repaymentPositive");
       return;
     }
     this.secureService.addRepayment(this.repaymentLoan._id, this.newRepayment).subscribe({

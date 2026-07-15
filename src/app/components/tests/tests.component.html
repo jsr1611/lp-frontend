@@ -1,12 +1,13 @@
 <p class="test-info border rounded p-3 mb-4">
-  {{statements.numberOfTests}}: {{dict.length}} | {{statements.result}}: {{userCorrectTimes}} {{statements.correct}}
-  | {{userFalseTimes}} {{statements.incorrect}}
-  | {{statements.testNumber}}: {{totalTestNumbers.length}}
-  | {{statements.bestResult}}: {{bestResult}}
+  {{ 'tests.numberOfTests' | translate }}: {{dict.length}}
+  | {{ 'tests.result' | translate }}: {{ 'tests.correctCount' | translate:{ count: userCorrectTimes } }}
+  | {{ 'tests.incorrectCount' | translate:{ count: userFalseTimes } }}
+  | {{ 'tests.testNumber' | translate }}: {{totalTestNumbers.length}}
+  | {{ 'tests.bestResult' | translate }}: {{bestResult}}
 </p>
 
 <p class="question-intro mb-4">
-  {{questionStatementBefore[selectedIndex]}}
+  {{ 'tests.questionBefore' | translate }}
 </p>
 
 @if (test) {
@@ -29,12 +30,12 @@
   </h2>
 } @else {
   <h3 class="no-connection">
-    Server bilan aloqa yo'q. Iltimos, biroz sabr qiling yoki birozdan keyin yana qayta kirib ko'ring. Rahmat
+    {{ 'tests.noConnection' | translate }}
   </h3>
 }
 
 
-<p class="answer-prompt mb-3">{{questionStatementAfter[selectedIndex]}}:</p>
+<p class="answer-prompt mb-3">{{ 'tests.questionAfter' | translate }}:</p>
 
 @if (selectedLangIndex == 0 || selectedLangIndex == 5) {
   <span>
@@ -74,8 +75,8 @@
   </span>
 }
 <div class="button-group mt-4">
-  <button (click)="generateTest()" class="btn btn-primary" title="Keyingi testni yuklash">
-    {{nextButton[selectedIndex]}} <i class="bi bi-arrow-right-square"></i>
+  <button (click)="generateTest()" class="btn btn-primary" [attr.title]="'tests.nextTitle' | translate">
+    {{ 'tests.next' | translate }} <i class="bi bi-arrow-right-square"></i>
   </button>
   <select id="selectedLang"
     name="selectedLang"
@@ -83,14 +84,14 @@
     (change)="changeLanguage(selectedLang)"
     >
     @for (lang of languages; track lang; let i = $index) {
-      <option [value]="lang">{{ lang }}</option>
+      <option [value]="lang">{{ langPairLabels[lang] | translate }}</option>
     }
   </select>
   <!-- <button (click)="changeUzbArab()" class="btn btn-info" title="Tilni almashtirish">
   {{selectedLang}}
 </button> -->
 <!-- Arab <i class="bi bi-arrow-left-right"></i> O'zbek -->
-<button (click)="stopTest()" class="btn btn-danger" title="Testni shu yerda yakunlaysizmi?">
-  {{stopButton[selectedIndex]}} <i class="bi bi-stop-circle"></i>
+<button (click)="stopTest()" class="btn btn-danger" [attr.title]="'tests.stopTitle' | translate">
+  {{ 'tests.stop' | translate }} <i class="bi bi-stop-circle"></i>
 </button>
 </div>

@@ -58,7 +58,7 @@
 }
 
 .ans-btn i {
-    margin-right: 8px; /* Space between icon and text */
+    margin-inline-end: 8px; /* Space between icon and text */
 }
 
 .ans-btn:hover {

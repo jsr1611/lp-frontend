@@ -1,6 +1,6 @@
 <div class="profile-container">
-  <h2>User Profile @if (token) {
-    <a (click)="openUserModal()" class="edit-user-btn" title="Update user info"><i
+  <h2>{{ 'profile.title' | translate }} @if (token) {
+    <a (click)="openUserModal()" class="edit-user-btn" [attr.title]="'profile.editUser' | translate"><i
     class="bi bi-pencil-square"></i></a>
   } </h2>
   <div class="profile-content">
@@ -9,23 +9,23 @@
         <div class="profile-picture-container">
           @if (user.profilePicture) {
             <img [src]="'data:image/jpeg;base64,' + user.profilePicture"
-              alt="Profile Picture" />
+              [attr.alt]="'profile.pictureAlt' | translate" />
           } @else {
-            <img src="/assets/images/default-profile-image.jpg" alt="Default Profile Image" />
+            <img src="/assets/images/default-profile-image.jpg" [attr.alt]="'profile.defaultPictureAlt' | translate" />
           }
-          <div class="overlay-text">Change Picture</div>
+          <div class="overlay-text">{{ 'profile.changePicture' | translate }}</div>
         </div>
       </label>
       <input type="file" (change)="onFileSelected($event)" id="file-upload" style="display: none" />
     </div>
     <div class="profile-details">
-      <p><strong>Name:</strong> {{ user.firstname + " " + user.lastname }}@if (user.is_superuser) {
+      <p><strong>{{ 'profile.name' | translate }}</strong> {{ user.firstname + " " + user.lastname }}@if (user.is_superuser) {
       <i
-      class="bi bi-database-fill-gear mx-2" title="Site Admininistrator"></i>
+      class="bi bi-database-fill-gear mx-2" [attr.title]="'profile.siteAdmin' | translate"></i>
     }</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Username:</strong> {{ user.username }}</p>
-    <p><strong>Activated:</strong> {{ user.is_activated ? "Yes" : "No" }}</p>
+    <p><strong>{{ 'profile.email' | translate }}</strong> {{ user.email }}</p>
+    <p><strong>{{ 'profile.username' | translate }}</strong> {{ user.username }}</p>
+    <p><strong>{{ 'profile.activated' | translate }}</strong> {{ (user.is_activated ? "profile.yes" : "profile.no") | translate }}</p>
   </div>
 </div>
 </div>
@@ -37,15 +37,15 @@
       <span class="close" (click)="closeEditModal($event, 'user')">&times;</span>
       <form (submit)="updateUserInfo($event, false)">
         <div class="form-group">
-          <label for="firstname">Firstname:</label>
+          <label for="firstname">{{ 'profile.firstname' | translate }}</label>
           <input type="text" id="firstname" name="firstname" required [(ngModel)]="userInfo.firstname" />
         </div>
         <div class="form-group">
-          <label for="lastname">Lastname:</label>
+          <label for="lastname">{{ 'profile.lastname' | translate }}</label>
           <input type="text" id="lastname" name="lastname" required [(ngModel)]="userInfo.lastname" />
         </div>
         <div class="form-group">
-          <label for="email">Email:</label>
+          <label for="email">{{ 'profile.email' | translate }}</label>
           <input type="email" id="email" name="email" required [(ngModel)]="userInfo.email" />
         </div>
         @if (errorMessage) {
@@ -55,8 +55,8 @@
           <div class="alert alert-danger mt-2">{{ successMessage }}</div>
         }
         <div class="btn-align-horizontal d-flex justify-content-center">
-          <button class="btn btn-primary" (click)="updateUserInfo($event, false)">Update</button>
-          <button class="btn btn-primary" (click)="closeEditModal($event, 'user')">Close</button>
+          <button class="btn btn-primary" (click)="updateUserInfo($event, false)">{{ 'profile.update' | translate }}</button>
+          <button class="btn btn-primary" (click)="closeEditModal($event, 'user')">{{ 'profile.close' | translate }}</button>
         </div>
       </form>
     </div>
@@ -65,13 +65,15 @@
 
 <hr />
 <div class="expense-container">
-  <h2>Monthly Expense Management</h2>
+  <h2>{{ 'profile.expenses.title' | translate }}</h2>
 
 
   <div class="expense-controls-section">
     <div class="expense-controls-buttons">
       <mat-form-field appearance="fill" class="flex-item month-selector-item">
-        <input matInput [(ngModel)]="monthAndYear" [matDatepicker]="picker" [max]="today"
+        <!-- readonly: the adapter renders the month localised ("2025년 1월"), which its
+             M/YYYY-only parse() cannot read back, so selection is via the picker only. -->
+        <input matInput readonly [(ngModel)]="monthAndYear" [matDatepicker]="picker" [max]="today"
           (dateChange)="emitDateChange($event)" />
           <mat-datepicker-toggle matSuffix [for]="picker">
           </mat-datepicker-toggle>
@@ -80,17 +82,17 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="flex-item">
-          <mat-select placeholder="Select Currency" [(value)]="selectedCurrency"
+          <mat-select [placeholder]="'profile.selectCurrency' | translate" [(value)]="selectedCurrency"
             (selectionChange)="onCurrencyChange($event.value)">
             @for (currency of popularCurrencies; track currency) {
               <mat-option [value]="currency.code">
-                {{ currency.name }} ({{ currency.symbol }})
+                {{ currencyNameKey(currency.code) | translate }} ({{ currency.symbol }})
               </mat-option>
             }
           </mat-select>
         </mat-form-field>
         <button type="button" class="btn btn-primary flex-item" (click)="showAddNewExpense('create')">
-          Add New
+          {{ 'profile.addNew' | translate }}
         </button>
         <!-- <button type="button" class="btn btn-primary flex-item" (click)="viewExpenses(ONE)">
         View Expenses
@@ -105,33 +107,36 @@
         <span class="close" (click)="closeEditModal($event, 'expense')">&times;</span>
         <form (submit)="addExpense()">
           <div class="form-group">
-            <label for="date">Date:</label>
+            <label for="date">{{ 'profile.form.date' | translate }}</label>
             <input type="date" id="date" name="date" required [(ngModel)]="todaysExpense.date" />
           </div>
           <div class="form-group">
-            <label for="category">Category:</label>
-            <input type="text" id="category" name="category" placeholder="E.g., Food, Transport" required
+            <label for="category">{{ 'profile.form.category' | translate }}</label>
+            <input type="text" id="category" name="category"
+              [attr.placeholder]="'profile.form.categoryPlaceholder' | translate" required
               [(ngModel)]="todaysExpense.category" />
             </div>
             <div class="form-group">
-              <label for="amount">Amount:</label>
-              <input type="text" id="amount" name="amount" placeholder="Enter amount" required
+              <label for="amount">{{ 'profile.form.amount' | translate }}</label>
+              <input type="text" id="amount" name="amount"
+                [attr.placeholder]="'profile.form.amountPlaceholder' | translate" required
                 [value]="todaysExpense.amount !== 0 ? (todaysExpense.amount | currency : selectedCurrency : 'symbol' : '1.0-0') : '' "
                 (input)="onAmountChange($event)" />
               </div>
               <div class="form-group">
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" placeholder="Add a note..." rows="3"
+                <label for="description">{{ 'profile.form.description' | translate }}</label>
+                <textarea id="description" name="description"
+                  [attr.placeholder]="'profile.form.descriptionPlaceholder' | translate" rows="3"
                 [(ngModel)]="todaysExpense.description"></textarea>
               </div>
               @if (!displayUpdateInput) {
-                <button type="submit" class="btn-submit">Add Expense</button>
+                <button type="submit" class="btn-submit">{{ 'profile.form.addExpense' | translate }}</button>
               }
               @if (displayUpdateInput) {
                 <div class="btn-align-horizontal d-flex justify-content-center">
-                  <button class="btn btn-primary" (click)="updateExpense(todaysExpense, $event)">Update</button>
-                  <button class="btn btn-danger" (click)="deleteExpense(todaysExpense._id, $event)">Delete</button>
-                  <button class="btn btn-primary" (click)="closeEditModal($event, 'expense')">Close</button>
+                  <button class="btn btn-primary" (click)="updateExpense(todaysExpense, $event)">{{ 'profile.update' | translate }}</button>
+                  <button class="btn btn-danger" (click)="deleteExpense(todaysExpense._id, $event)">{{ 'profile.delete' | translate }}</button>
+                  <button class="btn btn-primary" (click)="closeEditModal($event, 'expense')">{{ 'profile.close' | translate }}</button>
                 </div>
               }
             </form>
@@ -143,16 +148,16 @@
       <!-- Expenses Table -->
       <div class="expense-table">
         <h3>
-          Expenses for <span id="selected-month">{{ selectedMonthStr }}</span>
+          <span id="selected-month">{{ 'profile.expenses.forMonth' | translate: { month: selectedMonthStr } }}</span>
         </h3>
         <table>
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Category</th>
-              <th>Amount</th>
-              <th>Description</th>
-              <th>Action</th>
+              <th>{{ 'profile.table.date' | translate }}</th>
+              <th>{{ 'profile.table.category' | translate }}</th>
+              <th>{{ 'profile.table.amount' | translate }}</th>
+              <th>{{ 'profile.table.description' | translate }}</th>
+              <th>{{ 'profile.table.action' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -162,7 +167,7 @@
                 <td>{{ expense.category }}</td>
                 <td>{{ (expense.amount | currency : selectedCurrency : 'symbol' : '1.0-0') }}</td>
                 <td>{{ expense.description }}</td>
-                <td><button class="btn btn-primary" (click)="openEditModal(expense)">Edit</button></td>
+                <td><button class="btn btn-primary" (click)="openEditModal(expense)">{{ 'profile.edit' | translate }}</button></td>
               </tr>
             }
           </tbody>
@@ -177,11 +182,11 @@
               <span class="expense-amount">{{ expense.amount | currency: selectedCurrency: 'symbol': '1.0-0' }}</span>
             </div>
             <div class="expense-card-body">
-              <p><strong>Category:</strong> {{ expense.category }}</p>
-              <p><strong>Description:</strong> {{ expense.description }}</p>
+              <p><strong>{{ 'profile.form.category' | translate }}</strong> {{ expense.category }}</p>
+              <p><strong>{{ 'profile.form.description' | translate }}</strong> {{ expense.description }}</p>
             </div>
             <div class="expense-card-actions">
-              <button class="btn btn-primary" (click)="openEditModal(expense)">Edit</button>
+              <button class="btn btn-primary" (click)="openEditModal(expense)">{{ 'profile.edit' | translate }}</button>
             </div>
           </div>
         }
@@ -190,9 +195,9 @@
 
       <!-- Monthly Summary -->
       <div class="expense-summary">
-        <h3>Summary for {{ selectedMonthStr }}</h3>
+        <h3>{{ 'profile.expenses.summaryFor' | translate: { month: selectedMonthStr } }}</h3>
         <p>
-          Total: <span>{{ (monthlyTotal | currency : selectedCurrency : 'symbol' : '1.0-0') }}</span>
+          {{ 'profile.total' | translate }} <span>{{ (monthlyTotal | currency : selectedCurrency : 'symbol' : '1.0-0') }}</span>
         </p>
       </div>
     </div>

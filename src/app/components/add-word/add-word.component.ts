@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { catchError, of } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { Category, Word } from 'src/app/models/word';
 import { CategoryMapping } from 'src/app/mappings/category-mapping';
 import { DictionaryService } from 'src/app/services/DictionaryService';
@@ -23,8 +24,10 @@ export class AddWordComponent {
   };
 
   categories: Category[] = Object.values(Category); // Enum values
-  categoryLabels = CategoryMapping; // Uzbek labels
+  categoryLabels = CategoryMapping; // i18n keys for the category labels
   successMsg = "";
+
+  private readonly translate = inject(TranslateService);
 
   constructor(
     private dictionaryService: DictionaryService,
@@ -42,16 +45,18 @@ export class AddWordComponent {
     this.dictionaryService.createDictEntry(this.newWord).pipe(
       catchError((error) => {
         console.error('Error creating word entry:', error.error);
-        this.successMsg = "So'zni saqlashda muammoga duch kelindi.";
+        this.successMsg = this.translate.instant('addWord.errors.saveFailed');
         let errMsg = error.error ? error.error.message : error.message;
-        alert(errMsg);
+        // errMsg is a raw server string and cannot be localized; frame it with
+        // a translated prefix so the alert is always comprehensible.
+        alert(this.translate.instant('addWord.errors.saveFailedDetail', { detail: errMsg }));
         return of(null);
       })
     ).subscribe((data) => {
       if (data) {
         console.log('Server response:', data);
         this.resetForm();
-        this.successMsg = "So'z muvaffaqiyatli saqlandi...";
+        this.successMsg = this.translate.instant('addWord.saved');
         setTimeout(() => {
           this.successMsg = "";
         }, 2000)

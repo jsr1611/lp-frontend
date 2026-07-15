@@ -1,6 +1,13 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, Inject, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import {
+  Component,
+  Inject,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject,
+} from "@angular/core";
 import { Router } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "src/app/services/AuthService";
 import { SecureService } from "src/app/services/SercureService";
 import {
@@ -12,16 +19,16 @@ import {
   OvertimeSummary,
 } from "src/app/models/overtime";
 import { Currency } from "src/app/models/user";
-import { popularCurrencies, findCurrency } from "src/app/mappings/currencies";
+import { popularCurrencies, findCurrency, currencyNameKey } from "src/app/mappings/currencies";
 import { Chart, registerables } from "chart.js";
 
 Chart.register(...registerables);
 
-const MINUTES_PER_DAY = 24 * 60;
-const HALF_DAY_MINUTES = 12 * 60;
-// 휴일근로 earns the higher premium only past 8 hours (근로기준법 §56②).
-const REST_DAY_PREMIUM_BREAK = 8 * 60;
-
+// Deliberately English and NOT localized. These are written to entry.restDayReason,
+// which is persisted, and which the backend also populates in English. Localizing the
+// write path would store a different language per entry depending on the UI language at
+// the time, leaving the field unqueryable and old rows mismatched. Rendering it in the
+// user's language needs a stable token in the data model — a backend contract change.
 const WEEKDAY_NAMES = [
   "Sunday",
   "Monday",
@@ -31,6 +38,11 @@ const WEEKDAY_NAMES = [
   "Friday",
   "Saturday",
 ];
+
+const MINUTES_PER_DAY = 24 * 60;
+const HALF_DAY_MINUTES = 12 * 60;
+// 휴일근로 earns the higher premium only past 8 hours (근로기준법 §56②).
+const REST_DAY_PREMIUM_BREAK = 8 * 60;
 
 // Average weeks in a month: 365 / 7 / 12.
 const WEEKS_PER_MONTH = 365 / 7 / 12;
@@ -45,13 +57,13 @@ const WEEKLY_REST_CAP_HOURS = 8;
 // A choice in the "minimum overtime" dropdown, in minutes.
 interface MinimumOption {
   minutes: number;
-  label: string;
+  labelKey: string;
 }
 
 // One weekday checkbox in the contracted-days picker.
 interface WeekDayOption {
   value: number; // 0 = Sunday
-  label: string;
+  labelKey: string;
 }
 
 @Component({
@@ -62,9 +74,14 @@ interface WeekDayOption {
     standalone: false
 })
 export class OvertimeTrackerComponent implements OnInit {
+  // Declared first: field initializers run in order, and inject() is only valid
+  // inside the injection context these run in.
+  private readonly translate = inject(TranslateService);
+
   protected token: string | null = null;
 
   popularCurrencies: Currency[] = popularCurrencies;
+  protected currencyNameKey = currencyNameKey;
 
   // Data
   settings: OvertimeSettings | null = null;
@@ -107,24 +124,27 @@ export class OvertimeTrackerComponent implements OnInit {
   // Every half hour of the clock, so night shifts are selectable too.
   shiftStartOptions: string[] = this.buildTimeOptions();
 
+  // Abbreviated weekday labels for the compact button group. Translated rather than
+  // derived from the locale: there is no date to format here, and CLDR's abbreviated
+  // names are full words in some languages (ar), which would break the button row.
   weekDayOptions: WeekDayOption[] = [
-    { value: 1, label: "Mon" },
-    { value: 2, label: "Tue" },
-    { value: 3, label: "Wed" },
-    { value: 4, label: "Thu" },
-    { value: 5, label: "Fri" },
-    { value: 6, label: "Sat" },
-    { value: 0, label: "Sun" },
+    { value: 1, labelKey: "overtime.weekdays.mon" },
+    { value: 2, labelKey: "overtime.weekdays.tue" },
+    { value: 3, labelKey: "overtime.weekdays.wed" },
+    { value: 4, labelKey: "overtime.weekdays.thu" },
+    { value: 5, labelKey: "overtime.weekdays.fri" },
+    { value: 6, labelKey: "overtime.weekdays.sat" },
+    { value: 0, labelKey: "overtime.weekdays.sun" },
   ];
 
   minimumOptions: MinimumOption[] = [
-    { minutes: 0, label: "No minimum — every minute counts" },
-    { minutes: 30, label: "30 minutes" },
-    { minutes: 60, label: "1 hour" },
-    { minutes: 90, label: "1 hour 30 minutes" },
-    { minutes: 120, label: "2 hours" },
-    { minutes: 180, label: "3 hours" },
-    { minutes: 240, label: "4 hours" },
+    { minutes: 0, labelKey: "overtime.minimums.none" },
+    { minutes: 30, labelKey: "overtime.minimums.m30" },
+    { minutes: 60, labelKey: "overtime.minimums.h1" },
+    { minutes: 90, labelKey: "overtime.minimums.h1m30" },
+    { minutes: 120, labelKey: "overtime.minimums.h2" },
+    { minutes: 180, labelKey: "overtime.minimums.h3" },
+    { minutes: 240, labelKey: "overtime.minimums.h4" },
   ];
 
   private otChart: any = null;
@@ -230,12 +250,12 @@ export class OvertimeTrackerComponent implements OnInit {
   saveSettings(): void {
     if (this.isSavingSettings) return;
     if (!this.settingsForm.hourlyRate || this.settingsForm.hourlyRate <= 0) {
-      this.errorMessage = "Enter your base hourly rate.";
+      this.errorMessage = this.translate.instant("overtime.errors.hourlyRateRequired");
       return;
     }
     // With no working days every day would be a rest day, silently doubling the pay.
     if (!this.settingsForm.workDays || !this.settingsForm.workDays.length) {
-      this.errorMessage = "Pick at least one working day.";
+      this.errorMessage = this.translate.instant("overtime.errors.workDaysRequired");
       return;
     }
     this.isSavingSettings = true;
@@ -403,6 +423,11 @@ export class OvertimeTrackerComponent implements OnInit {
   }
 
   // Plain-language reason shown under the rest-day toggle.
+  //
+  // `reason` is either a 공휴일 name straight from the API (Korean, and left exactly as
+  // the backend sent it — it is data, not copy) or a weekday rendered in the UI
+  // language. Either way it goes in as a parameter, so each language decides how the
+  // sentence is built around it rather than having one spliced onto the front.
   private describeRestDay(): void {
     if (!this.entryForm.isRestDay) {
       this.restDayNote = null;
@@ -410,14 +435,20 @@ export class OvertimeTrackerComponent implements OnInit {
     }
     const reason = this.entryForm.restDayReason;
     this.restDayNote = reason
-      ? `${reason} — every hour counts, at the 휴일근로 rate.`
-      : "Every hour counts, at the 휴일근로 rate.";
+      ? this.translate.instant("overtime.restDayNotice", { reason })
+      : this.translate.instant("overtime.restDayNoticeGeneric");
+  }
+
+  // A "yyyy-MM-dd" as the UTC-midnight instant the backend stores it at. Built from the
+  // parts rather than parsed, so the calendar day never drifts with the viewer's zone.
+  private utcDateOf(isoDate: string): Date {
+    const [y, m, d] = isoDate.split("-").map(Number);
+    return new Date(Date.UTC(y, m - 1, d));
   }
 
   // Weekday of a "yyyy-MM-dd", read in UTC to match how the backend stores the date.
   private weekdayOf(isoDate: string): number {
-    const [y, m, d] = isoDate.split("-").map(Number);
-    return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+    return this.utcDateOf(isoDate).getUTCDay();
   }
 
   // ---------- Work-day settings ----------
@@ -441,7 +472,7 @@ export class OvertimeTrackerComponent implements OnInit {
   saveEntry(): void {
     if (this.isSaving) return;
     if (!this.entryForm.date || !this.entryForm.startTime || !this.entryForm.endTime) {
-      this.errorMessage = "Date, start time and end time are all required.";
+      this.errorMessage = this.translate.instant("overtime.errors.entryFieldsRequired");
       return;
     }
     this.isSaving = true;
@@ -466,7 +497,10 @@ export class OvertimeTrackerComponent implements OnInit {
 
   deleteEntry(entry: OvertimeEntry): void {
     if (!entry._id) return;
-    if (!confirm(`Delete the entry for ${this.isoDay(entry.date)}?`)) return;
+    const confirmMessage = this.translate.instant("overtime.deleteConfirm", {
+      date: this.isoDay(entry.date),
+    });
+    if (!confirm(confirmMessage)) return;
     this.secureService.deleteOvertimeEntry(entry._id).subscribe({
       next: () => this.loadMonth(),
       error: (err: HttpErrorResponse) => this.showError(err),
@@ -587,13 +621,15 @@ export class OvertimeTrackerComponent implements OnInit {
   // These return primitives, so binding them inside @for is safe under Eager change
   // detection (unlike a method returning a fresh array or object).
 
+  // The unit suffixes and their spacing differ per language ("2h 30m", "2시간 30분"),
+  // so the whole duration is built from a translated pattern rather than concatenated.
   formatMinutes(minutes: number | undefined): string {
     const m = minutes || 0;
     const h = Math.floor(m / 60);
     const rest = m % 60;
-    if (!h) return `${rest}m`;
-    if (!rest) return `${h}h`;
-    return `${h}h ${rest}m`;
+    if (!h) return this.translate.instant("overtime.units.minutes", { m: rest });
+    if (!rest) return this.translate.instant("overtime.units.hours", { h });
+    return this.translate.instant("overtime.units.hoursMinutes", { h, m: rest });
   }
 
   // True when the shift ran past midnight, so the table can flag it.
@@ -625,12 +661,29 @@ export class OvertimeTrackerComponent implements OnInit {
     const s = this.settings;
     if (!s) return "";
     const parts: string[] = [];
-    parts.push(`${s.shiftStart} + ${s.workHours}h`);
-    if (s.lunchBreakMinutes) parts.push(`${this.formatMinutes(s.lunchBreakMinutes)} lunch`);
-    parts.push(`overtime after ${this.boundaryLabel}`);
-    if (s.minimumOtMinutes) parts.push(`min ${this.formatMinutes(s.minimumOtMinutes)}`);
-    if (s.countEarlyArrival) parts.push("early arrival counts");
-    parts.push(`${s.otMultiplier}x`);
+    parts.push(
+      this.translate.instant("overtime.rule.schedule", {
+        start: s.shiftStart,
+        hours: s.workHours,
+      })
+    );
+    if (s.lunchBreakMinutes) {
+      parts.push(
+        this.translate.instant("overtime.rule.lunch", {
+          duration: this.formatMinutes(s.lunchBreakMinutes),
+        })
+      );
+    }
+    parts.push(this.translate.instant("overtime.rule.overtimeAfter", { time: this.boundaryLabel }));
+    if (s.minimumOtMinutes) {
+      parts.push(
+        this.translate.instant("overtime.rule.minimum", {
+          duration: this.formatMinutes(s.minimumOtMinutes),
+        })
+      );
+    }
+    if (s.countEarlyArrival) parts.push(this.translate.instant("overtime.rule.earlyArrival"));
+    parts.push(this.translate.instant("overtime.rule.multiplier", { value: s.otMultiplier }));
     return parts.join(" · ");
   }
 
@@ -661,12 +714,12 @@ export class OvertimeTrackerComponent implements OnInit {
         labels: days.map((d) => this.isoDay(d.date).slice(-2)),
         datasets: [
           {
-            label: "Paid overtime (h)",
+            label: this.translate.instant("overtime.chart.paidOvertime"),
             data: days.map((d) => Math.round((d.paidOtMinutes / 60) * 100) / 100),
             backgroundColor: "#0d6efd",
           },
           {
-            label: "Unpaid (h)",
+            label: this.translate.instant("overtime.chart.unpaid"),
             data: days.map(
               (d) => Math.round(((d.rawOtMinutes - d.paidOtMinutes) / 60) * 100) / 100
             ),
@@ -678,8 +731,15 @@ export class OvertimeTrackerComponent implements OnInit {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          x: { stacked: true, title: { display: true, text: "Day of month" } },
-          y: { stacked: true, beginAtZero: true, title: { display: true, text: "Hours" } },
+          x: {
+            stacked: true,
+            title: { display: true, text: this.translate.instant("overtime.chart.dayOfMonth") },
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            title: { display: true, text: this.translate.instant("overtime.chart.hours") },
+          },
         },
       },
     });

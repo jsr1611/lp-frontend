@@ -1,4 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { GithubService } from 'src/app/services/GithubService';
 
 @Component({
@@ -21,6 +22,7 @@ export class GithubRepoManagerComponent implements OnInit {
   SHOW_SELF = 'show_self';
   showRepos = this.ALL;
   showSelf = false;
+  private readonly translate = inject(TranslateService);
   constructor(private github: GithubService) { }
 
   ngOnInit(): void {
@@ -70,8 +72,10 @@ export class GithubRepoManagerComponent implements OnInit {
       if (!action) continue;
 
       if (action.delete) {
+        // Only the instruction is translated — the user still has to type the
+        // repository's real name, which is what `confirmed` is compared against.
         const confirmed = prompt(
-          `Type "${repo.name}" to DELETE this repository`
+          this.translate.instant('github.deleteConfirm', { name: repo.name })
         );
         if (confirmed !== repo.name) continue;
         await this.github.deleteRepo(repo.owner.login, repo.name);
@@ -86,7 +90,7 @@ export class GithubRepoManagerComponent implements OnInit {
       }
     }
 
-    alert('Actions completed');
+    alert(this.translate.instant('github.actionsCompleted'));
     this.cancel();
   }
 

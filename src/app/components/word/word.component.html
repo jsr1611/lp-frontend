@@ -1,4 +1,4 @@
-<h2 class="search-heading">Qidirilgan so`z: {{ searchKey }}</h2>
+<h2 class="search-heading">{{ 'word.searchedWord' | translate }}: {{ searchKey }}</h2>
 @if (word) {
   <div class="word-container">
     <div class="word-header">
@@ -13,12 +13,12 @@
     @if (fileExists) {
       <audio [id]="word._id" controls class="word-audio">
         <source [src]="'/assets/audio/' + word._id + '.m4a'" />
-        Your browser does not support the audio element.
+        {{ 'word.audioUnsupported' | translate }}
       </audio>
     }
   </div>
 } @else {
   <div class="no-word-found">
-    <i class="bi bi-exclamation-circle"></i> So'z topilmadi!
+    <i class="bi bi-exclamation-circle"></i> {{ 'word.notFound' | translate }}
   </div>
 }

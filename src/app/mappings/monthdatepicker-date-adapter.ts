@@ -19,6 +19,6 @@ export class MonthpickerDateAdapter extends NativeDateAdapter {
   
     override format(date: Date, displayFormat: any): string {
       const options = { year: 'numeric', month: 'long' } as const;
-      return new Intl.DateTimeFormat('en-US', options).format(date);
-    }    
+      return new Intl.DateTimeFormat(this.locale, options).format(date);
+    }
   }

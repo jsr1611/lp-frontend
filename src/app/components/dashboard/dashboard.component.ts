@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, Inject, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { AfterViewInit, Component, Inject, OnInit, ChangeDetectionStrategy, LOCALE_ID, inject } from "@angular/core";
 import { SecureService } from "src/app/services/SercureService";
 import { Chart, registerables } from "chart.js";
 import { User } from "src/app/models/user";
 import { AuthService } from "src/app/services/AuthService";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
+import { DatePipe } from "@angular/common";
+import { TranslateService } from "@ngx-translate/core";
 Chart.register(...registerables)
 @Component({
     selector: "app-dashboard",
@@ -25,6 +27,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   protected users!: User[];
   protected token: string | null = null;
+
+  private readonly translate = inject(TranslateService);
+  private readonly datePipe = inject(DatePipe);
+  /** The language the UI is running in — chart axis labels must follow it, not the machine's locale. */
+  private readonly locale = inject(LOCALE_ID);
 
   constructor(
     private authService: AuthService,
@@ -109,9 +116,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     const deviceCounts: { [key: string]: number } = {};
     this.visitsOverTime = {};
     
+    const unknown = this.translate.instant('dashboard.unknown');
+
     this.visitData.forEach(day => {
-      const date = new Date(day.date).toLocaleDateString();
-      
+      // These become chart axis labels, so they have to be formatted in the app's
+      // language rather than whatever locale the browser happens to be set to.
+      const date = this.datePipe.transform(day.date, 'shortDate', undefined, this.locale) ?? String(day.date);
+
       let rand = this.getRandomInt(0, 999);
 
       if (!this.visitsOverTime[date]) {
@@ -123,9 +134,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       this.visitsOverTime[date] += day.count;
       this.visitsOverTime2[date] += new Set(day.uniqueVisitors).size;
       day.visits.forEach((visit: { location: { country: string; }; device: { type: string; }; }) => {
-        const country = visit.location.country || 'Unknown';
+        // Country and device names come from the backend and stay as-is; only our
+        // own fallback is translated.
+        const country = visit.location.country || unknown;
         countryCounts[country] = (countryCounts[country] || 0) + 1;
-        const device = visit.device.type || 'Unknown';
+        const device = visit.device.type || unknown;
         deviceCounts[device] = (deviceCounts[device] || 0) + 1;
       });
     });
@@ -136,10 +149,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   drawCharts() {
-    this.drawPieChart('pieChart1', this.visitsByCountry, 'Visits by Country');
-    this.drawBarChart('barChart1', this.visitsOverTime, 'Total Visits Over Time');
-    this.drawBarChart('barChart2', this.visitsOverTime2, 'Unique Visits Over Time');
-    this.drawPieChart('deviceChart', this.deviceInfo, 'Device Information');
+    this.drawPieChart('pieChart1', this.visitsByCountry, this.translate.instant('dashboard.chart.visitsByCountry'));
+    this.drawBarChart('barChart1', this.visitsOverTime, this.translate.instant('dashboard.chart.totalVisitsOverTime'));
+    this.drawBarChart('barChart2', this.visitsOverTime2, this.translate.instant('dashboard.chart.uniqueVisitsOverTime'));
+    this.drawPieChart('deviceChart', this.deviceInfo, this.translate.instant('dashboard.chart.deviceInfo'));
   }
 
 

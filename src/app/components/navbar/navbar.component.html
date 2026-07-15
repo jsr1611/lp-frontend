@@ -2,48 +2,70 @@
   <div class="container-fluid">
     <a class="navbar-brand" href="/"><i class="bi bi-house"></i></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      aria-controls="navbarSupportedContent" aria-expanded="false" [attr.aria-label]="'nav.toggle' | translate">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="/words">Yangi so'zlar</a>
+          <a class="nav-link" href="/words">{{ 'nav.words' | translate }}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/add-word">Yangi so'z qo'shish</a>
+          <a class="nav-link" href="/add-word">{{ 'nav.addWord' | translate }}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/tests">Test yechish</a>
+          <a class="nav-link" href="/tests">{{ 'nav.tests' | translate }}</a>
         </li>
         @if (authService.getToken()) {
           <li class="nav-item">
-            <a class="nav-link" href="/downloader">Downloader</a>
+            <a class="nav-link" href="/downloader">{{ 'nav.downloader' | translate }}</a>
           </li>
         }
         @if (authService.getToken()) {
           <li class="nav-item">
-            <a class="nav-link" href="/dashboard">Dashboard</a>
+            <a class="nav-link" href="/dashboard">{{ 'nav.dashboard' | translate }}</a>
           </li>
         }
         @if (authService.getToken()) {
           <li class="nav-item">
-            <a class="nav-link" href="/loans">Loans</a>
+            <a class="nav-link" href="/loans">{{ 'nav.loans' | translate }}</a>
           </li>
         }
         @if (authService.getToken()) {
           <li class="nav-item">
-            <a class="nav-link" href="/overtime">Overtime</a>
+            <a class="nav-link" href="/overtime">{{ 'nav.overtime' | translate }}</a>
           </li>
         }
       </ul>
       <div class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="O'zbekcha so'z qidiruvi" aria-label="Search"
+        <input class="form-control me-2" type="search" [attr.placeholder]="'nav.searchPlaceholder' | translate"
+          [attr.aria-label]="'nav.search' | translate"
           [(ngModel)]="searchKey" (keydown.enter)="search()">
-          <button class="btn btn-outline-success" type="submit" (click)="search()">Qidiruv</button>
+          <button class="btn btn-outline-success" type="submit" (click)="search()">{{ 'nav.search' | translate }}</button>
           <!-- TODO implement black/white theme changer -->
           <!-- <button id="theme-changer" class="btn btn-light" (click)="changeThem()"><i class="bi bi-sun-fill"></i></button> -->
           <ul class="navbar-nav ms-auto">
+            <li class="nav-item dropdown d-flex align-items-center">
+              <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false" [attr.aria-label]="'nav.language' | translate">
+                <i class="bi bi-translate"></i>
+                <span class="ms-1">{{ languageService.currentDef.label }}</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                @for (lang of languageService.languages; track lang.code) {
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="#"
+                      [class.active]="lang.code === languageService.currentLang()"
+                      (click)="$event.preventDefault(); switchLanguage(lang.code)">
+                      <span>{{ lang.label }}</span>
+                      @if (lang.code === languageService.currentLang()) {
+                        <i class="bi bi-check2 ms-2"></i>
+                      }
+                    </a>
+                  </li>
+                }
+              </ul>
+            </li>
             @if (!authService.getToken()) {
               <li class="nav-item dropdown d-flex align-items-center">
                 <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown"
@@ -52,10 +74,10 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="loginDropdown">
                   <li>
-                    <a class="dropdown-item" routerLink="/login">Login</a>
+                    <a class="dropdown-item" routerLink="/login">{{ 'auth.login' | translate }}</a>
                   </li>
                   <li>
-                    <a class="dropdown-item" routerLink="/signup">Sign Up</a>
+                    <a class="dropdown-item" routerLink="/signup">{{ 'auth.signup' | translate }}</a>
                   </li>
                 </ul>
               </li>
@@ -64,14 +86,14 @@
               <li class="nav-item dropdown d-flex align-items-center">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false">
-                  <img src="assets/images/default-profile-image.jpg" alt="User Icon" class="user-icon">
+                  <img src="assets/images/default-profile-image.jpg" [attr.alt]="'nav.userIcon' | translate" class="user-icon">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                  <li><a class="dropdown-item" routerLink="/profile">Profile</a></li>
+                  <li><a class="dropdown-item" routerLink="/profile">{{ 'nav.profile' | translate }}</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>
-                  <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+                  <li><a class="dropdown-item" (click)="logout()">{{ 'auth.logout' | translate }}</a></li>
                 </ul>
               </li>
             }

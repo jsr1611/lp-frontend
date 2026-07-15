@@ -1,0 +1,525 @@
+{
+  "addWord": {
+    "arabic": "Arabic",
+    "arabicPlaceholder": "Enter the word in Arabic",
+    "category": "Choose the word type",
+    "english": "English (optional)",
+    "englishPlaceholder": "Enter the English meaning of the word",
+    "errors": {
+      "saveFailed": "Something went wrong while saving the word.",
+      "saveFailedDetail": "Something went wrong while saving the word: {{detail}}"
+    },
+    "meaning": "Meaning",
+    "meaningPlaceholder": "Enter the meaning of the word",
+    "pronunciation": "Pronunciation",
+    "pronunciationPlaceholder": "Enter how the word is pronounced",
+    "remark": "Additional note (for tests)",
+    "remarkPlaceholder": "Used for grouping tests",
+    "saved": "Word saved successfully…",
+    "title": "Add a new word",
+    "viewWords": "View new words"
+  },
+  "auth": {
+    "createAccount": "Create an account",
+    "email": "Email",
+    "errors": {
+      "resetPasswordFailed": "Failed to reset password"
+    },
+    "firstname": "First name",
+    "forgotPassword": "Forgot your password?",
+    "lastname": "Last name",
+    "login": "Log in",
+    "logout": "Log out",
+    "password": "Password",
+    "resetPasswordSent": "Password reset instructions sent to your email",
+    "resetPasswordSubmit": "Reset password",
+    "resetPasswordTitle": "Reset password",
+    "signup": "Sign up",
+    "username": "Username"
+  },
+  "category": {
+    "adjective": "Adjective",
+    "adverb": "Adverb",
+    "conjunction": "Conjunction",
+    "noun": "Noun",
+    "number": "Numeral",
+    "other": "Other",
+    "preposition": "Preposition",
+    "verb": "Verb"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "currency": "Currency",
+    "date": "Date",
+    "delete": "Delete",
+    "save": "Save",
+    "saving": "Saving…"
+  },
+  "currency": {
+    "AED": "United Arab Emirates Dirham",
+    "CNY": "Chinese Yuan",
+    "EGP": "Egyptian Pound",
+    "EUR": "Euro",
+    "GBP": "British Pound",
+    "JPY": "Japanese Yen",
+    "KGS": "Kyrgyz Som",
+    "KRW": "South Korean Won",
+    "KZT": "Kazakh Tenge",
+    "PKR": "Pakistani Rupee",
+    "RUB": "Russian Ruble",
+    "SAR": "Saudi Riyal",
+    "TJS": "Tajik Somoni",
+    "USD": "US Dollar",
+    "UZS": "Uzbek Som"
+  },
+  "dashboard": {
+    "action": {
+      "activate": "Activate?",
+      "deactivate": "Deactivate?"
+    },
+    "chart": {
+      "deviceInfo": "Device Information",
+      "totalVisitsOverTime": "Total Visits Over Time",
+      "uniqueVisitsOverTime": "Unique Visits Over Time",
+      "visitsByCountry": "Visits by Country"
+    },
+    "defaultPhotoAlt": "Default profile image",
+    "photoAlt": "Photo",
+    "role": {
+      "admin": "Admin",
+      "user": "User"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "table": {
+      "email": "Email",
+      "lastLogin": "Last login",
+      "name": "Name",
+      "no": "#",
+      "picture": "Picture",
+      "role": "Role",
+      "signupDate": "Signup date",
+      "status": "Status",
+      "username": "Username"
+    },
+    "title": "Website Visits Statistics",
+    "unknown": "Unknown",
+    "users": {
+      "title": "User Management"
+    }
+  },
+  "downloader": {
+    "backendPill": "FastAPI backend",
+    "convertToMp3": "Convert to MP3",
+    "download": "Download",
+    "lead": "Paste a link, pick your format, and the file drops straight to your machine.",
+    "proTip": "Want a quick audio rip? Toggle MP3 and keep the browser tab open until the download starts.",
+    "proTipTitle": "Pro tip",
+    "status": {
+      "emptyResponse": "Download failed. Empty response.",
+      "failed": "Download failed. Please try again.",
+      "invalidUrl": "Enter a valid YouTube or Instagram URL.",
+      "preparingMp3": "Preparing MP3 download…",
+      "preparingMp4": "Preparing MP4 download…",
+      "ready": "Ready.",
+      "readyToDownload": "Ready to download.",
+      "started": "Download started. Keep this tab open."
+    },
+    "title": "Download YouTube/Instagram clips without the fuss.",
+    "urlPlaceholder": "https://www.youtube.com/watch?v=... or https://www.instagram.com/reel/...",
+    "videoUrl": "Video URL"
+  },
+  "github": {
+    "actionsCompleted": "Actions completed",
+    "deleteConfirm": "Type \"{{name}}\" to DELETE this repository",
+    "loadRepos": "Load repos",
+    "loading": "Loading repositories…",
+    "onlySelf": "Only self",
+    "private": "Private",
+    "public": "Public",
+    "table": {
+      "name": "Name",
+      "ownerId": "Owner id",
+      "visibility": "Visibility"
+    },
+    "title": "GitHub Repo Manager",
+    "tokenPlaceholder": "Paste GitHub token"
+  },
+  "home": {
+    "title": "Let's learn Arabic!",
+    "viewWords": "View new words"
+  },
+  "loans": {
+    "addLoan": "Add loan",
+    "addRepayment": "Add repayment",
+    "amount": "Amount",
+    "balancesByPerson": "Balances by person",
+    "cancel": "Cancel",
+    "chart": {
+      "currency": "Chart currency",
+      "netBalance": "Net balance ({{code}})",
+      "outstanding": "Outstanding ({{code}})"
+    },
+    "contact": "Contact",
+    "contactMode": {
+      "existing": "Existing",
+      "new": "New contact"
+    },
+    "currency": "Currency",
+    "currencyBalance": "{{code}} balance",
+    "date": "Date",
+    "dateTaken": "Date taken",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this loan with {{name}}? This cannot be undone.",
+    "direction": {
+      "borrowed": "I owe",
+      "borrowedLong": "I owe (borrowed)",
+      "label": "Direction",
+      "lent": "Owed to me",
+      "lentLong": "Owed to me (lent)"
+    },
+    "dueDate": "Due date",
+    "dueOn": "(due {{date}})",
+    "dueSoonCount": "Due soon ({{count}})",
+    "edit": "Edit",
+    "editLoan": "Edit loan",
+    "email": "Email",
+    "empty": {
+      "noMatch": "No loans match these filters.",
+      "noOutstanding": "No outstanding loans. Add one to get started.",
+      "noneWithContact": "No loans with this contact."
+    },
+    "errors": {
+      "amountPositive": "Amount must be greater than 0.",
+      "generic": "Something went wrong.",
+      "nameRequired": "Contact name is required.",
+      "repaymentPositive": "Repayment amount must be greater than 0.",
+      "selectContact": "Please select a contact."
+    },
+    "filters": {
+      "active": "Active (unsettled)",
+      "all": "All"
+    },
+    "importFromPhone": "Import from phone",
+    "links": {
+      "call": "Call",
+      "email": "Email"
+    },
+    "namePlaceholder": "Name (required)",
+    "net": "Net",
+    "netPosition": "Net position",
+    "noChannels": "No contact channels saved",
+    "noRepayments": "No repayments logged yet.",
+    "note": "Note",
+    "notePlaceholder": "What was it for?",
+    "ofPrincipal": "of {{principal}}",
+    "optional": "(optional)",
+    "overdueCount": "Overdue ({{count}})",
+    "phone": "Phone",
+    "remainingLabel": "Remaining:",
+    "repaymentsWith": "Repayments — {{name}}",
+    "save": "Save",
+    "saving": "Saving…",
+    "selectContact": "— select a contact —",
+    "status": {
+      "label": "Status",
+      "open": "Open",
+      "paid": "Paid",
+      "partial": "Partially paid"
+    },
+    "table": {
+      "actions": "Actions",
+      "contact": "Contact",
+      "direction": "Direction",
+      "due": "Due",
+      "dueDate": "Due date",
+      "principal": "Principal",
+      "remaining": "Remaining",
+      "status": "Status",
+      "taken": "Taken"
+    },
+    "title": "Debt & Loan Tracker",
+    "update": "Update"
+  },
+  "nav": {
+    "addWord": "Add a word",
+    "dashboard": "Dashboard",
+    "downloader": "Downloader",
+    "language": "Language",
+    "loans": "Loans",
+    "overtime": "Overtime",
+    "profile": "Profile",
+    "search": "Search",
+    "searchPlaceholder": "Search Uzbek words",
+    "tests": "Take a test",
+    "toggle": "Toggle navigation",
+    "userIcon": "User icon",
+    "words": "New words"
+  },
+  "notFound": {
+    "redirecting": "Returning to home page...",
+    "title": "Oops! Page not found."
+  },
+  "overtime": {
+    "baseHourlyRate": "Base hourly rate",
+    "baseHourlyRateHelp": "Your normal rate — the multiplier is applied on top.",
+    "belowMinimumTitle": "Below the minimum — earns nothing",
+    "chart": {
+      "dayOfMonth": "Day of month",
+      "hours": "Hours",
+      "paidOvertime": "Paid overtime (h)",
+      "title": "Overtime by day",
+      "unpaid": "Unpaid (h)"
+    },
+    "companyIntro": "Not used in any calculation. Stored so later stats can compare overtime against your base pay.",
+    "companyName": "Company",
+    "contractEnd": "Contract end",
+    "contractSalary": "Contract salary",
+    "contractStart": "Contract start",
+    "contractedDays": "Contracted days",
+    "contractedDaysAria": "Contracted working days",
+    "contractedDaysHelp": "Any day outside these is a rest day — every hour worked counts, at the 휴일근로 rate below.",
+    "countEarlyArrival": "Count early arrival as overtime",
+    "countEarlyArrivalHelp": "On for a plain 8-hour day where anything outside it counts. Off where only evening overtime is paid.",
+    "deleteConfirm": "Delete the entry for {{date}}?",
+    "deleteEntry": "Delete entry",
+    "editDay": "Edit day",
+    "editEntry": "Edit entry",
+    "empty": "Nothing logged for this month yet.",
+    "endTime": "End (퇴근 시간)",
+    "endTimeHelp": "Earlier than the start = finished after midnight.",
+    "errors": {
+      "entryFieldsRequired": "Date, start time and end time are all required.",
+      "hourlyRateRequired": "Enter your base hourly rate.",
+      "workDaysRequired": "Pick at least one working day."
+    },
+    "estimateHourly": "Use this to estimate my hourly rate",
+    "estimateHourlyHelp": "통상시급 (ordinary hourly wage): monthly pay ÷ {{hours}} hours ({{workHours}}h × 5 days + 주휴, × 4.345 weeks). An estimate — check it against your payslip.",
+    "getStarted": "Get started",
+    "holidayLookupUnavailable": "Couldn't check public holidays — weekends are still detected, but tick the box yourself for a 빨간날.",
+    "logADay": "Log a day",
+    "logDay": "Log day",
+    "lostToRounding": "Lost to rounding",
+    "lunchMinutes": "Lunch (min)",
+    "minimumHelp": "Stay less than this and the day pays nothing at all.",
+    "minimumOnRestDays": "Apply the minimum on rest days too",
+    "minimumOnRestDaysHelp": "Usually off — coming in at all on a day off is the commitment.",
+    "minimumToQualify": "Minimum to qualify",
+    "minimums": {
+      "h1": "1 hour",
+      "h1m30": "1 hour 30 minutes",
+      "h2": "2 hours",
+      "h3": "3 hours",
+      "h4": "4 hours",
+      "m30": "30 minutes",
+      "none": "No minimum — every minute counts"
+    },
+    "multiplier15Flat": "1.5× — flat, no split",
+    "multiplier15Statutory": "1.5× — statutory",
+    "multiplier20": "2.0×",
+    "multiplier20Statutory": "2.0× — statutory",
+    "nextDayBadge": "+1d",
+    "nextMonth": "Next month",
+    "note": "Note",
+    "optional": "— optional",
+    "otRate": "Overtime rate",
+    "otRate15": "1.5× — standard overtime",
+    "otRate20": "2.0× — night work (22:00–06:00)",
+    "otRateHelp": "Korean law sets overtime at 1.5×; night work adds another 0.5×.",
+    "pastMidnight": "Shift ran past midnight",
+    "position": "Position",
+    "prevMonth": "Previous month",
+    "preview": {
+      "countsAs": "Counts as",
+      "earn": "You earn",
+      "nothing": "nothing — under the minimum",
+      "restDayHelp": "Rest day — every hour counts. First 8h at {{first8}}×, beyond at {{beyond}}×. Breaks are deducted per 근로기준법 §54.",
+      "startsAt": "Overtime starts at {{time}}.",
+      "worked": "Overtime worked"
+    },
+    "rates": {
+      "base": "{{rate}}/h base",
+      "mixed": "Mixed rates this month",
+      "mixedTitle": "Entries this month were logged at different rates",
+      "overtime": "{{rate}}/h overtime",
+      "restDays": "Rest days at {{first8}}× / {{beyond}}×."
+    },
+    "resnapshot": "Re-apply current settings to this day",
+    "resnapshotHelp": "Off by default — the day keeps the rate and rules it was logged under.",
+    "restDay": "Rest day",
+    "restDayBeyond": "Beyond 8 hours",
+    "restDayBeyondHelp": "Korean law adds a further 50% past 8 hours on a rest day.",
+    "restDayCheckbox": "Rest day (휴일/주말)",
+    "restDayFirst8": "First 8 hours",
+    "restDayNotice": "{{reason}} — every hour counts, at the 휴일근로 (holiday work) rate.",
+    "restDayNoticeGeneric": "Every hour counts, at the 휴일근로 (holiday work) rate.",
+    "restDaysIntro": "Weekends and 공휴일. There is no scheduled day to exceed, so every hour worked is overtime from the first minute.",
+    "retry": "Retry",
+    "rounding": "Rounding",
+    "roundingDown30": "Down to 30 minutes",
+    "roundingDown60": "Down to whole hours",
+    "roundingExact": "Exact minutes",
+    "rule": {
+      "earlyArrival": "early arrival counts",
+      "lunch": "{{duration}} lunch",
+      "minimum": "min {{duration}}",
+      "multiplier": "{{value}}×",
+      "overtimeAfter": "overtime after {{time}}",
+      "schedule": "{{start}} + {{hours}}h"
+    },
+    "salaryAnnual": "Annual (연봉)",
+    "salaryMonthly": "Monthly (월급)",
+    "salaryPeriod": "Salary period",
+    "saveSettings": "Save settings",
+    "scheduledStart": "Scheduled start (출근 시간)",
+    "sections": {
+      "company": "Company",
+      "counting": "How overtime is counted",
+      "pay": "Pay",
+      "restDays": "Rest days (휴일근로)",
+      "workingDay": "Your working day"
+    },
+    "settings": "Settings",
+    "settingsIntro": "Changes apply to days you log from now on. Already-logged days keep their original rate and rules.",
+    "setupIntro": "Tell us your hourly rate and how your employer counts overtime. You can change all of this later — past entries keep the rate they were logged under.",
+    "setupTitle": "Set up your overtime",
+    "shift": "Shift",
+    "shiftDay": "Day shift",
+    "shiftNight": "Night shift",
+    "startTime": "Start (출근 시간)",
+    "stats": {
+      "daysLogged": "Days logged",
+      "daysPaid": "({{count}} paid)",
+      "paid": "Paid overtime",
+      "pay": "Overtime pay",
+      "unpaid": "Worked but unpaid",
+      "unpaidHelp": "Under the minimum, or lost to rounding."
+    },
+    "table": {
+      "clockIn": "Clock in (출근)",
+      "clockOut": "Clock out (퇴근)",
+      "dateFormat": "MMM d (EEE)",
+      "earned": "Earned",
+      "overtime": "Overtime",
+      "paid": "Paid"
+    },
+    "title": "Overtime",
+    "underMinimum": "under minimum",
+    "units": {
+      "hours": "{{h}}h",
+      "hoursMinutes": "{{h}}h {{m}}m",
+      "minutes": "{{m}}m"
+    },
+    "weekdays": {
+      "fri": "Fri",
+      "mon": "Mon",
+      "sat": "Sat",
+      "sun": "Sun",
+      "thu": "Thu",
+      "tue": "Tue",
+      "wed": "Wed"
+    },
+    "workHours": "Work hours"
+  },
+  "profile": {
+    "activated": "Activated:",
+    "addNew": "Add new",
+    "changePicture": "Change picture",
+    "chart": {
+      "monthlyTotal": "Total monthly expenses for {{year}} in {{currency}}",
+      "tooltip": "{{label}}: {{amount}} ({{percent}})"
+    },
+    "close": "Close",
+    "defaultPictureAlt": "Default profile picture",
+    "delete": "Delete",
+    "edit": "Edit",
+    "editUser": "Update user info",
+    "email": "Email:",
+    "errors": {
+      "fileTooLarge": "File is too large. Maximum allowed size is {{size}} MB."
+    },
+    "expenses": {
+      "forMonth": "Expenses for {{month}}",
+      "summaryFor": "Summary for {{month}}",
+      "title": "Monthly Expense Management"
+    },
+    "firstname": "First name:",
+    "form": {
+      "addExpense": "Add expense",
+      "amount": "Amount:",
+      "amountPlaceholder": "Enter amount",
+      "category": "Category:",
+      "categoryPlaceholder": "E.g., Food, Transport",
+      "date": "Date:",
+      "description": "Description:",
+      "descriptionPlaceholder": "Add a note…"
+    },
+    "lastname": "Last name:",
+    "name": "Name:",
+    "no": "No",
+    "pictureAlt": "Profile picture",
+    "selectCurrency": "Select currency",
+    "siteAdmin": "Site administrator",
+    "table": {
+      "action": "Action",
+      "amount": "Amount",
+      "category": "Category",
+      "date": "Date",
+      "description": "Description"
+    },
+    "title": "User Profile",
+    "total": "Total:",
+    "update": "Update",
+    "username": "Username:",
+    "yes": "Yes"
+  },
+  "shell": {
+    "dailyVisits": "Daily visits: {{count}}"
+  },
+  "tests": {
+    "bestResult": "Your best result",
+    "correctCount": "{{count}} correct",
+    "incorrectCount": "{{count}} wrong",
+    "langPair": {
+      "arEn": "Arabic–English",
+      "arUz": "Arabic–Uzbek",
+      "enAr": "English–Arabic",
+      "enUz": "English–Uzbek",
+      "uzAr": "Uzbek–Arabic",
+      "uzEn": "Uzbek–English"
+    },
+    "next": "Next",
+    "nextTitle": "Load the next test",
+    "noConnection": "No connection to the server. Please be patient and try again in a little while. Thank you",
+    "numberOfTests": "Number of tests",
+    "questionAfter": "Please choose one of the following",
+    "questionBefore": "What is the meaning of this word?",
+    "result": "Result",
+    "resultAlert": "You answered {{correct}} of {{total}} tests correctly. Give it another try!",
+    "stop": "Finish the test",
+    "stopTitle": "Finish the test here?",
+    "testNumber": "Test number"
+  },
+  "word": {
+    "audioUnsupported": "Your browser does not support the audio element.",
+    "notFound": "Word not found!",
+    "searchedWord": "Searched word"
+  },
+  "words": {
+    "addWord": "Add a new word",
+    "back": "Go back",
+    "table": {
+      "arabic": "Arabic",
+      "english": "English",
+      "nr": "No.",
+      "pronunciation": "Pronunciation",
+      "remark": "Note",
+      "update": "Update",
+      "uzbek": "Uzbek"
+    },
+    "title": "New words",
+    "update": "Update"
+  }
+}

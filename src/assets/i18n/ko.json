@@ -1,0 +1,525 @@
+{
+  "addWord": {
+    "arabic": "아랍어",
+    "arabicPlaceholder": "단어를 아랍어로 입력하세요",
+    "category": "품사를 선택하세요",
+    "english": "영어 (선택)",
+    "englishPlaceholder": "단어의 영어 뜻을 입력하세요",
+    "errors": {
+      "saveFailed": "단어를 저장하는 중 문제가 발생했습니다.",
+      "saveFailedDetail": "단어를 저장하는 중 문제가 발생했습니다: {{detail}}"
+    },
+    "meaning": "뜻",
+    "meaningPlaceholder": "단어의 뜻을 입력하세요",
+    "pronunciation": "발음",
+    "pronunciationPlaceholder": "단어의 발음을 입력하세요",
+    "remark": "추가 정보 (테스트용)",
+    "remarkPlaceholder": "테스트 분류에 사용됩니다",
+    "saved": "단어가 저장되었습니다…",
+    "title": "새 단어 추가",
+    "viewWords": "새 단어 보기"
+  },
+  "auth": {
+    "createAccount": "계정 만들기",
+    "email": "이메일",
+    "errors": {
+      "resetPasswordFailed": "비밀번호를 재설정하지 못했습니다"
+    },
+    "firstname": "이름",
+    "forgotPassword": "비밀번호를 잊으셨나요?",
+    "lastname": "성",
+    "login": "로그인",
+    "logout": "로그아웃",
+    "password": "비밀번호",
+    "resetPasswordSent": "비밀번호 재설정 안내를 이메일로 보냈습니다",
+    "resetPasswordSubmit": "비밀번호 재설정",
+    "resetPasswordTitle": "비밀번호 재설정",
+    "signup": "회원가입",
+    "username": "사용자 이름"
+  },
+  "category": {
+    "adjective": "형용사",
+    "adverb": "부사",
+    "conjunction": "접속사",
+    "noun": "명사",
+    "number": "수사",
+    "other": "기타",
+    "preposition": "전치사",
+    "verb": "동사"
+  },
+  "common": {
+    "cancel": "취소",
+    "currency": "통화",
+    "date": "날짜",
+    "delete": "삭제",
+    "save": "저장",
+    "saving": "저장 중…"
+  },
+  "currency": {
+    "AED": "아랍에미리트 디르함",
+    "CNY": "중국 위안",
+    "EGP": "이집트 파운드",
+    "EUR": "유로",
+    "GBP": "영국 파운드",
+    "JPY": "일본 엔",
+    "KGS": "키르기스스탄 솜",
+    "KRW": "대한민국 원",
+    "KZT": "카자흐스탄 텡게",
+    "PKR": "파키스탄 루피",
+    "RUB": "러시아 루블",
+    "SAR": "사우디 리얄",
+    "TJS": "타지키스탄 소모니",
+    "USD": "미국 달러",
+    "UZS": "우즈베키스탄 숨"
+  },
+  "dashboard": {
+    "action": {
+      "activate": "활성화할까요?",
+      "deactivate": "비활성화할까요?"
+    },
+    "chart": {
+      "deviceInfo": "기기 정보",
+      "totalVisitsOverTime": "기간별 총 방문",
+      "uniqueVisitsOverTime": "기간별 순 방문",
+      "visitsByCountry": "국가별 방문"
+    },
+    "defaultPhotoAlt": "기본 프로필 이미지",
+    "photoAlt": "사진",
+    "role": {
+      "admin": "관리자",
+      "user": "사용자"
+    },
+    "status": {
+      "active": "활성",
+      "inactive": "비활성"
+    },
+    "table": {
+      "email": "이메일",
+      "lastLogin": "마지막 로그인",
+      "name": "이름",
+      "no": "번호",
+      "picture": "사진",
+      "role": "역할",
+      "signupDate": "가입일",
+      "status": "상태",
+      "username": "사용자명"
+    },
+    "title": "웹사이트 방문 통계",
+    "unknown": "알 수 없음",
+    "users": {
+      "title": "사용자 관리"
+    }
+  },
+  "downloader": {
+    "backendPill": "FastAPI 백엔드",
+    "convertToMp3": "MP3로 변환",
+    "download": "내려받기",
+    "lead": "링크를 붙여넣고 형식을 고르면 파일이 기기에 바로 저장됩니다.",
+    "proTip": "오디오만 빠르게 받고 싶으신가요? MP3를 켜고 내려받기가 시작될 때까지 브라우저 탭을 열어 두세요.",
+    "proTipTitle": "유용한 팁",
+    "status": {
+      "emptyResponse": "내려받기에 실패했습니다. 응답이 비어 있습니다.",
+      "failed": "내려받기에 실패했습니다. 다시 시도해 주세요.",
+      "invalidUrl": "올바른 YouTube 또는 Instagram 링크를 입력하세요.",
+      "preparingMp3": "MP3 내려받기를 준비하는 중…",
+      "preparingMp4": "MP4 내려받기를 준비하는 중…",
+      "ready": "준비됨.",
+      "readyToDownload": "내려받을 준비가 되었습니다.",
+      "started": "내려받기가 시작되었습니다. 이 탭을 열어 두세요."
+    },
+    "title": "YouTube/Instagram 영상을 번거로움 없이 내려받으세요.",
+    "urlPlaceholder": "https://www.youtube.com/watch?v=... 또는 https://www.instagram.com/reel/...",
+    "videoUrl": "동영상 URL"
+  },
+  "github": {
+    "actionsCompleted": "작업이 완료되었습니다",
+    "deleteConfirm": "이 저장소를 삭제하려면 \"{{name}}\"을(를) 입력하세요",
+    "loadRepos": "저장소 불러오기",
+    "loading": "저장소를 불러오는 중…",
+    "onlySelf": "내 저장소만",
+    "private": "비공개",
+    "public": "공개",
+    "table": {
+      "name": "이름",
+      "ownerId": "소유자 ID",
+      "visibility": "공개 범위"
+    },
+    "title": "GitHub 저장소 관리자",
+    "tokenPlaceholder": "GitHub 토큰 붙여넣기"
+  },
+  "home": {
+    "title": "아랍어를 배워봅시다!",
+    "viewWords": "새 단어 보기"
+  },
+  "loans": {
+    "addLoan": "대여금 추가",
+    "addRepayment": "상환 추가",
+    "amount": "금액",
+    "balancesByPerson": "사람별 잔액",
+    "cancel": "취소",
+    "chart": {
+      "currency": "차트 통화",
+      "netBalance": "순 잔액 ({{code}})",
+      "outstanding": "미상환 ({{code}})"
+    },
+    "contact": "연락처",
+    "contactMode": {
+      "existing": "기존",
+      "new": "새 연락처"
+    },
+    "currency": "통화",
+    "currencyBalance": "{{code}} 잔액",
+    "date": "날짜",
+    "dateTaken": "발생일",
+    "delete": "삭제",
+    "deleteConfirm": "{{name}} 님과의 이 대여금을 삭제하시겠습니까? 되돌릴 수 없습니다.",
+    "direction": {
+      "borrowed": "내가 갚을 돈",
+      "borrowedLong": "내가 갚을 돈 (빌림)",
+      "label": "구분",
+      "lent": "내가 받을 돈",
+      "lentLong": "내가 받을 돈 (빌려줌)"
+    },
+    "dueDate": "상환 기한",
+    "dueOn": "(기한: {{date}})",
+    "dueSoonCount": "기한 임박 ({{count}})",
+    "edit": "수정",
+    "editLoan": "대여금 수정",
+    "email": "이메일",
+    "empty": {
+      "noMatch": "이 필터에 해당하는 대여금이 없습니다.",
+      "noOutstanding": "미상환 대여금이 없습니다. 하나 추가해 시작하세요.",
+      "noneWithContact": "이 연락처와 관련된 대여금이 없습니다."
+    },
+    "errors": {
+      "amountPositive": "금액은 0보다 커야 합니다.",
+      "generic": "문제가 발생했습니다.",
+      "nameRequired": "연락처 이름을 입력해야 합니다.",
+      "repaymentPositive": "상환 금액은 0보다 커야 합니다.",
+      "selectContact": "연락처를 선택해 주세요."
+    },
+    "filters": {
+      "active": "진행 중 (미정산)",
+      "all": "전체"
+    },
+    "importFromPhone": "휴대폰에서 가져오기",
+    "links": {
+      "call": "전화 걸기",
+      "email": "이메일 보내기"
+    },
+    "namePlaceholder": "이름 (필수)",
+    "net": "순 잔액",
+    "netPosition": "순 잔액",
+    "noChannels": "저장된 연락 수단이 없습니다",
+    "noRepayments": "아직 기록된 상환이 없습니다.",
+    "note": "메모",
+    "notePlaceholder": "어떤 용도였나요?",
+    "ofPrincipal": "/ 총 {{principal}}",
+    "optional": "(선택)",
+    "overdueCount": "연체 ({{count}})",
+    "phone": "전화번호",
+    "remainingLabel": "잔액:",
+    "repaymentsWith": "상환 내역 — {{name}}",
+    "save": "저장",
+    "saving": "저장 중…",
+    "selectContact": "— 연락처 선택 —",
+    "status": {
+      "label": "상태",
+      "open": "미상환",
+      "paid": "상환 완료",
+      "partial": "부분 상환"
+    },
+    "table": {
+      "actions": "작업",
+      "contact": "연락처",
+      "direction": "구분",
+      "due": "기한",
+      "dueDate": "상환 기한",
+      "principal": "원금",
+      "remaining": "잔액",
+      "status": "상태",
+      "taken": "발생일"
+    },
+    "title": "채무 및 대여금 관리",
+    "update": "수정"
+  },
+  "nav": {
+    "addWord": "단어 추가",
+    "dashboard": "대시보드",
+    "downloader": "다운로더",
+    "language": "언어",
+    "loans": "대여금",
+    "overtime": "초과근무",
+    "profile": "프로필",
+    "search": "검색",
+    "searchPlaceholder": "우즈베크어 단어 검색",
+    "tests": "테스트 풀기",
+    "toggle": "메뉴 열기",
+    "userIcon": "사용자 아이콘",
+    "words": "새 단어"
+  },
+  "notFound": {
+    "redirecting": "홈페이지로 돌아갑니다...",
+    "title": "이런! 페이지를 찾을 수 없습니다."
+  },
+  "overtime": {
+    "baseHourlyRate": "기본 시급",
+    "baseHourlyRateHelp": "평상시 시급이며, 배율은 여기에 적용됩니다.",
+    "belowMinimumTitle": "최소 시간 미달 — 지급되지 않습니다",
+    "chart": {
+      "dayOfMonth": "일자",
+      "hours": "시간",
+      "paidOvertime": "지급 초과근무 (시간)",
+      "title": "일별 초과근무",
+      "unpaid": "미지급 (시간)"
+    },
+    "companyIntro": "계산에는 사용되지 않습니다. 나중에 통계에서 초과근무를 기본급과 비교할 수 있도록 저장됩니다.",
+    "companyName": "회사명",
+    "contractEnd": "계약 종료일",
+    "contractSalary": "계약 급여",
+    "contractStart": "계약 시작일",
+    "contractedDays": "소정근로일",
+    "contractedDaysAria": "소정근로일 선택",
+    "contractedDaysHelp": "여기에 포함되지 않은 날은 휴일이며, 근무한 모든 시간이 아래 휴일근로 배율로 계산됩니다.",
+    "countEarlyArrival": "조기 출근도 초과근무로 인정",
+    "countEarlyArrivalHelp": "소정 시간 외 모든 근무를 인정하는 8시간 근무제라면 켜세요. 연장근로만 지급된다면 끄세요.",
+    "deleteConfirm": "{{date}} 기록을 삭제할까요?",
+    "deleteEntry": "기록 삭제",
+    "editDay": "근무 수정",
+    "editEntry": "기록 수정",
+    "empty": "이번 달에 기록된 근무가 없습니다.",
+    "endTime": "퇴근 시간",
+    "endTimeHelp": "출근 시간보다 이르면 자정 이후 퇴근으로 처리됩니다.",
+    "errors": {
+      "entryFieldsRequired": "날짜, 출근 시간, 퇴근 시간을 모두 입력하세요.",
+      "hourlyRateRequired": "기본 시급을 입력하세요.",
+      "workDaysRequired": "근무일을 하나 이상 선택하세요."
+    },
+    "estimateHourly": "이 값으로 시급 추정하기",
+    "estimateHourlyHelp": "통상시급: 월급 ÷ {{hours}}시간 ({{workHours}}시간 × 5일 + 주휴, × 4.345주). 추정치이므로 급여명세서와 대조하세요.",
+    "getStarted": "시작하기",
+    "holidayLookupUnavailable": "공휴일을 확인할 수 없습니다 — 주말은 그대로 인식되지만, 빨간날은 직접 체크해 주세요.",
+    "logADay": "근무 기록하기",
+    "logDay": "근무 기록",
+    "lostToRounding": "절사로 사라짐",
+    "lunchMinutes": "점심시간 (분)",
+    "minimumHelp": "이보다 적게 근무하면 그날은 전혀 지급되지 않습니다.",
+    "minimumOnRestDays": "휴일에도 최소 시간 적용",
+    "minimumOnRestDaysHelp": "보통은 끕니다 — 휴일에 출근한 것 자체가 이미 부담이기 때문입니다.",
+    "minimumToQualify": "인정 최소 시간",
+    "minimums": {
+      "h1": "1시간",
+      "h1m30": "1시간 30분",
+      "h2": "2시간",
+      "h3": "3시간",
+      "h4": "4시간",
+      "m30": "30분",
+      "none": "최소 없음 — 1분부터 인정"
+    },
+    "multiplier15Flat": "1.5× — 구분 없이 일괄",
+    "multiplier15Statutory": "1.5× — 법정",
+    "multiplier20": "2.0×",
+    "multiplier20Statutory": "2.0× — 법정",
+    "nextDayBadge": "+1일",
+    "nextMonth": "다음 달",
+    "note": "메모",
+    "optional": "— 선택 사항",
+    "otRate": "초과근무 배율",
+    "otRate15": "1.5× — 일반 초과근무",
+    "otRate20": "2.0× — 야간근로 (22:00–06:00)",
+    "otRateHelp": "근로기준법상 연장근로는 1.5×이며, 야간근로에는 0.5×가 추가됩니다.",
+    "pastMidnight": "자정을 넘긴 근무",
+    "position": "직위",
+    "prevMonth": "이전 달",
+    "preview": {
+      "countsAs": "인정 시간",
+      "earn": "예상 수당",
+      "nothing": "없음 — 최소 시간 미달",
+      "restDayHelp": "휴일근로 — 모든 시간이 인정됩니다. 최초 8시간 {{first8}}×, 초과분 {{beyond}}×. 휴게시간은 근로기준법 §54에 따라 공제됩니다.",
+      "startsAt": "{{time}}부터 초과근무입니다.",
+      "worked": "초과근무 시간"
+    },
+    "rates": {
+      "base": "기본 {{rate}}/시간",
+      "mixed": "이번 달은 시급이 여러 개입니다",
+      "mixedTitle": "이번 달 기록이 서로 다른 시급으로 저장되었습니다",
+      "overtime": "초과근무 {{rate}}/시간",
+      "restDays": "휴일근로 {{first8}}× / {{beyond}}×."
+    },
+    "resnapshot": "현재 설정을 이 날에 다시 적용",
+    "resnapshotHelp": "기본값은 꺼짐 — 해당 날은 기록 당시의 시급과 규칙을 유지합니다.",
+    "restDay": "휴일",
+    "restDayBeyond": "8시간 초과분",
+    "restDayBeyondHelp": "근로기준법상 휴일근로 8시간 초과분에는 50%가 추가 가산됩니다.",
+    "restDayCheckbox": "휴일/주말",
+    "restDayFirst8": "최초 8시간",
+    "restDayNotice": "{{reason}} — 근무한 모든 시간이 휴일근로 수당 대상입니다.",
+    "restDayNoticeGeneric": "근무한 모든 시간이 휴일근로 수당 대상입니다.",
+    "restDaysIntro": "주말과 공휴일입니다. 초과해야 할 소정근로시간이 없으므로 근무한 모든 시간이 첫 1분부터 초과근무입니다.",
+    "retry": "다시 시도",
+    "rounding": "절사 단위",
+    "roundingDown30": "30분 단위로 절사",
+    "roundingDown60": "1시간 단위로 절사",
+    "roundingExact": "분 단위 그대로",
+    "rule": {
+      "earlyArrival": "조기 출근 인정",
+      "lunch": "점심 {{duration}}",
+      "minimum": "최소 {{duration}}",
+      "multiplier": "{{value}}×",
+      "overtimeAfter": "{{time}} 이후 초과근무",
+      "schedule": "{{start}} + {{hours}}시간"
+    },
+    "salaryAnnual": "연봉",
+    "salaryMonthly": "월급",
+    "salaryPeriod": "급여 기준",
+    "saveSettings": "설정 저장",
+    "scheduledStart": "출근 시간",
+    "sections": {
+      "company": "회사",
+      "counting": "초과근무 산정 방식",
+      "pay": "급여",
+      "restDays": "휴일근로",
+      "workingDay": "근무일 설정"
+    },
+    "settings": "설정",
+    "settingsIntro": "변경 사항은 앞으로 기록하는 날부터 적용됩니다. 이미 기록된 날은 기존 시급과 규칙을 유지합니다.",
+    "setupIntro": "시급과 회사의 초과근무 산정 방식을 입력하세요. 나중에 모두 변경할 수 있으며, 이미 기록된 날은 기록 당시의 시급을 그대로 유지합니다.",
+    "setupTitle": "초과근무 설정",
+    "shift": "근무 형태",
+    "shiftDay": "주간 근무",
+    "shiftNight": "야간 근무",
+    "startTime": "출근 시간",
+    "stats": {
+      "daysLogged": "기록한 날",
+      "daysPaid": "({{count}}일 지급)",
+      "paid": "지급 대상 초과근무",
+      "pay": "초과근무 수당",
+      "unpaid": "근무했지만 미지급",
+      "unpaidHelp": "최소 시간에 못 미치거나 절사로 사라진 시간입니다."
+    },
+    "table": {
+      "clockIn": "출근",
+      "clockOut": "퇴근",
+      "dateFormat": "M월 d일 (EEE)",
+      "earned": "수당",
+      "overtime": "초과근무",
+      "paid": "지급"
+    },
+    "title": "초과근무",
+    "underMinimum": "최소 미달",
+    "units": {
+      "hours": "{{h}}시간",
+      "hoursMinutes": "{{h}}시간 {{m}}분",
+      "minutes": "{{m}}분"
+    },
+    "weekdays": {
+      "fri": "금",
+      "mon": "월",
+      "sat": "토",
+      "sun": "일",
+      "thu": "목",
+      "tue": "화",
+      "wed": "수"
+    },
+    "workHours": "소정근로시간"
+  },
+  "profile": {
+    "activated": "활성화 여부:",
+    "addNew": "새로 추가",
+    "changePicture": "사진 변경",
+    "chart": {
+      "monthlyTotal": "{{year}}년 월별 총 지출 ({{currency}})",
+      "tooltip": "{{label}}: {{amount}} ({{percent}})"
+    },
+    "close": "닫기",
+    "defaultPictureAlt": "기본 프로필 사진",
+    "delete": "삭제",
+    "edit": "수정",
+    "editUser": "사용자 정보 수정",
+    "email": "이메일:",
+    "errors": {
+      "fileTooLarge": "파일이 너무 큽니다. 최대 허용 크기는 {{size}}MB입니다."
+    },
+    "expenses": {
+      "forMonth": "{{month}} 지출 내역",
+      "summaryFor": "{{month}} 요약",
+      "title": "월별 지출 관리"
+    },
+    "firstname": "이름:",
+    "form": {
+      "addExpense": "지출 추가",
+      "amount": "금액:",
+      "amountPlaceholder": "금액을 입력하세요",
+      "category": "분류:",
+      "categoryPlaceholder": "예: 식비, 교통비",
+      "date": "날짜:",
+      "description": "설명:",
+      "descriptionPlaceholder": "메모를 추가하세요…"
+    },
+    "lastname": "성:",
+    "name": "이름:",
+    "no": "아니요",
+    "pictureAlt": "프로필 사진",
+    "selectCurrency": "통화 선택",
+    "siteAdmin": "사이트 관리자",
+    "table": {
+      "action": "작업",
+      "amount": "금액",
+      "category": "분류",
+      "date": "날짜",
+      "description": "설명"
+    },
+    "title": "사용자 프로필",
+    "total": "합계:",
+    "update": "저장",
+    "username": "사용자 이름:",
+    "yes": "예"
+  },
+  "shell": {
+    "dailyVisits": "일일 방문 수: {{count}}"
+  },
+  "tests": {
+    "bestResult": "최고 기록",
+    "correctCount": "{{count}}개 정답",
+    "incorrectCount": "{{count}}개 오답",
+    "langPair": {
+      "arEn": "아랍어–영어",
+      "arUz": "아랍어–우즈베크어",
+      "enAr": "영어–아랍어",
+      "enUz": "영어–우즈베크어",
+      "uzAr": "우즈베크어–아랍어",
+      "uzEn": "우즈베크어–영어"
+    },
+    "next": "다음",
+    "nextTitle": "다음 테스트 불러오기",
+    "noConnection": "서버에 연결할 수 없습니다. 잠시 후 다시 시도해 주세요. 감사합니다",
+    "numberOfTests": "전체 단어 수",
+    "questionAfter": "아래 보기 중 하나를 선택하세요",
+    "questionBefore": "이 단어의 뜻은 무엇입니까?",
+    "result": "결과",
+    "resultAlert": "{{total}}문제 중 {{correct}}문제를 맞히셨습니다. 다시 도전해 보세요!",
+    "stop": "테스트 종료",
+    "stopTitle": "여기서 테스트를 종료하시겠습니까?",
+    "testNumber": "테스트 번호"
+  },
+  "word": {
+    "audioUnsupported": "이 브라우저는 오디오 재생을 지원하지 않습니다.",
+    "notFound": "단어를 찾을 수 없습니다!",
+    "searchedWord": "검색한 단어"
+  },
+  "words": {
+    "addWord": "새 단어 추가",
+    "back": "돌아가기",
+    "table": {
+      "arabic": "아랍어",
+      "english": "영어",
+      "nr": "번호",
+      "pronunciation": "발음",
+      "remark": "비고",
+      "update": "수정",
+      "uzbek": "우즈베크어"
+    },
+    "title": "새 단어",
+    "update": "수정"
+  }
+}
