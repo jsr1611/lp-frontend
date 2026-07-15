@@ -1,9 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy, inject } from "@angular/core";
 import { Subscription, catchError, of } from "rxjs";
+import { TranslateService } from "@ngx-translate/core";
 import { DictionaryService } from "src/app/services/DictionaryService";
 import { NavBarService } from "../navbar/navbar.service";
 import { Word } from "src/app/models/word";
-import { TestingLangulages } from "src/app/mappings/category-mapping";
+import { TestingLangulages, TestingLanguagesMapping } from "src/app/mappings/category-mapping";
 
 @Component({
     selector: "app-tests",
@@ -14,6 +15,7 @@ import { TestingLangulages } from "src/app/mappings/category-mapping";
 })
 export class TestsComponent implements OnInit {
   [x: string]: any;
+  private readonly translate = inject(TranslateService);
   constructor(
     private dictService: DictionaryService,
     private navbarService: NavBarService
@@ -31,48 +33,20 @@ export class TestsComponent implements OnInit {
   userFalseTimes: number = 0;
   bestResult: number = 0;
 
-  questionStatementBefore: string[] = [
-    "Bu so'zning ma'nosi nima?",
-    "ما معنى هذه الكلمة؟",
-    "What is the meaning of this word?",
-  ];
-  questionStatementAfter: string[] = [
-    "Quyidagi javoblardan birini tanlang",
-    "اختر واحدة من الإجابات أدناه",
-    "Please, choose one of the following",
-  ]
-
-  statements = {
-    numberOfTests: "Testlar soni",
-    result: "Natija",
-    correct: "ta to'g'ri",
-    incorrect: "ta xato",
-    testNumber: "Test raqami",
-    bestResult: "Eng yaxshi natijangiz",
-  }
-
-  stopButton = [
-    "Testni yakunlash",
-    "لإنهاء الاختبار",
-    "Finish the test"
-  ];
-  nextButton = [
-    "Keyingi",
-    "التالي",
-    "Next"
-  ];
-    
   languages: TestingLangulages[] = Object.values(TestingLangulages);
+  langPairLabels = TestingLanguagesMapping;
   selectedLangIndex = 0;
-  selectedIndex = 0;
   selectedLang: TestingLangulages = TestingLangulages.uz_ar;
 
+  /**
+   * Selects which dictionary language PAIR the quiz tests (e.g. Uzbek->Arabic).
+   * This is a domain setting and is independent of the app's UI language.
+   */
   changeLanguage(lang: TestingLangulages){
      let index = Object.values(TestingLangulages).indexOf(lang);
      this.selectedLangIndex = index;
-     this.selectedIndex = Math.floor(index / 2);
      console.log(`selected lang: ${this.selectedLang}, index: ${this.selectedLangIndex}`);
-     
+
   }
   localDbState: boolean = false;
   private _dbStateSub: Subscription = new Subscription();
@@ -148,11 +122,10 @@ export class TestsComponent implements OnInit {
       localStorage.setItem('bestResult', this.bestResult.toString());
     }
     alert(
-      "Siz " +
-      this.totalTestNumbers.length +
-      " ta testdan " +
-      this.userCorrectTimes +
-      " tasini to'g'ri yechdingiz. Yana urinib ko'ring!"
+      this.translate.instant('tests.resultAlert', {
+        total: this.totalTestNumbers.length,
+        correct: this.userCorrectTimes
+      })
     );
     this.totalTestNumbers = [];
     this.userAnsers = [];

@@ -44,9 +44,9 @@ h2 {
 }
 
 .text-center .btn-success {
-    margin-right: 15px;
+    margin-inline-end: 15px;
 }
 
 .text-center .btn-secondary {
-    margin-left: 15px;
+    margin-inline-start: 15px;
 }

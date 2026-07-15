@@ -1,61 +1,61 @@
-<h2>Yangi so`z qo`shish: @if (successMsg.length > 0) {
+<h2>{{ 'addWord.title' | translate }}: @if (successMsg.length > 0) {
   <span>{{successMsg}}</span>
 }</h2>
 <div class="container">
   <form (ngSubmit)="addWord()" #wordForm="ngForm">
     <div class="form-group">
-      <label for="pronunciation">O'qilishi:</label>
+      <label for="pronunciation">{{ 'addWord.pronunciation' | translate }}:</label>
       <input
         id="pronunciation"
         name="pronunciation"
         [(ngModel)]="newWord.pronunciation"
         type="text"
         class="form-control"
-        placeholder="So'zni o'qilishini kiriting"
+        [attr.placeholder]="'addWord.pronunciationPlaceholder' | translate"
         required
         />
       </div>
 
       <div class="form-group">
-        <label for="arabic">Arabchasi:</label>
+        <label for="arabic">{{ 'addWord.arabic' | translate }}:</label>
         <input
           id="arabic"
           name="arabic"
           [(ngModel)]="newWord.arabic"
           type="text"
           class="form-control word-arabic"
-          placeholder="So'zni arabcha kiriting"
+          [attr.placeholder]="'addWord.arabicPlaceholder' | translate"
           required
           />
         </div>
 
         <div class="form-group">
-          <label for="uzbek">Ma`nosi:</label>
+          <label for="uzbek">{{ 'addWord.meaning' | translate }}:</label>
           <input
             id="uzbek"
             name="uzbek"
             [(ngModel)]="newWord.uzbek"
             type="text"
             class="form-control"
-            placeholder="So'zni ma`nosini kiriting"
+            [attr.placeholder]="'addWord.meaningPlaceholder' | translate"
             required
             />
           </div>
 
           <div class="form-group">
-            <label for="english">Inglizchasi (ixtiyoriy):</label>
+            <label for="english">{{ 'addWord.english' | translate }}:</label>
             <input
               id="english"
               name="english"
               [(ngModel)]="newWord.english"
               type="text"
               class="form-control"
-              placeholder="So'zni inglizcha ma`nosini kiriting"
+              [attr.placeholder]="'addWord.englishPlaceholder' | translate"
               />
             </div>
 
             <div class="form-group">
-              <label for="category">So`z turini tanlang:</label>
+              <label for="category">{{ 'addWord.category' | translate }}:</label>
               <select
                 id="category"
                 name="category"
@@ -65,27 +65,27 @@
                 >
                 @for (category of categories; track category) {
                   <option [value]="category">
-                    {{ categoryLabels[category] }} <!-- Display Uzbek labels -->
+                    {{ categoryLabels[category] | translate }}
                   </option>
                 }
               </select>
             </div>
             <div class="form-group">
-              <label for="remark">Qo`shimcha ma`lumot (test uchun):</label>
+              <label for="remark">{{ 'addWord.remark' | translate }}:</label>
               <input
                 id="remark"
                 name="remark"
                 [(ngModel)]="newWord.remark"
                 type="text"
                 class="form-control"
-                placeholder="Testni guruhlashda foydalanish uchun"
+                [attr.placeholder]="'addWord.remarkPlaceholder' | translate"
                 />
               </div>
 
-              <button type="submit" class="btn btn-primary">Saqlash</button>
+              <button type="submit" class="btn btn-primary">{{ 'common.save' | translate }}</button>
             </form>
 
             <hr>
 
-              <a href="/words" class="btn btn-secondary">Yangi so'zlarni ko'rish</a>
+              <a href="/words" class="btn btn-secondary">{{ 'addWord.viewWords' | translate }}</a>
             </div>
