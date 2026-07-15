@@ -4,6 +4,8 @@ import { Router } from "@angular/router";
 import { AuthService } from "src/app/services/AuthService";
 import { SecureService } from "src/app/services/SercureService";
 import {
+  Holiday,
+  HolidayLookup,
   OvertimeEntry,
   OvertimePreview,
   OvertimeSettings,
@@ -17,6 +19,18 @@ Chart.register(...registerables);
 
 const MINUTES_PER_DAY = 24 * 60;
 const HALF_DAY_MINUTES = 12 * 60;
+// 휴일근로 earns the higher premium only past 8 hours (근로기준법 §56②).
+const REST_DAY_PREMIUM_BREAK = 8 * 60;
+
+const WEEKDAY_NAMES = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 // Average weeks in a month: 365 / 7 / 12.
 const WEEKS_PER_MONTH = 365 / 7 / 12;
@@ -31,6 +45,12 @@ const WEEKLY_REST_CAP_HOURS = 8;
 // A choice in the "minimum overtime" dropdown, in minutes.
 interface MinimumOption {
   minutes: number;
+  label: string;
+}
+
+// One weekday checkbox in the contracted-days picker.
+interface WeekDayOption {
+  value: number; // 0 = Sunday
   label: string;
 }
 
@@ -73,10 +93,29 @@ export class OvertimeTrackerComponent implements OnInit {
   // Set when editing a day that was logged under settings that have since changed.
   resnapshot = false;
 
+  // Public holidays, keyed by "YYYY-MM". Cached per month so re-opening the modal or
+  // nudging the date does not re-hit the API.
+  private holidayCache = new Map<string, HolidayLookup>();
+  // Why the current entry counts as a rest day, for the modal to explain itself.
+  restDayNote: string | null = null;
+  // True when the 공휴일 lookup could not be made, so the UI can say that weekends are
+  // still detected but 빨간날 need a manual tick.
+  holidayLookupUnavailable = false;
+
   errorMessage: string | null = null;
 
   // Every half hour of the clock, so night shifts are selectable too.
   shiftStartOptions: string[] = this.buildTimeOptions();
+
+  weekDayOptions: WeekDayOption[] = [
+    { value: 1, label: "Mon" },
+    { value: 2, label: "Tue" },
+    { value: 3, label: "Wed" },
+    { value: 4, label: "Thu" },
+    { value: 5, label: "Fri" },
+    { value: 6, label: "Sat" },
+    { value: 0, label: "Sun" },
+  ];
 
   minimumOptions: MinimumOption[] = [
     { minutes: 0, label: "No minimum — every minute counts" },
@@ -168,6 +207,14 @@ export class OvertimeTrackerComponent implements OnInit {
       ? JSON.parse(JSON.stringify(this.settings))
       : this.blankSettings();
     if (!this.settingsForm.company) this.settingsForm.company = {};
+    // Settings saved before rest-day support have none of these paths. Fill them in
+    // rather than trust the server's defaults, so the form never binds to undefined.
+    if (!this.settingsForm.workDays || !this.settingsForm.workDays.length) {
+      this.settingsForm.workDays = [1, 2, 3, 4, 5];
+    }
+    this.settingsForm.restDayFirst8Multiplier = this.settingsForm.restDayFirst8Multiplier ?? 1.5;
+    this.settingsForm.restDayBeyondMultiplier = this.settingsForm.restDayBeyondMultiplier ?? 2;
+    this.settingsForm.minimumOnRestDays = this.settingsForm.minimumOnRestDays ?? false;
     this.errorMessage = null;
     this.showSettings = true;
   }
@@ -184,6 +231,11 @@ export class OvertimeTrackerComponent implements OnInit {
     if (this.isSavingSettings) return;
     if (!this.settingsForm.hourlyRate || this.settingsForm.hourlyRate <= 0) {
       this.errorMessage = "Enter your base hourly rate.";
+      return;
+    }
+    // With no working days every day would be a rest day, silently doubling the pay.
+    if (!this.settingsForm.workDays || !this.settingsForm.workDays.length) {
+      this.errorMessage = "Pick at least one working day.";
       return;
     }
     this.isSavingSettings = true;
@@ -251,6 +303,7 @@ export class OvertimeTrackerComponent implements OnInit {
   openEntryModal(entry?: OvertimeEntry): void {
     this.errorMessage = null;
     this.resnapshot = false;
+    this.restDayNote = null;
     if (entry) {
       this.isEditingEntry = true;
       this.entryForm = {
@@ -261,8 +314,123 @@ export class OvertimeTrackerComponent implements OnInit {
       this.isEditingEntry = false;
       this.entryForm = this.blankEntry();
     }
-    this.updatePreview();
+    // An entry logged before rest days existed has no isRestDay at all — undefined is
+    // the signal to work it out, as opposed to an explicit false the user chose.
+    if (this.entryForm.isRestDay === undefined) {
+      this.detectRestDay();
+    } else {
+      this.describeRestDay();
+      this.updatePreview();
+    }
     this.showEntryModal = true;
+  }
+
+  // Re-detect whenever the date moves — the answer is a property of the date.
+  onEntryDateChange(): void {
+    this.detectRestDay();
+  }
+
+  // A manual tick overrides detection; the reason becomes the user's own say-so.
+  onRestDayToggle(): void {
+    this.entryForm.restDayReason = this.entryForm.isRestDay ? "Marked by you" : undefined;
+    this.describeRestDay();
+    this.updatePreview();
+  }
+
+  /**
+   * Work out whether the entry's date is a rest day.
+   *
+   * Weekends are settled locally from workDays and never need the network. Only 빨간날
+   * need the lookup, and when it is unavailable the day stays a working day with a
+   * note explaining that the user should tick the box themselves.
+   */
+  private detectRestDay(): void {
+    if (!this.entryForm.date || !this.settings) return;
+
+    const weekday = this.weekdayOf(this.entryForm.date);
+    const workDays =
+      this.settings.workDays && this.settings.workDays.length
+        ? this.settings.workDays
+        : [1, 2, 3, 4, 5];
+
+    if (!workDays.includes(weekday)) {
+      this.entryForm.isRestDay = true;
+      this.entryForm.restDayReason = WEEKDAY_NAMES[weekday];
+      this.describeRestDay();
+      this.updatePreview();
+      return;
+    }
+
+    const month = this.entryForm.date.slice(0, 7);
+    this.loadHolidays(month, (lookup) => {
+      // Only a successful lookup may clear the flag. If it failed, leave the day as a
+      // working day but tell the user why we could not check.
+      if (lookup.available) {
+        const hit = (lookup.holidays || []).find((h: Holiday) => h.date === this.entryForm.date);
+        this.entryForm.isRestDay = !!hit;
+        this.entryForm.restDayReason = hit ? hit.name : undefined;
+      } else {
+        this.entryForm.isRestDay = false;
+        this.entryForm.restDayReason = undefined;
+      }
+      this.describeRestDay();
+      this.updatePreview();
+    });
+  }
+
+  private loadHolidays(month: string, done: (lookup: HolidayLookup) => void): void {
+    const cached = this.holidayCache.get(month);
+    if (cached) {
+      this.holidayLookupUnavailable = !cached.available;
+      done(cached);
+      return;
+    }
+    this.secureService.getOvertimeHolidays(month).subscribe({
+      next: (data: any) => {
+        const lookup: HolidayLookup = data;
+        this.holidayCache.set(month, lookup);
+        this.holidayLookupUnavailable = !lookup.available;
+        done(lookup);
+      },
+      error: () => {
+        // A holiday lookup failing must never block logging a day.
+        const lookup: HolidayLookup = { month, available: false, holidays: [] };
+        this.holidayCache.set(month, lookup);
+        this.holidayLookupUnavailable = true;
+        done(lookup);
+      },
+    });
+  }
+
+  // Plain-language reason shown under the rest-day toggle.
+  private describeRestDay(): void {
+    if (!this.entryForm.isRestDay) {
+      this.restDayNote = null;
+      return;
+    }
+    const reason = this.entryForm.restDayReason;
+    this.restDayNote = reason
+      ? `${reason} — every hour counts, at the 휴일근로 rate.`
+      : "Every hour counts, at the 휴일근로 rate.";
+  }
+
+  // Weekday of a "yyyy-MM-dd", read in UTC to match how the backend stores the date.
+  private weekdayOf(isoDate: string): number {
+    const [y, m, d] = isoDate.split("-").map(Number);
+    return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  }
+
+  // ---------- Work-day settings ----------
+
+  isWorkDay(day: number): boolean {
+    return !!this.settingsForm.workDays && this.settingsForm.workDays.includes(day);
+  }
+
+  toggleWorkDay(day: number): void {
+    const days = this.settingsForm.workDays || [];
+    this.settingsForm.workDays = days.includes(day)
+      ? days.filter((d) => d !== day)
+      : [...days, day].sort();
   }
 
   closeEntryModal(): void {
@@ -331,30 +499,60 @@ export class OvertimeTrackerComponent implements OnInit {
     let end = this.toMinutes(entry.endTime);
     if (end <= start) end += MINUTES_PER_DAY;
 
-    // Pull the scheduled start onto the same day as the actual one, so a night shift
-    // logged just after midnight reads as slightly late rather than ~22 hours early.
-    let shift = this.toMinutes(rules.shiftStart);
-    if (shift - start > HALF_DAY_MINUTES) shift -= MINUTES_PER_DAY;
-    else if (start - shift > HALF_DAY_MINUTES) shift += MINUTES_PER_DAY;
+    const isRestDay = !!entry.isRestDay;
+    let rawOtMinutes: number;
 
-    const boundary = shift + rules.workHours * 60 + rules.lunchBreakMinutes;
+    if (isRestDay) {
+      // No scheduled hours to subtract — the whole day is overtime, less the break the
+      // law assumes was taken.
+      const elapsed = end - start;
+      rawOtMinutes = Math.max(0, elapsed - this.statutoryBreak(elapsed));
+    } else {
+      // Pull the scheduled start onto the same day as the actual one, so a night shift
+      // logged just after midnight reads as slightly late rather than ~22 hours early.
+      let shift = this.toMinutes(rules.shiftStart);
+      if (shift - start > HALF_DAY_MINUTES) shift -= MINUTES_PER_DAY;
+      else if (start - shift > HALF_DAY_MINUTES) shift += MINUTES_PER_DAY;
 
-    const eveningOt = Math.max(0, end - boundary);
-    const earlyOt = rules.countEarlyArrival ? Math.max(0, shift - start) : 0;
-    const rawOtMinutes = eveningOt + earlyOt;
+      const boundary = shift + rules.workHours * 60 + rules.lunchBreakMinutes;
 
-    // The minimum is a cliff, tested before rounding.
-    const threshold = rules.minimumOtMinutes || 0;
+      const eveningOt = Math.max(0, end - boundary);
+      const earlyOt = rules.countEarlyArrival ? Math.max(0, shift - start) : 0;
+      rawOtMinutes = eveningOt + earlyOt;
+    }
+
+    // The minimum is a cliff, tested before rounding, and a working-day rule unless the
+    // employer extends it to rest days.
+    const threshold = isRestDay && !rules.minimumOnRestDays ? 0 : rules.minimumOtMinutes || 0;
     const qualified = rawOtMinutes > 0 && rawOtMinutes >= threshold;
 
     let paidOtMinutes = qualified ? rawOtMinutes : 0;
     if (rules.rounding === "down30") paidOtMinutes = Math.floor(paidOtMinutes / 30) * 30;
     else if (rules.rounding === "down60") paidOtMinutes = Math.floor(paidOtMinutes / 60) * 60;
 
-    const earnings =
-      Math.round((paidOtMinutes / 60) * rules.hourlyRate * rules.otMultiplier * 100) / 100;
+    let earnings: number;
+    if (isRestDay) {
+      // 휴일근로수당: the two blocks are weighted separately, not scaled by one rate.
+      const firstBlock = Math.min(paidOtMinutes, REST_DAY_PREMIUM_BREAK);
+      const beyondBlock = Math.max(0, paidOtMinutes - REST_DAY_PREMIUM_BREAK);
+      const weighted =
+        firstBlock * (rules.restDayFirst8Multiplier ?? 1.5) +
+        beyondBlock * (rules.restDayBeyondMultiplier ?? 2);
+      earnings = Math.round((weighted / 60) * rules.hourlyRate * 100) / 100;
+    } else {
+      earnings =
+        Math.round((paidOtMinutes / 60) * rules.hourlyRate * rules.otMultiplier * 100) / 100;
+    }
 
     return { rawOtMinutes, paidOtMinutes, qualified, earnings };
+  }
+
+  // 근로기준법 §54: at least 30 minutes' break per 4 hours worked, an hour per 8.
+  // A weekday needs none of this — its lunch is already inside the boundary.
+  private statutoryBreak(elapsedMinutes: number): number {
+    if (elapsedMinutes >= 9 * 60) return 60;
+    if (elapsedMinutes >= 4.5 * 60) return 30;
+    return 0;
   }
 
   // The rules an existing entry was logged under, falling back to current settings for
@@ -371,6 +569,12 @@ export class OvertimeTrackerComponent implements OnInit {
       countEarlyArrival: entry.countEarlyArrival ?? fallback.countEarlyArrival,
       rounding: entry.rounding ?? fallback.rounding,
       currency: entry.currency ?? fallback.currency,
+      // Statutory defaults, not the current settings: an entry logged before rest days
+      // existed has no multipliers of its own, and a missing one would price a
+      // Saturday at zero.
+      restDayFirst8Multiplier: entry.restDayFirst8Multiplier ?? 1.5,
+      restDayBeyondMultiplier: entry.restDayBeyondMultiplier ?? 2,
+      minimumOnRestDays: entry.minimumOnRestDays ?? false,
     };
   }
 
@@ -488,6 +692,10 @@ export class OvertimeTrackerComponent implements OnInit {
       minimumOtMinutes: 0,
       countEarlyArrival: false,
       rounding: "down60",
+      workDays: [1, 2, 3, 4, 5],
+      restDayFirst8Multiplier: 1.5,
+      restDayBeyondMultiplier: 2,
+      minimumOnRestDays: false,
       company: {},
     };
   }

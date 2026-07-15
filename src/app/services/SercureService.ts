@@ -168,6 +168,16 @@ export class SecureService extends AuthService {
     });
   }
 
+  // Korean public holidays for a month. Check `available` before trusting `holidays` —
+  // an empty list from a failed lookup is not the same as a month with no holidays.
+  getOvertimeHolidays(month: string) {
+    let params = new HttpParams().set('month', month);
+    return this.http.get(this.url + `/overtime/holidays`, {
+      headers: this.getHeaders(),
+      params,
+    });
+  }
+
   saveOvertimeEntry(entry: OvertimeEntry) {
     return this.http.post(this.url + `/overtime/entries`, { entry }, {
       headers: this.getHeaders(),
