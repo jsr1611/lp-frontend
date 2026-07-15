@@ -35,6 +35,7 @@ import { GithubRepoManagerComponent } from './components/github-repo-manager/git
 import { GithubService } from './services/GithubService';
 import { DownloaderComponent } from './components/downloader/downloader.component';
 import { LoanTrackerComponent } from './components/loan-tracker/loan-tracker.component';
+import { OvertimeTrackerComponent } from './components/overtime-tracker/overtime-tracker.component';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { LoanTrackerComponent } from './components/loan-tracker/loan-tracker.com
         DashboardComponent,
         GithubRepoManagerComponent,
         DownloaderComponent,
-        LoanTrackerComponent
+        LoanTrackerComponent,
+        OvertimeTrackerComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -77,6 +79,7 @@ import { LoanTrackerComponent } from './components/loan-tracker/loan-tracker.com
             { path: 'profile', component: UserPageComponent, canActivate: [authGuard] },
             { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
             { path: 'loans', component: LoanTrackerComponent, canActivate: [authGuard] },
+            { path: 'overtime', component: OvertimeTrackerComponent, canActivate: [authGuard] },
             { path: 'home', component: HomeComponent },
             { path: 'add-word', component: AddWordComponent },
             { path: 'words', component: WordsComponent },
