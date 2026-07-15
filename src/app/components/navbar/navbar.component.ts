@@ -1,6 +1,8 @@
-import { Component, Inject, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Inject, OnChanges, SimpleChanges, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NavBarService } from './navbar.service';
 import { AuthService } from 'src/app/services/AuthService';
+import { LanguageService } from 'src/app/services/LanguageService';
+import { LangCode } from 'src/app/mappings/languages';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,11 +13,17 @@ import { Router } from '@angular/router';
     standalone: false
 })
 export class NavbarComponent implements OnChanges{
+  readonly languageService = inject(LanguageService);
+
   constructor(
     private navbarService: NavBarService,
     @Inject(Router) private router: Router,
     public authService: AuthService,
   ){ }
+
+  switchLanguage(lang: LangCode): void {
+    this.languageService.use(lang);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
   }
