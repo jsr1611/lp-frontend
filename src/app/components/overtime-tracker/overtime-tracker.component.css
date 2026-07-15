@@ -1,0 +1,52 @@
+.overtime-tracker {
+  max-width: 1000px;
+}
+
+/* Simple modal overlay (matches the app's custom modal approach, not Bootstrap's JS modal). */
+.ot-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem;
+  z-index: 1050;
+  overflow-y: auto;
+}
+
+.ot-modal-content {
+  background: #fff;
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* The global `.btn { margin: 10px }` rule in styles.css would break tight button groups here. */
+.overtime-tracker .btn,
+.ot-modal .btn {
+  margin: 0;
+}
+
+/* Live running total inside the entry modal. */
+.ot-preview {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+}
+
+/* chart.js needs a fixed-height, non-flex parent or its ResizeObserver loops forever. */
+.chart-box {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  overflow: hidden;
+}
+
+/* The month picker sits between two arrow buttons; keep it from stretching. */
+.ot-month-input {
+  max-width: 12rem;
+}

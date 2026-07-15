@@ -1,0 +1,473 @@
+<div class="overtime-tracker container py-4">
+
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h2 class="mb-0"><i class="bi bi-clock-history me-2"></i>Overtime</h2>
+    @if (settings && !showSettings) {
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary" (click)="openSettings()">
+          <i class="bi bi-gear me-1"></i>Settings
+        </button>
+        <button class="btn btn-primary" (click)="openEntryModal()">
+          <i class="bi bi-plus-lg me-1"></i>Log day
+        </button>
+      </div>
+    }
+  </div>
+
+  @if (errorMessage && !showSettings && !showEntryModal) {
+    <div class="alert alert-danger d-flex justify-content-between align-items-center gap-3"
+         role="alert">
+      <span>{{ errorMessage }}</span>
+      <!-- A failed settings load leaves nothing else on screen, so offer the way back. -->
+      @if (!settings) {
+        <button class="btn btn-sm btn-outline-danger text-nowrap" (click)="loadSettings()">
+          <i class="bi bi-arrow-clockwise me-1"></i>Retry
+        </button>
+      }
+    </div>
+  }
+
+  <!-- ============ Setup / settings form ============ -->
+  @if (showSettings) {
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        @if (!settings) {
+          <h5 class="card-title">Set up your overtime</h5>
+          <p class="text-muted small">
+            Tell us your hourly rate and how your employer counts overtime. You can change
+            all of this later — past entries keep the rate they were logged under.
+          </p>
+        } @else {
+          <h5 class="card-title">Settings</h5>
+          <p class="text-muted small">
+            Changes apply to days you log from now on. Already-logged days keep their
+            original rate and rules.
+          </p>
+        }
+
+        <form (ngSubmit)="saveSettings()" #settingsFormRef="ngForm">
+
+          <h6 class="text-muted text-uppercase small mt-3">Pay</h6>
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label class="form-label" for="hourlyRate">Base hourly rate</label>
+              <input id="hourlyRate" name="hourlyRate" type="number" min="0" step="any"
+                     class="form-control" required
+                     [(ngModel)]="settingsForm.hourlyRate" />
+              <div class="form-text">Your normal rate — the multiplier is applied on top.</div>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label" for="currency">Currency</label>
+              <select id="currency" name="currency" class="form-select"
+                      [ngModel]="settingsForm.currency.code"
+                      (ngModelChange)="onCurrencyChange($event)">
+                @for (c of popularCurrencies; track c.code) {
+                  <option [value]="c.code">{{ c.code }} — {{ c.name }}</option>
+                }
+              </select>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label" for="otMultiplier">Overtime rate</label>
+              <select id="otMultiplier" name="otMultiplier" class="form-select"
+                      [(ngModel)]="settingsForm.otMultiplier">
+                <option [ngValue]="1.5">1.5× — standard overtime</option>
+                <option [ngValue]="2">2.0× — night work (22:00–06:00)</option>
+              </select>
+              <div class="form-text">
+                Korean law sets overtime at 1.5×; night work adds another 0.5×.
+              </div>
+            </div>
+          </div>
+
+          <h6 class="text-muted text-uppercase small mt-4">Your working day</h6>
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label class="form-label" for="shiftType">Shift</label>
+              <select id="shiftType" name="shiftType" class="form-select"
+                      [(ngModel)]="settingsForm.shiftType"
+                      (ngModelChange)="onShiftTypeChange()">
+                <option value="day">Day shift</option>
+                <option value="night">Night shift</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label" for="shiftStart">Scheduled start (출근 시간)</label>
+              <select id="shiftStart" name="shiftStart" class="form-select"
+                      [(ngModel)]="settingsForm.shiftStart">
+                @for (t of shiftStartOptions; track t) {
+                  <option [value]="t">{{ t }}</option>
+                }
+              </select>
+            </div>
+            <div class="col-6 col-md-2">
+              <label class="form-label" for="workHours">Work hours</label>
+              <input id="workHours" name="workHours" type="number" min="0" max="24" step="0.5"
+                     class="form-control" [(ngModel)]="settingsForm.workHours" />
+            </div>
+            <div class="col-6 col-md-2">
+              <label class="form-label" for="lunchBreakMinutes">Lunch (min)</label>
+              <input id="lunchBreakMinutes" name="lunchBreakMinutes" type="number" min="0" step="5"
+                     class="form-control" [(ngModel)]="settingsForm.lunchBreakMinutes" />
+            </div>
+          </div>
+
+          <h6 class="text-muted text-uppercase small mt-4">How overtime is counted</h6>
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <label class="form-label" for="minimumOtMinutes">Minimum to qualify</label>
+              <select id="minimumOtMinutes" name="minimumOtMinutes" class="form-select"
+                      [(ngModel)]="settingsForm.minimumOtMinutes">
+                @for (opt of minimumOptions; track opt.minutes) {
+                  <option [ngValue]="opt.minutes">{{ opt.label }}</option>
+                }
+              </select>
+              <div class="form-text">
+                Stay less than this and the day pays nothing at all.
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label" for="rounding">Rounding</label>
+              <select id="rounding" name="rounding" class="form-select"
+                      [(ngModel)]="settingsForm.rounding">
+                <option value="down60">Down to whole hours</option>
+                <option value="down30">Down to 30 minutes</option>
+                <option value="exact">Exact minutes</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="countEarlyArrival"
+                       name="countEarlyArrival" [(ngModel)]="settingsForm.countEarlyArrival" />
+                <label class="form-check-label" for="countEarlyArrival">
+                  Count early arrival as overtime
+                  <span class="text-muted small d-block">
+                    On for a plain 8-hour day where anything outside it counts. Off where only
+                    evening overtime is paid.
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <h6 class="text-muted text-uppercase small mt-4">
+            Company <span class="text-lowercase fw-normal">— optional</span>
+          </h6>
+          <p class="text-muted small mb-2">
+            Not used in any calculation. Stored so later stats can compare overtime against
+            your base pay.
+          </p>
+          @if (settingsForm.company) {
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label" for="companyName">Company</label>
+                <input id="companyName" name="companyName" type="text" class="form-control"
+                       [(ngModel)]="settingsForm.company.name" />
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label" for="position">Position</label>
+                <input id="position" name="position" type="text" class="form-control"
+                       [(ngModel)]="settingsForm.company.position" />
+              </div>
+              <div class="col-12 col-md-3">
+                <label class="form-label" for="contractStart">Contract start</label>
+                <input id="contractStart" name="contractStart" type="date" class="form-control"
+                       [(ngModel)]="settingsForm.company.contractStart" />
+              </div>
+              <div class="col-12 col-md-3">
+                <label class="form-label" for="contractEnd">Contract end</label>
+                <input id="contractEnd" name="contractEnd" type="date" class="form-control"
+                       [(ngModel)]="settingsForm.company.contractEnd" />
+              </div>
+              <div class="col-12 col-md-3">
+                <label class="form-label" for="contractSalary">Contract salary</label>
+                <input id="contractSalary" name="contractSalary" type="number" min="0" step="any"
+                       class="form-control" [(ngModel)]="settingsForm.company.contractSalary" />
+              </div>
+              <div class="col-12 col-md-3">
+                <label class="form-label" for="salaryPeriod">Salary period</label>
+                <select id="salaryPeriod" name="salaryPeriod" class="form-select"
+                        [(ngModel)]="settingsForm.company.salaryPeriod">
+                  <option value="monthly">Monthly (월급)</option>
+                  <option value="annual">Annual (연봉)</option>
+                </select>
+              </div>
+              @if (canEstimateHourly) {
+                <div class="col-12">
+                  <button type="button" class="btn btn-sm btn-outline-secondary"
+                          (click)="estimateHourlyFromSalary()">
+                    <i class="bi bi-calculator me-1"></i>Use this to estimate my hourly rate
+                  </button>
+                  <span class="form-text ms-2">
+                    Korean 통상시급: monthly pay ÷ {{ monthlyPaidHours }} hours
+                    ({{ settingsForm.workHours }}h × 5 days + 주휴, × 4.345 weeks).
+                    An estimate — check it against your payslip.
+                  </span>
+                </div>
+              }
+            </div>
+          }
+
+          @if (errorMessage) {
+            <div class="alert alert-danger mt-3 mb-0" role="alert">{{ errorMessage }}</div>
+          }
+
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary" [disabled]="isSavingSettings">
+              {{ isSavingSettings ? "Saving…" : settings ? "Save settings" : "Get started" }}
+            </button>
+            @if (settings) {
+              <button type="button" class="btn btn-outline-secondary" (click)="closeSettings()">
+                Cancel
+              </button>
+            }
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- ============ Month view ============ -->
+  @if (settings && !showSettings) {
+
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-secondary btn-sm" (click)="shiftMonth(-1)"
+                    aria-label="Previous month">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <input type="month" class="form-control ot-month-input" name="month"
+                   [(ngModel)]="month" (ngModelChange)="onMonthChange()" />
+            <button class="btn btn-outline-secondary btn-sm" (click)="shiftMonth(1)"
+                    aria-label="Next month">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+          <span class="text-muted small">{{ ruleSummary }}</span>
+        </div>
+      </div>
+    </div>
+
+    @if (summary) {
+      <div class="row g-3 mb-3">
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <div class="text-muted small">Overtime pay</div>
+              <div class="fs-4 fw-semibold text-success">
+                {{ summary.totalEarnings | currency: currencyCode : 'symbol' : '1.0-2' }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <div class="text-muted small">Paid overtime</div>
+              <div class="fs-4 fw-semibold">{{ formatMinutes(summary.totalPaidMinutes) }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <div class="text-muted small">Worked but unpaid</div>
+              <div class="fs-4 fw-semibold" [class.text-danger]="summary.unpaidMinutes > 0">
+                {{ formatMinutes(summary.unpaidMinutes) }}
+              </div>
+              <div class="form-text">Under the minimum, or lost to rounding.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <div class="text-muted small">Days logged</div>
+              <div class="fs-4 fw-semibold">
+                {{ summary.daysLogged }}
+                <span class="fs-6 text-muted">({{ summary.daysQualified }} paid)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      @if (summary.byDay.length) {
+        <div class="card shadow-sm mb-3">
+          <div class="card-body">
+            <h6 class="card-title text-muted">Overtime by day</h6>
+            <div class="chart-box">
+              <canvas id="overtimeByDayChart"></canvas>
+            </div>
+          </div>
+        </div>
+      }
+    }
+
+    <div class="card shadow-sm">
+      <div class="card-body">
+        @if (!entries.length) {
+          <div class="text-center text-muted py-4">
+            <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+            Nothing logged for this month yet.
+            <div class="mt-3">
+              <button class="btn btn-primary" (click)="openEntryModal()">
+                <i class="bi bi-plus-lg me-1"></i>Log a day
+              </button>
+            </div>
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>출근</th>
+                  <th>퇴근</th>
+                  <th class="text-end">Overtime</th>
+                  <th class="text-end">Paid</th>
+                  <th class="text-end">Earned</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (entry of entries; track entry._id) {
+                  <tr [class.table-light]="!entry.qualified">
+                    <td>{{ entry.date | date: 'MMM d (EEE)' : 'UTC' }}</td>
+                    <td>{{ entry.startTime }}</td>
+                    <td>
+                      {{ entry.endTime }}
+                      @if (crossesMidnight(entry)) {
+                        <span class="badge text-bg-secondary ms-1" title="Shift ran past midnight">
+                          +1d
+                        </span>
+                      }
+                    </td>
+                    <td class="text-end">{{ formatMinutes(entry.rawOtMinutes) }}</td>
+                    <td class="text-end">
+                      @if (entry.qualified) {
+                        {{ formatMinutes(entry.paidOtMinutes) }}
+                        @if (lostMinutes(entry) > 0) {
+                          <span class="badge rounded-pill text-bg-warning ms-1"
+                                title="Lost to rounding">
+                            −{{ formatMinutes(lostMinutes(entry)) }}
+                          </span>
+                        }
+                      } @else if (entry.rawOtMinutes) {
+                        <span class="badge rounded-pill text-bg-danger"
+                              title="Below the minimum — earns nothing">
+                          under minimum
+                        </span>
+                      } @else {
+                        <span class="text-muted">—</span>
+                      }
+                    </td>
+                    <td class="text-end">
+                      {{ entry.earnings | currency: (entry.currency ? entry.currency.code : currencyCode) : 'symbol' : '1.0-2' }}
+                    </td>
+                    <td class="text-end text-nowrap">
+                      <button class="btn btn-sm btn-outline-secondary" (click)="openEntryModal(entry)"
+                              aria-label="Edit entry">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger ms-1" (click)="deleteEntry(entry)"
+                              aria-label="Delete entry">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ============ Daily entry modal ============ -->
+  @if (showEntryModal) {
+    <div class="ot-modal" (click)="closeEntryModal()">
+      <div class="ot-modal-content" (click)="$event.stopPropagation()">
+        <h5 class="mb-3">{{ isEditingEntry ? "Edit day" : "Log a day" }}</h5>
+
+        <form (ngSubmit)="saveEntry()">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label" for="entryDate">Date</label>
+              <input id="entryDate" name="entryDate" type="date" class="form-control" required
+                     [(ngModel)]="entryForm.date" />
+            </div>
+            <div class="col-6">
+              <label class="form-label" for="startTime">Start (출근 시간)</label>
+              <input id="startTime" name="startTime" type="time" class="form-control" required
+                     [(ngModel)]="entryForm.startTime" (ngModelChange)="updatePreview()" />
+            </div>
+            <div class="col-6">
+              <label class="form-label" for="endTime">End (퇴근 시간)</label>
+              <input id="endTime" name="endTime" type="time" class="form-control" required
+                     [(ngModel)]="entryForm.endTime" (ngModelChange)="updatePreview()" />
+              <div class="form-text">Earlier than the start = finished after midnight.</div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="entryNote">Note</label>
+              <input id="entryNote" name="entryNote" type="text" class="form-control"
+                     [(ngModel)]="entryForm.note" />
+            </div>
+          </div>
+
+          @if (isEditingEntry) {
+            <div class="form-check mt-3">
+              <input class="form-check-input" type="checkbox" id="resnapshot" name="resnapshot"
+                     [(ngModel)]="resnapshot" (ngModelChange)="updatePreview()" />
+              <label class="form-check-label small" for="resnapshot">
+                Re-apply current settings to this day
+                <span class="text-muted d-block">
+                  Off by default — the day keeps the rate and rules it was logged under.
+                </span>
+              </label>
+            </div>
+          }
+
+          @if (preview) {
+            <div class="ot-preview mt-3">
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Overtime worked</span>
+                <strong>{{ formatMinutes(preview.rawOtMinutes) }}</strong>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Counts as</span>
+                <strong [class.text-danger]="!preview.qualified">
+                  {{ preview.qualified ? formatMinutes(preview.paidOtMinutes) : "nothing — under the minimum" }}
+                </strong>
+              </div>
+              <hr class="my-2" />
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">You earn</span>
+                <strong class="text-success fs-5">
+                  {{ preview.earnings | currency: currencyCode : 'symbol' : '1.0-2' }}
+                </strong>
+              </div>
+              <div class="form-text mt-1">Overtime starts at {{ boundaryLabel }}.</div>
+            </div>
+          }
+
+          @if (errorMessage) {
+            <div class="alert alert-danger mt-3 mb-0" role="alert">{{ errorMessage }}</div>
+          }
+
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary" [disabled]="isSaving">
+              {{ isSaving ? "Saving…" : "Save" }}
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="closeEntryModal()">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+</div>
