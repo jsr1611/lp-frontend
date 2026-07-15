@@ -607,6 +607,13 @@ export class OvertimeTrackerComponent implements OnInit {
     return Math.max(0, (entry.rawOtMinutes || 0) - (entry.paidOtMinutes || 0));
   }
 
+  // What one overtime hour is actually worth: base rate x multiplier. Null when the
+  // month mixes rates, since no single figure would be true.
+  get effectiveOtRate(): number | null {
+    if (!this.summary || !this.summary.hourlyRate || !this.summary.otMultiplier) return null;
+    return Math.round(this.summary.hourlyRate * this.summary.otMultiplier * 100) / 100;
+  }
+
   get currencyCode(): string {
     if (this.summary && this.summary.currency) return this.summary.currency.code;
     if (this.settings) return this.settings.currency.code;
