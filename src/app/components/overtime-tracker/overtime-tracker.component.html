@@ -109,6 +109,22 @@
               <input id="lunchBreakMinutes" name="lunchBreakMinutes" type="number" min="0" step="5"
                      class="form-control" [(ngModel)]="settingsForm.lunchBreakMinutes" />
             </div>
+            <div class="col-12">
+              <label class="form-label d-block">Contracted days</label>
+              <div class="btn-group flex-wrap" role="group" aria-label="Contracted working days">
+                @for (d of weekDayOptions; track d.value) {
+                  <input type="checkbox" class="btn-check" [id]="'workDay' + d.value"
+                         [checked]="isWorkDay(d.value)" (change)="toggleWorkDay(d.value)" />
+                  <label class="btn btn-outline-primary btn-sm" [for]="'workDay' + d.value">
+                    {{ d.label }}
+                  </label>
+                }
+              </div>
+              <div class="form-text">
+                Any day outside these is a rest day — every hour worked counts, at the
+                휴일근로 rate below.
+              </div>
+            </div>
           </div>
 
           <h6 class="text-muted text-uppercase small mt-4">How overtime is counted</h6>
@@ -143,6 +159,45 @@
                   <span class="text-muted small d-block">
                     On for a plain 8-hour day where anything outside it counts. Off where only
                     evening overtime is paid.
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <h6 class="text-muted text-uppercase small mt-4">Rest days (휴일근로)</h6>
+          <p class="text-muted small mb-2">
+            Weekends and 공휴일. There is no scheduled day to exceed, so every hour worked
+            is overtime from the first minute.
+          </p>
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label class="form-label" for="restDayFirst8Multiplier">First 8 hours</label>
+              <select id="restDayFirst8Multiplier" name="restDayFirst8Multiplier"
+                      class="form-select" [(ngModel)]="settingsForm.restDayFirst8Multiplier">
+                <option [ngValue]="1.5">1.5× — statutory</option>
+                <option [ngValue]="2">2.0×</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label" for="restDayBeyondMultiplier">Beyond 8 hours</label>
+              <select id="restDayBeyondMultiplier" name="restDayBeyondMultiplier"
+                      class="form-select" [(ngModel)]="settingsForm.restDayBeyondMultiplier">
+                <option [ngValue]="1.5">1.5× — flat, no split</option>
+                <option [ngValue]="2">2.0× — statutory</option>
+              </select>
+              <div class="form-text">
+                Korean law adds a further 50% past 8 hours on a rest day.
+              </div>
+            </div>
+            <div class="col-12 col-md-4 d-flex align-items-center">
+              <div class="form-check mt-3">
+                <input class="form-check-input" type="checkbox" id="minimumOnRestDays"
+                       name="minimumOnRestDays" [(ngModel)]="settingsForm.minimumOnRestDays" />
+                <label class="form-check-label" for="minimumOnRestDays">
+                  Apply the minimum on rest days too
+                  <span class="text-muted small d-block">
+                    Usually off — coming in at all on a day off is the commitment.
                   </span>
                 </label>
               </div>
@@ -334,7 +389,15 @@
               <tbody>
                 @for (entry of entries; track entry._id) {
                   <tr [class.table-light]="!entry.qualified">
-                    <td>{{ entry.date | date: 'MMM d (EEE)' : 'UTC' }}</td>
+                    <td>
+                      {{ entry.date | date: 'MMM d (EEE)' : 'UTC' }}
+                      @if (entry.isRestDay) {
+                        <span class="badge rounded-pill text-bg-info ms-1"
+                              [title]="entry.restDayReason || 'Rest day'">
+                          {{ entry.restDayReason || '휴일' }}
+                        </span>
+                      }
+                    </td>
                     <td>{{ entry.startTime }}</td>
                     <td>
                       {{ entry.endTime }}
@@ -397,7 +460,28 @@
             <div class="col-12">
               <label class="form-label" for="entryDate">Date</label>
               <input id="entryDate" name="entryDate" type="date" class="form-control" required
-                     [(ngModel)]="entryForm.date" />
+                     [(ngModel)]="entryForm.date" (ngModelChange)="onEntryDateChange()" />
+            </div>
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="isRestDay" name="isRestDay"
+                       [(ngModel)]="entryForm.isRestDay" (ngModelChange)="onRestDayToggle()" />
+                <label class="form-check-label" for="isRestDay">
+                  Rest day (휴일/주말)
+                </label>
+              </div>
+              @if (restDayNote) {
+                <div class="alert alert-info py-2 px-3 mt-2 mb-0 small">
+                  <i class="bi bi-calendar-event me-1"></i>{{ restDayNote }}
+                </div>
+              }
+              @if (holidayLookupUnavailable && !entryForm.isRestDay) {
+                <div class="form-text text-warning-emphasis">
+                  <i class="bi bi-exclamation-triangle me-1"></i>
+                  Couldn't check public holidays — weekends are still detected, but tick the
+                  box yourself for a 빨간날.
+                </div>
+              }
             </div>
             <div class="col-6">
               <label class="form-label" for="startTime">Start (출근 시간)</label>
@@ -449,7 +533,16 @@
                   {{ preview.earnings | currency: currencyCode : 'symbol' : '1.0-2' }}
                 </strong>
               </div>
-              <div class="form-text mt-1">Overtime starts at {{ boundaryLabel }}.</div>
+              @if (entryForm.isRestDay) {
+                <div class="form-text mt-1">
+                  Rest day — every hour counts. First 8h at
+                  {{ settings?.restDayFirst8Multiplier ?? 1.5 }}×, beyond at
+                  {{ settings?.restDayBeyondMultiplier ?? 2 }}×. Breaks are deducted per
+                  근로기준법 §54.
+                </div>
+              } @else {
+                <div class="form-text mt-1">Overtime starts at {{ boundaryLabel }}.</div>
+              }
             </div>
           }
 
