@@ -1,9 +1,9 @@
 <div class="container my-4 loan-tracker">
 
   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-    <h2 class="mb-0"><i class="bi bi-cash-coin me-2"></i>Debt &amp; Loan Tracker</h2>
+    <h2 class="mb-0"><i class="bi bi-cash-coin me-2"></i>{{ 'loans.title' | translate }}</h2>
     <button class="btn btn-primary" (click)="openLoanModal()">
-      <i class="bi bi-plus-lg me-1"></i>Add loan
+      <i class="bi bi-plus-lg me-1"></i>{{ 'loans.addLoan' | translate }}
     </button>
   </div>
 
@@ -12,7 +12,7 @@
     @if (summary.byCurrency.length === 0) {
       <div class="col-12">
         <div class="alert alert-light border text-center mb-0">
-          No outstanding loans. Add one to get started.
+          {{ 'loans.empty.noOutstanding' | translate }}
         </div>
       </div>
     }
@@ -20,18 +20,18 @@
       <div class="col-12 col-md-6 col-xl-4">
         <div class="card h-100 shadow-sm">
           <div class="card-body">
-            <h6 class="text-muted mb-3">{{ c.currency.code }} balance</h6>
+            <h6 class="text-muted mb-3">{{ 'loans.currencyBalance' | translate:{ code: c.currency.code } }}</h6>
             <div class="d-flex justify-content-between mb-1">
-              <span class="text-danger"><i class="bi bi-arrow-up-right me-1"></i>I owe</span>
+              <span class="text-danger"><i class="bi bi-arrow-up-right me-1"></i>{{ 'loans.direction.borrowed' | translate }}</span>
               <strong class="text-danger">{{ c.borrowedOutstanding | currency: c.currency.code : 'symbol' : '1.0-2' }}</strong>
             </div>
             <div class="d-flex justify-content-between mb-2">
-              <span class="text-success"><i class="bi bi-arrow-down-left me-1"></i>Owed to me</span>
+              <span class="text-success"><i class="bi bi-arrow-down-left me-1"></i>{{ 'loans.direction.lent' | translate }}</span>
               <strong class="text-success">{{ c.lentOutstanding | currency: c.currency.code : 'symbol' : '1.0-2' }}</strong>
             </div>
             <hr class="my-2" />
             <div class="d-flex justify-content-between">
-              <span>Net position</span>
+              <span>{{ 'loans.netPosition' | translate }}</span>
               <strong [class.text-success]="c.net >= 0" [class.text-danger]="c.net < 0">
                 {{ c.net | currency: c.currency.code : 'symbol' : '1.0-2' }}
               </strong>
@@ -47,7 +47,7 @@
     <div class="row g-3 mb-3">
       @if (chartCurrencies.length > 1) {
         <div class="col-12">
-          <label class="form-label small mb-1">Chart currency</label>
+          <label class="form-label small mb-1">{{ 'loans.chart.currency' | translate }}</label>
           <select class="form-select form-select-sm w-auto" [(ngModel)]="chartCurrencyCode" (change)="drawCharts()">
             @for (code of chartCurrencies; track code) {
               <option [value]="code">{{ code }}</option>
@@ -72,7 +72,7 @@
   @if (summary.byContact.length) {
     <div class="card shadow-sm mb-3">
       <div class="card-body">
-        <h6 class="text-muted mb-2">Balances by person</h6>
+        <h6 class="text-muted mb-2">{{ 'loans.balancesByPerson' | translate }}</h6>
         <div class="list-group list-group-flush">
           @for (b of summary.byContact; track b) {
             <button type="button"
@@ -92,13 +92,13 @@
   <!-- ===================== OVERDUE / DUE SOON ===================== -->
   @if (summary.overdue.length) {
     <div class="alert alert-danger">
-      <strong><i class="bi bi-exclamation-triangle me-1"></i>Overdue ({{ summary.overdue.length }})</strong>
+      <strong><i class="bi bi-exclamation-triangle me-1"></i>{{ 'loans.overdueCount' | translate:{ count: summary.overdue.length } }}</strong>
       <ul class="mb-0 mt-1">
         @for (d of summary.overdue; track d) {
           <li>
-            {{ directionLabel(d.direction) }} — {{ d.contactName }}:
+            {{ directionKey(d.direction) | translate }} — {{ d.contactName }}:
             {{ d.remaining | currency: d.currency.code : 'symbol' : '1.0-2' }}
-            (due {{ d.dueDate | date: 'mediumDate' }})
+            {{ 'loans.dueOn' | translate:{ date: (d.dueDate | date: 'mediumDate') } }}
           </li>
         }
       </ul>
@@ -106,13 +106,13 @@
   }
   @if (summary.dueSoon.length) {
     <div class="alert alert-warning">
-      <strong><i class="bi bi-clock me-1"></i>Due soon ({{ summary.dueSoon.length }})</strong>
+      <strong><i class="bi bi-clock me-1"></i>{{ 'loans.dueSoonCount' | translate:{ count: summary.dueSoon.length } }}</strong>
       <ul class="mb-0 mt-1">
         @for (d of summary.dueSoon; track d) {
           <li>
-            {{ directionLabel(d.direction) }} — {{ d.contactName }}:
+            {{ directionKey(d.direction) | translate }} — {{ d.contactName }}:
             {{ d.remaining | currency: d.currency.code : 'symbol' : '1.0-2' }}
-            (due {{ d.dueDate | date: 'mediumDate' }})
+            {{ 'loans.dueOn' | translate:{ date: (d.dueDate | date: 'mediumDate') } }}
           </li>
         }
       </ul>
@@ -122,21 +122,21 @@
   <!-- ===================== FILTERS ===================== -->
   <div class="row g-2 align-items-end mb-2">
     <div class="col-6 col-md-3">
-      <label class="form-label small mb-1">Direction</label>
+      <label class="form-label small mb-1">{{ 'loans.direction.label' | translate }}</label>
       <select class="form-select form-select-sm" [(ngModel)]="filters.direction" (change)="applyFilters()">
-        <option value="">All</option>
-        <option value="borrowed">I owe (borrowed)</option>
-        <option value="lent">Owed to me (lent)</option>
+        <option value="">{{ 'loans.filters.all' | translate }}</option>
+        <option value="borrowed">{{ 'loans.direction.borrowedLong' | translate }}</option>
+        <option value="lent">{{ 'loans.direction.lentLong' | translate }}</option>
       </select>
     </div>
     <div class="col-6 col-md-3">
-      <label class="form-label small mb-1">Status</label>
+      <label class="form-label small mb-1">{{ 'loans.status.label' | translate }}</label>
       <select class="form-select form-select-sm" [(ngModel)]="filters.status" (change)="applyFilters()">
-        <option value="active">Active (unsettled)</option>
-        <option value="open">Open</option>
-        <option value="partial">Partially paid</option>
-        <option value="paid">Paid</option>
-        <option value="all">All</option>
+        <option value="active">{{ 'loans.filters.active' | translate }}</option>
+        <option value="open">{{ 'loans.status.open' | translate }}</option>
+        <option value="partial">{{ 'loans.status.partial' | translate }}</option>
+        <option value="paid">{{ 'loans.status.paid' | translate }}</option>
+        <option value="all">{{ 'loans.filters.all' | translate }}</option>
       </select>
     </div>
   </div>
@@ -146,19 +146,19 @@
     <table class="table table-hover align-middle">
       <thead class="table-light">
         <tr>
-          <th>Contact</th>
-          <th>Direction</th>
-          <th class="text-end">Principal</th>
-          <th class="text-end">Remaining</th>
-          <th>Due date</th>
-          <th>Status</th>
-          <th class="text-end">Actions</th>
+          <th>{{ 'loans.table.contact' | translate }}</th>
+          <th>{{ 'loans.table.direction' | translate }}</th>
+          <th class="text-end">{{ 'loans.table.principal' | translate }}</th>
+          <th class="text-end">{{ 'loans.table.remaining' | translate }}</th>
+          <th>{{ 'loans.table.dueDate' | translate }}</th>
+          <th>{{ 'loans.table.status' | translate }}</th>
+          <th class="text-end">{{ 'loans.table.actions' | translate }}</th>
         </tr>
       </thead>
       <tbody>
         @if (loans.length === 0) {
           <tr>
-            <td colspan="7" class="text-center text-muted py-3">No loans match these filters.</td>
+            <td colspan="7" class="text-center text-muted py-3">{{ 'loans.empty.noMatch' | translate }}</td>
           </tr>
         }
         @for (loan of loans; track loan) {
@@ -178,7 +178,7 @@
             </td>
             <td>
               <span class="badge" [class.bg-danger]="loan.direction === 'borrowed'" [class.bg-success]="loan.direction === 'lent'">
-                {{ directionLabel(loan.direction) }}
+                {{ directionKey(loan.direction) | translate }}
               </span>
             </td>
             <td class="text-end">{{ loan.principal | currency: loan.currency.code : 'symbol' : '1.0-2' }}</td>
@@ -196,18 +196,18 @@
                 [class.bg-secondary]="loan.status === 'open'"
                 [class.bg-info]="loan.status === 'partial'"
                 [class.bg-success]="loan.status === 'paid'">
-                {{ loan.status }}
+                {{ statusKey(loan.status) | translate }}
               </span>
             </td>
             <td class="text-end text-nowrap">
-              <button class="btn btn-sm btn-outline-success me-1" title="Add repayment"
+              <button class="btn btn-sm btn-outline-success me-1" [attr.title]="'loans.addRepayment' | translate"
                 [disabled]="loan.status === 'paid'" (click)="openRepaymentModal(loan)">
                 <i class="bi bi-cash"></i>
               </button>
-              <button class="btn btn-sm btn-outline-primary me-1" title="Edit" (click)="openLoanModal(loan)">
+              <button class="btn btn-sm btn-outline-primary me-1" [attr.title]="'loans.edit' | translate" (click)="openLoanModal(loan)">
                 <i class="bi bi-pencil"></i>
               </button>
-              <button class="btn btn-sm btn-outline-danger" title="Delete" (click)="deleteLoan(loan)">
+              <button class="btn btn-sm btn-outline-danger" [attr.title]="'loans.delete' | translate" (click)="deleteLoan(loan)">
                 <i class="bi bi-trash"></i>
               </button>
             </td>
@@ -223,7 +223,7 @@
   <div class="lt-modal" (click)="closeLoanModal()">
     <div class="lt-modal-content" (click)="$event.stopPropagation()">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">{{ isEditingLoan ? 'Edit loan' : 'Add loan' }}</h5>
+        <h5 class="mb-0">{{ (isEditingLoan ? 'loans.editLoan' : 'loans.addLoan') | translate }}</h5>
         <button class="btn-close" (click)="closeLoanModal()"></button>
       </div>
       @if (errorMessage) {
@@ -232,32 +232,32 @@
       <form (ngSubmit)="saveLoan()">
         <!-- Direction -->
         <div class="mb-3">
-          <label class="form-label">Direction</label>
+          <label class="form-label">{{ 'loans.direction.label' | translate }}</label>
           <div class="btn-group w-100" role="group">
             <input type="radio" class="btn-check" name="direction" id="dirBorrowed" value="borrowed"
               [(ngModel)]="loanForm.direction" />
-            <label class="btn btn-outline-danger" for="dirBorrowed">I owe (borrowed)</label>
+            <label class="btn btn-outline-danger" for="dirBorrowed">{{ 'loans.direction.borrowedLong' | translate }}</label>
             <input type="radio" class="btn-check" name="direction" id="dirLent" value="lent"
               [(ngModel)]="loanForm.direction" />
-            <label class="btn btn-outline-success" for="dirLent">Owed to me (lent)</label>
+            <label class="btn btn-outline-success" for="dirLent">{{ 'loans.direction.lentLong' | translate }}</label>
           </div>
         </div>
         <!-- Contact -->
         <div class="mb-3">
-          <label class="form-label">Contact</label>
+          <label class="form-label">{{ 'loans.contact' | translate }}</label>
           <div class="btn-group btn-group-sm w-100 mb-2" role="group">
             <input type="radio" class="btn-check" name="contactMode" id="cmExisting" value="existing"
               [(ngModel)]="contactMode" />
-            <label class="btn btn-outline-secondary" for="cmExisting">Existing</label>
+            <label class="btn btn-outline-secondary" for="cmExisting">{{ 'loans.contactMode.existing' | translate }}</label>
             <input type="radio" class="btn-check" name="contactMode" id="cmNew" value="new"
               [(ngModel)]="contactMode" />
-            <label class="btn btn-outline-secondary" for="cmNew">New contact</label>
+            <label class="btn btn-outline-secondary" for="cmNew">{{ 'loans.contactMode.new' | translate }}</label>
           </div>
           <!-- pick existing -->
           @if (contactMode === 'existing') {
             <select class="form-select" name="contactId"
               [(ngModel)]="loanForm.contactId">
-              <option value="">— select a contact —</option>
+              <option value="">{{ 'loans.selectContact' | translate }}</option>
               @for (c of contacts; track c) {
                 <option [value]="c._id">{{ c.name }}</option>
               }
@@ -269,14 +269,14 @@
               @if (contactPickerSupported) {
                 <button type="button" class="btn btn-sm btn-outline-primary mb-2"
                   (click)="importFromDevice()">
-                  <i class="bi bi-person-lines-fill me-1"></i>Import from phone
+                  <i class="bi bi-person-lines-fill me-1"></i>{{ 'loans.importFromPhone' | translate }}
                 </button>
               }
-              <input class="form-control mb-2" name="ncName" placeholder="Name (required)" required
+              <input class="form-control mb-2" name="ncName" [attr.placeholder]="'loans.namePlaceholder' | translate" required
                 [(ngModel)]="newContact.name" />
               <div class="row g-2">
-                <div class="col-6"><input class="form-control" name="ncPhone" placeholder="Phone" [(ngModel)]="newContact.phone" /></div>
-                <div class="col-6"><input class="form-control" name="ncEmail" placeholder="Email" [(ngModel)]="newContact.email" /></div>
+                <div class="col-6"><input class="form-control" name="ncPhone" [attr.placeholder]="'loans.phone' | translate" [(ngModel)]="newContact.phone" /></div>
+                <div class="col-6"><input class="form-control" name="ncEmail" [attr.placeholder]="'loans.email' | translate" [(ngModel)]="newContact.email" /></div>
                 <div class="col-6"><input class="form-control" name="ncTg" placeholder="Telegram" [(ngModel)]="newContact.telegram" /></div>
                 <div class="col-6"><input class="form-control" name="ncWa" placeholder="WhatsApp" [(ngModel)]="newContact.whatsapp" /></div>
               </div>
@@ -286,12 +286,12 @@
         <!-- Amount + currency -->
         <div class="row g-2 mb-3">
           <div class="col-7">
-            <label class="form-label">Amount</label>
+            <label class="form-label">{{ 'loans.amount' | translate }}</label>
             <input type="number" min="0" step="0.01" class="form-control" name="principal" required
               [(ngModel)]="loanForm.principal" />
           </div>
           <div class="col-5">
-            <label class="form-label">Currency</label>
+            <label class="form-label">{{ 'loans.currency' | translate }}</label>
             <select class="form-select" name="currency" [ngModel]="loanForm.currency.code"
               (ngModelChange)="onCurrencyChange($event)">
               @for (cur of popularCurrencies; track cur) {
@@ -303,22 +303,22 @@
         <!-- Dates -->
         <div class="row g-2 mb-3">
           <div class="col-6">
-            <label class="form-label">Date taken</label>
+            <label class="form-label">{{ 'loans.dateTaken' | translate }}</label>
             <input type="date" class="form-control" name="dateTaken" required [(ngModel)]="loanForm.dateTaken" />
           </div>
           <div class="col-6">
-            <label class="form-label">Due date <span class="text-muted small">(optional)</span></label>
+            <label class="form-label">{{ 'loans.dueDate' | translate }} <span class="text-muted small">{{ 'loans.optional' | translate }}</span></label>
             <input type="date" class="form-control" name="dueDate" [(ngModel)]="loanForm.dueDate" />
           </div>
         </div>
         <!-- Note -->
         <div class="mb-3">
-          <label class="form-label">Note</label>
-          <textarea class="form-control" rows="2" name="note" placeholder="What was it for?" [(ngModel)]="loanForm.note"></textarea>
+          <label class="form-label">{{ 'loans.note' | translate }}</label>
+          <textarea class="form-control" rows="2" name="note" [attr.placeholder]="'loans.notePlaceholder' | translate" [(ngModel)]="loanForm.note"></textarea>
         </div>
         <div class="d-flex justify-content-end gap-2">
-          <button type="button" class="btn btn-outline-secondary" (click)="closeLoanModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" [disabled]="isSaving">{{ isSaving ? 'Saving…' : (isEditingLoan ? 'Update' : 'Save') }}</button>
+          <button type="button" class="btn btn-outline-secondary" (click)="closeLoanModal()">{{ 'loans.cancel' | translate }}</button>
+          <button type="submit" class="btn btn-primary" [disabled]="isSaving">{{ (isSaving ? 'loans.saving' : (isEditingLoan ? 'loans.update' : 'loans.save')) | translate }}</button>
         </div>
       </form>
     </div>
@@ -330,17 +330,17 @@
   <div class="lt-modal" (click)="closeRepaymentModal()">
     <div class="lt-modal-content" (click)="$event.stopPropagation()">
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <h5 class="mb-0">Repayments — {{ repaymentLoan.contactName }}</h5>
+        <h5 class="mb-0">{{ 'loans.repaymentsWith' | translate:{ name: repaymentLoan.contactName } }}</h5>
         <button class="btn-close" (click)="closeRepaymentModal()"></button>
       </div>
       <p class="mb-3">
-        Remaining:
+        {{ 'loans.remainingLabel' | translate }}
         <strong>{{ remaining(repaymentLoan) | currency: repaymentLoan.currency.code : 'symbol' : '1.0-2' }}</strong>
-        of {{ repaymentLoan.principal | currency: repaymentLoan.currency.code : 'symbol' : '1.0-2' }}
+        {{ 'loans.ofPrincipal' | translate:{ principal: (repaymentLoan.principal | currency: repaymentLoan.currency.code : 'symbol' : '1.0-2') } }}
         <span class="badge rounded-pill ms-1"
           [class.bg-secondary]="repaymentLoan.status === 'open'"
           [class.bg-info]="repaymentLoan.status === 'partial'"
-        [class.bg-success]="repaymentLoan.status === 'paid'">{{ repaymentLoan.status }}</span>
+        [class.bg-success]="repaymentLoan.status === 'paid'">{{ statusKey(repaymentLoan.status) | translate }}</span>
       </p>
       @if (errorMessage) {
         <div class="alert alert-danger py-2">{{ errorMessage }}</div>
@@ -363,27 +363,27 @@
         </ul>
       }
       @if (!repaymentLoan.repayments?.length) {
-        <p class="text-muted small">No repayments logged yet.</p>
+        <p class="text-muted small">{{ 'loans.noRepayments' | translate }}</p>
       }
       <!-- add repayment -->
       @if (repaymentLoan.status !== 'paid') {
         <form (ngSubmit)="addRepayment()">
           <div class="row g-2 align-items-end">
             <div class="col-4">
-              <label class="form-label small mb-1">Amount</label>
+              <label class="form-label small mb-1">{{ 'loans.amount' | translate }}</label>
               <input type="number" min="0" step="0.01" class="form-control" name="rAmount" required [(ngModel)]="newRepayment.amount" />
             </div>
             <div class="col-4">
-              <label class="form-label small mb-1">Date</label>
+              <label class="form-label small mb-1">{{ 'loans.date' | translate }}</label>
               <input type="date" class="form-control" name="rDate" required [(ngModel)]="newRepayment.date" />
             </div>
             <div class="col-4">
-              <label class="form-label small mb-1">Note</label>
+              <label class="form-label small mb-1">{{ 'loans.note' | translate }}</label>
               <input class="form-control" name="rNote" [(ngModel)]="newRepayment.note" />
             </div>
           </div>
           <div class="d-flex justify-content-end mt-3">
-            <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Add repayment</button>
+            <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>{{ 'loans.addRepayment' | translate }}</button>
           </div>
         </form>
       }
@@ -406,7 +406,7 @@
               </a>
             }
             @if (contactLinks(detailContact).length === 0) {
-              <span class="text-muted small">No contact channels saved</span>
+              <span class="text-muted small">{{ 'loans.noChannels' | translate }}</span>
             }
           </div>
         </div>
@@ -417,10 +417,10 @@
         @for (t of detailTotals; track t) {
           <div class="border rounded px-3 py-2">
             <div class="small text-muted">{{ t.currency.code }}</div>
-            <div class="small text-danger">I owe: {{ t.borrowed | currency: t.currency.code : 'symbol' : '1.0-2' }}</div>
-            <div class="small text-success">Owed to me: {{ t.lent | currency: t.currency.code : 'symbol' : '1.0-2' }}</div>
+            <div class="small text-danger">{{ 'loans.direction.borrowed' | translate }}: {{ t.borrowed | currency: t.currency.code : 'symbol' : '1.0-2' }}</div>
+            <div class="small text-success">{{ 'loans.direction.lent' | translate }}: {{ t.lent | currency: t.currency.code : 'symbol' : '1.0-2' }}</div>
             <div class="fw-semibold" [class.text-success]="t.net >= 0" [class.text-danger]="t.net < 0">
-              Net: {{ t.net | currency: t.currency.code : 'symbol' : '1.0-2' }}
+              {{ 'loans.net' | translate }}: {{ t.net | currency: t.currency.code : 'symbol' : '1.0-2' }}
             </div>
           </div>
         }
@@ -430,26 +430,26 @@
         <table class="table table-sm align-middle">
           <thead class="table-light">
             <tr>
-              <th>Direction</th>
-              <th class="text-end">Principal</th>
-              <th class="text-end">Remaining</th>
-              <th>Taken</th>
-              <th>Due</th>
-              <th>Status</th>
-              <th class="text-end">Actions</th>
+              <th>{{ 'loans.table.direction' | translate }}</th>
+              <th class="text-end">{{ 'loans.table.principal' | translate }}</th>
+              <th class="text-end">{{ 'loans.table.remaining' | translate }}</th>
+              <th>{{ 'loans.table.taken' | translate }}</th>
+              <th>{{ 'loans.table.due' | translate }}</th>
+              <th>{{ 'loans.table.status' | translate }}</th>
+              <th class="text-end">{{ 'loans.table.actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>
             @if (detailLoans.length === 0) {
               <tr>
-                <td colspan="7" class="text-center text-muted py-2">No loans with this contact.</td>
+                <td colspan="7" class="text-center text-muted py-2">{{ 'loans.empty.noneWithContact' | translate }}</td>
               </tr>
             }
             @for (loan of detailLoans; track loan) {
               <tr>
                 <td>
                   <span class="badge" [class.bg-danger]="loan.direction === 'borrowed'" [class.bg-success]="loan.direction === 'lent'">
-                    {{ directionLabel(loan.direction) }}
+                    {{ directionKey(loan.direction) | translate }}
                   </span>
                 </td>
                 <td class="text-end">{{ loan.principal | currency: loan.currency.code : 'symbol' : '1.0-2' }}</td>
@@ -467,14 +467,14 @@
                   <span class="badge rounded-pill"
                     [class.bg-secondary]="loan.status === 'open'"
                     [class.bg-info]="loan.status === 'partial'"
-                  [class.bg-success]="loan.status === 'paid'">{{ loan.status }}</span>
+                  [class.bg-success]="loan.status === 'paid'">{{ statusKey(loan.status) | translate }}</span>
                 </td>
                 <td class="text-end text-nowrap">
-                  <button class="btn btn-sm btn-outline-success me-1" title="Add repayment"
+                  <button class="btn btn-sm btn-outline-success me-1" [attr.title]="'loans.addRepayment' | translate"
                     [disabled]="loan.status === 'paid'" (click)="detailAddRepayment(loan)">
                     <i class="bi bi-cash"></i>
                   </button>
-                  <button class="btn btn-sm btn-outline-primary" title="Edit" (click)="detailEditLoan(loan)">
+                  <button class="btn btn-sm btn-outline-primary" [attr.title]="'loans.edit' | translate" (click)="detailEditLoan(loan)">
                     <i class="bi bi-pencil"></i>
                   </button>
                 </td>
