@@ -1,16 +1,17 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output, ChangeDetectionStrategy } from "@angular/core";
+import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output, ChangeDetectionStrategy, inject } from "@angular/core";
 import { Currency, User } from "src/app/models/user";
 import { AuthService } from "src/app/services/AuthService";
-import { DatePipe } from "@angular/common";
+import { CurrencyPipe, DatePipe, PercentPipe } from "@angular/common";
 import { Expense } from "src/app/models/expense";
 import { Chart } from "chart.js";
 import { SecureService } from "src/app/services/SercureService";
 import { MatDatepickerInputEvent } from "@angular/material/datepicker";
-import { DateAdapter, MAT_DATE_LOCALE } from "@angular/material/core";
+import { DateAdapter } from "@angular/material/core";
 import { MonthpickerDateAdapter } from "src/app/mappings/monthdatepicker-date-adapter";
-import { Platform } from "@angular/cdk/platform";
 import { Router } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
+import { currencyNameKey, findCurrency, popularCurrencies } from "src/app/mappings/currencies";
 
 
 interface GroupedExpense {
@@ -23,11 +24,10 @@ interface GroupedExpense {
     templateUrl: "./user-page.component.html",
     styleUrls: ["./user-page.component.css"],
     providers: [
-        {
-            provide: DateAdapter,
-            useClass: MonthpickerDateAdapter,
-            deps: [MAT_DATE_LOCALE, Platform],
-        },
+        // MonthpickerDateAdapter takes no constructor args: NativeDateAdapter
+        // resolves MAT_DATE_LOCALE (which defaults to LOCALE_ID) via inject().
+        { provide: DateAdapter, useClass: MonthpickerDateAdapter },
+        PercentPipe,
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
@@ -86,27 +86,17 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   isEditModalOpen = false;
   editExpense: Expense = this.todaysExpense;
 
-  popularCurrencies: Currency[] = [
-    { code: 'KRW', name: 'South Korean Won', symbol: '₩' },
-    { code: 'UZS', name: 'Uzbek Som', symbol: 'soʻm' },
-    { code: 'KZT', name: 'Kazakh Tenge', symbol: '₸' },
-    { code: 'TJS', name: 'Tajik Somoni', symbol: 'SM' },
-    { code: 'KGS', name: 'Kyrgyz Som', symbol: 'с' },
-    { code: 'RUB', name: 'Russian Ruble', symbol: '₽' },
-    { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
-    { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
-    { code: 'PKR', name: 'Pakistani Rupee', symbol: '₨' },
-    { code: 'EGP', name: 'Egyptian Pound', symbol: 'ج.م' },
-    { code: 'AED', name: 'United Arab Emirates Dirham', symbol: 'د.إ' },
-    { code: 'SAR', name: 'Saudi Riyal', symbol: 'ر.س' },
-    { code: 'GBP', name: 'British Pound', symbol: '£' },
-    { code: 'EUR', name: 'Euro', symbol: '€' },
-    { code: 'USD', name: 'US Dollar', symbol: '$' },
-    // Add more currencies as needed
-  ];
+  // Shared across loans/overtime/profile — see src/app/mappings/currencies.ts
+  popularCurrencies: Currency[] = popularCurrencies;
 
   selectedCurrency: string = 'UZS';
 
+  private readonly translate = inject(TranslateService);
+  private readonly percentPipe = inject(PercentPipe);
+  private readonly currencyPipe = inject(CurrencyPipe);
+
+  /** Display name key for a currency code; the code/symbol stay untranslated. */
+  protected currencyNameKey = currencyNameKey;
 
   constructor(
     private authService: AuthService,
@@ -138,7 +128,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
           this.user = data.user;
           console.log('user info from db: ', this.user);
           if (this.user.currency == null) {
-            this.user.currency = this.popularCurrencies[1];
+            this.user.currency = findCurrency("UZS");
           }
           this.selectedCurrency = this.user.currency.code;
         },
@@ -168,7 +158,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     localStorage.setItem('currency', currencyCode);
     if (this.monthlyExpensesChart && this.monthlyExpensesChart.data && this.monthlyExpensesChart.data.datasets) {
       const dataset = this.monthlyExpensesChart.data.datasets[0];
-      dataset.label = `Total monthly expenses for ${this.selectedYear} in ${this.selectedCurrency}`;
+      dataset.label = this.monthlyChartLabel();
       this.monthlyExpensesChart.update();
     }
     this.popularCurrencies.forEach((currency) => {
@@ -191,6 +181,14 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   }
 
 
+  /** Chart legend label; year and currency code are interpolated, never translated. */
+  private monthlyChartLabel(): string {
+    return this.translate.instant('profile.chart.monthlyTotal', {
+      year: this.selectedYear,
+      currency: this.selectedCurrency,
+    });
+  }
+
   createMonthlyExpensesChart() {
     if (this.monthlyExpensesChart) {
       this.monthlyExpensesChart.destroy();
@@ -202,7 +200,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
         labels: this.monthlyExpenses.map(expense => expense.month),
         datasets: [
           {
-            label: `Total monthly expenses for ${this.selectedYear} in ${this.selectedCurrency}`,
+            label: this.monthlyChartLabel(),
             data: this.monthlyExpenses.map(expense => expense.total),
             backgroundColor: 'rgba(54, 162, 235, 0.6)',
             borderColor: 'rgba(54, 162, 235, 1)',
@@ -259,8 +257,16 @@ export class UserPageComponent implements OnInit, AfterViewInit {
             callbacks: {
               label: (context) => {
                 const value = context.raw as number; // Cast to number
-                const percentage = ((value / totalAmount) * 100).toFixed(2);
-                return `${context.label}: ${value} (${percentage}%)`;
+                // PercentPipe/CurrencyPipe follow LOCALE_ID, so the decimal
+                // separator and percent sign match the active language.
+                const percentage = totalAmount
+                  ? this.percentPipe.transform(value / totalAmount, '1.2-2')
+                  : '';
+                return this.translate.instant('profile.chart.tooltip', {
+                  label: context.label,
+                  amount: this.currencyPipe.transform(value, this.selectedCurrency, 'symbol', '1.0-0'),
+                  percent: percentage,
+                });
               }
             }
           }
@@ -488,7 +494,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
 
       if (this.selectedFile.size > maxSizeInBytes) {
         alert(
-          `File is too large. Maximum allowed size is ${this.maxSizeInMB} MB.`
+          this.translate.instant('profile.errors.fileTooLarge', { size: this.maxSizeInMB })
         );
         this.selectedFile = null; // Clear the selected file
         return;

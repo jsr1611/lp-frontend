@@ -194,7 +194,7 @@ h2 {
   color: #555;
 }
 .expense-card-actions {
-  text-align: right;
+  text-align: end;
   margin-top: 10px;
 }
 .modal {
@@ -217,7 +217,7 @@ h2 {
 }
 .close {
   color: #aaa;
-  float: right;
+  float: inline-end;
   font-size: 28px;
   font-weight: bold;
 }
@@ -240,8 +240,8 @@ h2 {
   }
   .profile-details {
     flex: 1;
-    margin-left: 30px;
-    text-align: left;
+    margin-inline-start: 30px;
+    text-align: start;
   }
   .expense-controls-buttons {
     flex-direction: row;
@@ -265,7 +265,7 @@ h2 {
   .expense-table th,
   .expense-table td {
     padding: 10px;
-    text-align: left;
+    text-align: start;
     border-bottom: 1px solid #ddd;
   }
   .expense-table th {
