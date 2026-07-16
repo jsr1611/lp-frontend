@@ -120,15 +120,15 @@
     "status": {
       "emptyResponse": "فشل التنزيل. الاستجابة فارغة.",
       "failed": "فشل التنزيل. حاول مرة أخرى.",
-      "invalidUrl": "أدخل رابط YouTube أو Instagram صحيحًا.",
+      "invalidUrl": "أدخل رابط YouTube أو Instagram أو Facebook صحيحًا.",
       "preparingMp3": "جارٍ تحضير تنزيل MP3…",
       "preparingMp4": "جارٍ تحضير تنزيل MP4…",
       "ready": "جاهز.",
       "readyToDownload": "جاهز للتنزيل.",
       "started": "بدأ التنزيل. أبقِ هذا التبويب مفتوحًا."
     },
-    "title": "نزّل مقاطع YouTube/Instagram دون عناء.",
-    "urlPlaceholder": "https://www.youtube.com/watch?v=... أو https://www.instagram.com/reel/...",
+    "title": "نزّل مقاطع YouTube/Instagram/Facebook دون عناء.",
+    "urlPlaceholder": "https://youtube.com/watch?v=... أو https://instagram.com/reel/... أو https://facebook.com/watch/?v=...",
     "videoUrl": "رابط الفيديو"
   },
   "github": {
