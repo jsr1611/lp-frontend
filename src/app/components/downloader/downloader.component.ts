@@ -10,6 +10,16 @@ import { SecureService } from 'src/app/services/SercureService';
     standalone: false
 })
 export class DownloaderComponent {
+  /** Registrable domains the backend can fetch from; any subdomain of these is accepted. */
+  private static readonly SUPPORTED_DOMAINS = [
+    'youtube.com',
+    'youtu.be',
+    'instagram.com',
+    'facebook.com',
+    'fb.watch',
+    'fb.com',
+  ];
+
   videoUrl = '';
   convertToMp3 = false;
   /** Holds a translation key, not text — the template pipes it through `translate`. */
@@ -43,7 +53,7 @@ export class DownloaderComponent {
 
     const payload = {
       url: this.videoUrl.trim(),
-      format: this.convertToMp3 ? 'mp3' : 'mp4',
+      convert_to_mp3: this.convertToMp3,
     };
 
     this.secureService.download(payload)
@@ -93,14 +103,14 @@ export class DownloaderComponent {
       }
 
       const parsed = new URL(trimmed);
+      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+        return false;
+      }
+
       const host = parsed.hostname.toLowerCase();
-      return host === 'youtube.com'
-        || host === 'www.youtube.com'
-        || host === 'm.youtube.com'
-        || host === 'youtu.be'
-        || host === 'instagram.com'
-        || host === 'www.instagram.com'
-        || host === 'm.instagram.com';
+      return DownloaderComponent.SUPPORTED_DOMAINS.some(
+        domain => host === domain || host.endsWith(`.${domain}`)
+      );
     } catch {
       return false;
     }

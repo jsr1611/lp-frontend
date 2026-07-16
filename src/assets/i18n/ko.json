@@ -120,15 +120,15 @@
     "status": {
       "emptyResponse": "내려받기에 실패했습니다. 응답이 비어 있습니다.",
       "failed": "내려받기에 실패했습니다. 다시 시도해 주세요.",
-      "invalidUrl": "올바른 YouTube 또는 Instagram 링크를 입력하세요.",
+      "invalidUrl": "올바른 YouTube, Instagram 또는 Facebook 링크를 입력하세요.",
       "preparingMp3": "MP3 내려받기를 준비하는 중…",
       "preparingMp4": "MP4 내려받기를 준비하는 중…",
       "ready": "준비됨.",
       "readyToDownload": "내려받을 준비가 되었습니다.",
       "started": "내려받기가 시작되었습니다. 이 탭을 열어 두세요."
     },
-    "title": "YouTube/Instagram 영상을 번거로움 없이 내려받으세요.",
-    "urlPlaceholder": "https://www.youtube.com/watch?v=... 또는 https://www.instagram.com/reel/...",
+    "title": "YouTube/Instagram/Facebook 영상을 번거로움 없이 내려받으세요.",
+    "urlPlaceholder": "https://youtube.com/watch?v=... 또는 https://instagram.com/reel/... 또는 https://facebook.com/watch/?v=...",
     "videoUrl": "동영상 URL"
   },
   "github": {

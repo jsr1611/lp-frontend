@@ -120,15 +120,15 @@
     "status": {
       "emptyResponse": "Download failed. Empty response.",
       "failed": "Download failed. Please try again.",
-      "invalidUrl": "Enter a valid YouTube or Instagram URL.",
+      "invalidUrl": "Enter a valid YouTube, Instagram, or Facebook URL.",
       "preparingMp3": "Preparing MP3 download…",
       "preparingMp4": "Preparing MP4 download…",
       "ready": "Ready.",
       "readyToDownload": "Ready to download.",
       "started": "Download started. Keep this tab open."
     },
-    "title": "Download YouTube/Instagram clips without the fuss.",
-    "urlPlaceholder": "https://www.youtube.com/watch?v=... or https://www.instagram.com/reel/...",
+    "title": "Download YouTube/Instagram/Facebook clips without the fuss.",
+    "urlPlaceholder": "https://youtube.com/watch?v=... or https://instagram.com/reel/... or https://facebook.com/watch/?v=...",
     "videoUrl": "Video URL"
   },
   "github": {
