@@ -18,13 +18,30 @@ const CORS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
-const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+/**
+ * Resolve the Upstash REST URL + write token from env, whatever prefix the Vercel
+ * integration used (e.g. KV_REST_API_URL, UPSTASH_REDIS_REST_URL, STORAGE_REST_API_URL…).
+ * We match any *_REST_API_URL / *_REST_API_TOKEN pair, skipping the read-only token.
+ */
+function kvConfig() {
+  const e = process.env;
+  const pick = (suffix, skip) => {
+    for (const [k, v] of Object.entries(e)) {
+      if (v && k.endsWith(suffix) && !(skip && k.endsWith(skip))) return v;
+    }
+    return null;
+  };
+  return {
+    url: e.KV_REST_API_URL || e.UPSTASH_REDIS_REST_URL || pick('_REST_API_URL'),
+    token: e.KV_REST_API_TOKEN || e.UPSTASH_REDIS_REST_TOKEN || pick('_REST_API_TOKEN', '_READ_ONLY_TOKEN'),
+  };
+}
 
 async function kv(command) {
-  const res = await fetch(KV_URL, {
+  const { url, token } = kvConfig();
+  const res = await fetch(url, {
     method: 'POST',
-    headers: { Authorization: `Bearer ${KV_TOKEN}`, 'Content-Type': 'application/json' },
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(command),
   });
   const j = await res.json();
@@ -41,13 +58,13 @@ export default async function handler(req, res) {
     const body = typeof req.body === 'object' && req.body ? req.body : safeJson(req.body);
     const c = String(body?.code || '').trim().toUpperCase();
     if (!c || !body?.token) return res.status(400).json({ ok: false, error: 'code and token required' });
-    if (!KV_URL) return res.status(500).json({ ok: false, error: 'store not configured' });
+    if (!kvConfig().url) return res.status(500).json({ ok: false, error: 'store not configured' });
     await kv(['SET', `rl:${c}`, body.token, 'EX', 600]);
     return res.status(200).json({ ok: true });
   }
 
   if (req.method === 'GET' && req.query?.pickup) {
-    if (!code || !KV_URL) return res.status(200).json({ token: null });
+    if (!code || !kvConfig().url) return res.status(200).json({ token: null });
     const token = await kv(['GET', `rl:${code}`]);
     if (token) await kv(['DEL', `rl:${code}`]);
     return res.status(200).json({ token: token || null });
