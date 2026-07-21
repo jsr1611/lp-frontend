@@ -22,7 +22,6 @@
     "@angular/platform-browser": "^22.0.6",
     "@angular/platform-browser-dynamic": "^22.0.6",
     "@angular/router": "^22.0.6",
-    "@netlify/blobs": "^8.2.0",
     "@ngx-translate/core": "^18.0.0",
     "@ngx-translate/http-loader": "^18.0.0",
     "bcryptjs": "^2.4.3",
