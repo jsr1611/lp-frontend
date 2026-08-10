@@ -403,7 +403,8 @@
       "dateFormat": "d MMM (EEE)",
       "earned": "المكتسب",
       "overtime": "العمل الإضافي",
-      "paid": "المدفوع"
+      "paid": "المدفوع",
+      "updated": "آخر تحديث"
     },
     "title": "العمل الإضافي",
     "underMinimum": "دون الحد الأدنى",

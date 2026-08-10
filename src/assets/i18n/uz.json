@@ -403,7 +403,8 @@
       "dateFormat": "d MMM (EEE)",
       "earned": "Ishlab topildi",
       "overtime": "Qo'shimcha",
-      "paid": "To'lanadi"
+      "paid": "To'lanadi",
+      "updated": "Yangilangan"
     },
     "title": "Qo'shimcha ish",
     "underMinimum": "minimumdan kam",
