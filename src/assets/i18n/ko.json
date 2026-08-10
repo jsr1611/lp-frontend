@@ -403,7 +403,8 @@
       "dateFormat": "M월 d일 (EEE)",
       "earned": "수당",
       "overtime": "초과근무",
-      "paid": "지급"
+      "paid": "지급",
+      "updated": "수정일"
     },
     "title": "초과근무",
     "underMinimum": "최소 미달",

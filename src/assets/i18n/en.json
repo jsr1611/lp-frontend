@@ -403,7 +403,8 @@
       "dateFormat": "MMM d (EEE)",
       "earned": "Earned",
       "overtime": "Overtime",
-      "paid": "Paid"
+      "paid": "Paid",
+      "updated": "Updated"
     },
     "title": "Overtime",
     "underMinimum": "under minimum",

@@ -403,7 +403,8 @@
       "dateFormat": "d MMM (EEE)",
       "earned": "Заработано",
       "overtime": "Сверхурочные",
-      "paid": "Оплачено"
+      "paid": "Оплачено",
+      "updated": "Обновлено"
     },
     "title": "Сверхурочные",
     "underMinimum": "ниже минимума",

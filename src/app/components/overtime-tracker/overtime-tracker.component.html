@@ -420,6 +420,7 @@
                   <th class="text-end">{{ 'overtime.table.overtime' | translate }}</th>
                   <th class="text-end">{{ 'overtime.table.paid' | translate }}</th>
                   <th class="text-end">{{ 'overtime.table.earned' | translate }}</th>
+                  <th>{{ 'overtime.table.updated' | translate }}</th>
                   <th></th>
                 </tr>
               </thead>
@@ -470,6 +471,13 @@
                     </td>
                     <td class="text-end">
                       {{ entry.earnings | currency: (entry.currency ? entry.currency.code : currencyCode) : 'symbol' : '1.0-2' }}
+                    </td>
+                    <td class="text-nowrap text-muted small">
+                      <!-- updated_at falls back to created_at ("added if not yet edited").
+                           No 'UTC' here, unlike the date column: this is a real instant, so
+                           it renders in the viewer's own zone. 'short' is locale-aware and
+                           stops at the minute. -->
+                      {{ (entry.updated_at || entry.created_at) | date: 'short' }}
                     </td>
                     <td class="text-end text-nowrap">
                       <button class="btn btn-sm btn-outline-secondary" (click)="openEntryModal(entry)"
