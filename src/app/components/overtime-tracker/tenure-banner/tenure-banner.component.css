@@ -1,0 +1,27 @@
+.tenure-banner {
+  border-left: 4px solid var(--bs-primary);
+}
+
+.border-dashed {
+  border-style: dashed;
+}
+
+/* The global `.btn { margin: 10px }` rule in styles.css would break tight button groups here. */
+.btn {
+  margin: 0;
+}
+
+/* Collapsed on phones behind the "more" toggle; always open from md up. */
+.tenure-details {
+  display: none;
+}
+
+.tenure-details.show {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .tenure-details {
+    display: block;
+  }
+}

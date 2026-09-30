@@ -1,0 +1,102 @@
+@if (!tenure) {
+  <div class="card shadow-sm mb-3 border-dashed">
+    <div class="card-body d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <span class="text-muted">
+        <i class="bi bi-briefcase me-2"></i>{{ 'overtime.tenure.noStart' | translate }}
+      </span>
+      <button class="btn btn-sm btn-outline-primary" (click)="addStartDate.emit()">
+        {{ 'overtime.tenure.addStart' | translate }}
+      </button>
+    </div>
+  </div>
+} @else {
+  <div class="card shadow-sm mb-3 tenure-banner">
+    <div class="card-body">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div>
+          @if (company?.name || company?.position) {
+            <div class="text-muted small">
+              <i class="bi bi-building me-1"></i>
+              {{ company?.name }}@if (company?.name && company?.position) { · }{{ company?.position }}
+            </div>
+          }
+          @if (tenure.started) {
+            <div class="d-flex align-items-baseline flex-wrap column-gap-3">
+              <span class="fs-3 fw-semibold">
+                {{ 'overtime.tenure.dayN' | translate: { n: tenure.dayNumber } }}
+              </span>
+              <span class="text-muted">
+                {{ 'overtime.tenure.span' | translate: { y: tenure.years, m: tenure.months, d: tenure.days } }}
+              </span>
+            </div>
+          } @else {
+            <span class="fs-5 fw-semibold">
+              {{ 'overtime.tenure.startsIn' | translate: { n: tenure.startsIn } }}
+            </span>
+          }
+        </div>
+        <button class="btn btn-sm btn-link text-decoration-none d-md-none" (click)="expanded = !expanded"
+                [attr.aria-expanded]="expanded">
+          {{ (expanded ? 'overtime.tenure.less' : 'overtime.tenure.more') | translate }}
+          <i class="bi" [class.bi-chevron-down]="!expanded" [class.bi-chevron-up]="expanded"></i>
+        </button>
+      </div>
+
+      @if (tenure.nextAnniversary) {
+        <div class="mt-2">
+          <div class="progress" role="progressbar" style="height: 6px"
+               [attr.aria-valuenow]="progressPercent" aria-valuemin="0" aria-valuemax="100"
+               [attr.aria-label]="'overtime.tenure.toYear' | translate: {
+                                    n: tenure.nextAnniversary.inDays, year: tenure.nextAnniversary.year }">
+            <div class="progress-bar" [style.width.%]="progressPercent"></div>
+          </div>
+          <div class="form-text">
+            {{ 'overtime.tenure.toYear' | translate: {
+                 n: tenure.nextAnniversary.inDays, year: tenure.nextAnniversary.year } }}
+          </div>
+        </div>
+      }
+
+      <div class="tenure-details mt-2" [class.show]="expanded">
+        <div class="row g-2 small">
+          <div class="col-12 col-md-6">
+            <i class="bi bi-calendar3 me-1 text-muted"></i>
+            {{ 'overtime.tenure.monthLeft' | translate: {
+                 days: tenure.daysLeftInMonth, workdays: tenure.workdaysLeftInMonth } }}
+            @if (tenure.workdaysApproximate) {
+              <span class="text-muted" [title]="'overtime.tenure.approxTitle' | translate">*</span>
+            }
+          </div>
+          @if (leave?.nextGrant; as next) {
+            <div class="col-12 col-md-6">
+              <i class="bi bi-sun me-1 text-muted"></i>
+              {{ 'overtime.tenure.nextLeave' | translate: { days: next.days, date: next.on, n: next.inDays } }}
+              @if (leave?.nextAnnualGrant; as annual) {
+                · {{ 'overtime.tenure.nextLeave' | translate: { days: annual.days, date: annual.on, n: annual.inDays } }}
+              }
+            </div>
+          }
+          @if (tenure.contractEndsIn !== null) {
+            <div class="col-12 col-md-6" [class.text-danger]="tenure.contractEndsIn <= 30">
+              <i class="bi bi-hourglass-split me-1"></i>
+              {{ 'overtime.tenure.contractEnds' | translate: { n: tenure.contractEndsIn, date: tenure.contractEnd } }}
+            </div>
+          }
+        </div>
+
+        @if (nextMilestones.length) {
+          <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
+            <span class="text-muted small">{{ 'overtime.tenure.nextMilestones' | translate }}</span>
+            @for (m of nextMilestones; track m.id) {
+              <span class="badge rounded-pill" [class.text-bg-warning]="m.soon"
+                    [class.text-bg-light]="!m.soon" [class.border]="!m.soon">
+                @if (m.soon) { <i class="bi bi-stars me-1"></i> }
+                {{ label(m) }} · {{ distance(m) }}
+              </span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

@@ -13,7 +13,9 @@ import { SecureService } from "src/app/services/SercureService";
 import {
   Holiday,
   HolidayLookup,
+  LeaveDay,
   OvertimeEntry,
+  OvertimeOverview,
   OvertimePreview,
   OvertimeSettings,
   OvertimeSummary,
@@ -54,6 +56,38 @@ const WORK_DAYS_PER_WEEK = 5;
 const WEEKLY_REST_MIN_HOURS = 15;
 const WEEKLY_REST_CAP_HOURS = 8;
 
+// A dashed guide across the chart at the contracted day length. Drawn by a plugin
+// rather than as a dataset, so it stays a reference mark and not a fourth series.
+function contractedLine(hours: number) {
+  return {
+    id: "contractedLine",
+    afterDatasetsDraw(chart: any) {
+      const y = chart.scales.y.getPixelForValue(hours);
+      const { left, right } = chart.chartArea;
+      const ctx = chart.ctx;
+      ctx.save();
+      ctx.strokeStyle = "#6c757d";
+      ctx.setLineDash([5, 4]);
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(left, y);
+      ctx.lineTo(right, y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Label on a white chip at the left edge, so no bar can cover it.
+      const label = `${hours}h`;
+      ctx.font = "11px sans-serif";
+      const w = ctx.measureText(label).width + 6;
+      ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+      ctx.fillRect(left + 2, y - 8, w, 16);
+      ctx.fillStyle = "#495057";
+      ctx.textBaseline = "middle";
+      ctx.fillText(label, left + 5, y);
+      ctx.restore();
+    },
+  };
+}
+
 // A choice in the "minimum overtime" dropdown, in minutes.
 interface MinimumOption {
   minutes: number;
@@ -65,6 +99,11 @@ interface WeekDayOption {
   value: number; // 0 = Sunday
   labelKey: string;
 }
+
+// A line in the month table: a worked day or a day off, interleaved by date.
+type MonthRow =
+  | { kind: "work"; id: string; date: string; entry: OvertimeEntry }
+  | { kind: "leave"; id: string; date: string; leave: LeaveDay };
 
 @Component({
     selector: "app-overtime-tracker",
@@ -86,7 +125,13 @@ export class OvertimeTrackerComponent implements OnInit {
   // Data
   settings: OvertimeSettings | null = null;
   entries: OvertimeEntry[] = [];
+  leaveDays: LeaveDay[] = [];
+  // entries + leaveDays for the table, rebuilt when either loads rather than bound as a
+  // getter — Eager change detection would rebuild the array every cycle.
+  rows: MonthRow[] = [];
   summary: OvertimeSummary | null = null;
+  // Tenure, leave balance and milestones: the whole job, not the month in view.
+  overview: OvertimeOverview | null = null;
 
   // Gates the first paint: without it the setup form flashes before the GET lands.
   settingsLoaded = false;
@@ -107,8 +152,14 @@ export class OvertimeTrackerComponent implements OnInit {
   // Live result of the entry form, recomputed on each edit rather than bound as a
   // method call — Eager change detection would re-run a bound method every cycle.
   preview: OvertimePreview | null = null;
+  // Total time away in the form, or why it is invalid — shown live under the rows.
+  awayTotal = 0;
+  awayError: string | null = null;
   // Set when editing a day that was logged under settings that have since changed.
   resnapshot = false;
+  // The same modal logs a day off: no clock times, just the date and full or half.
+  isDayOff = false;
+  leaveForm: LeaveDay = { date: "", amount: 1, note: "" };
 
   // Public holidays, keyed by "YYYY-MM". Cached per month so re-opening the modal or
   // nudging the date does not re-hit the API.
@@ -174,6 +225,7 @@ export class OvertimeTrackerComponent implements OnInit {
           return;
         }
         this.loadMonth();
+        this.loadOverview();
       },
       error: (err: HttpErrorResponse) => {
         this.settingsLoaded = true;
@@ -186,14 +238,55 @@ export class OvertimeTrackerComponent implements OnInit {
 
   loadMonth(): void {
     this.loadEntries();
+    this.loadLeaveDays();
     this.loadSummary();
   }
 
   loadEntries(): void {
     this.secureService.getOvertimeEntries(this.month).subscribe({
-      next: (data: any) => (this.entries = data.entries || []),
+      next: (data: any) => {
+        this.entries = data.entries || [];
+        this.buildRows();
+      },
       error: (err: HttpErrorResponse) => this.handleAuthError(err),
     });
+  }
+
+  loadLeaveDays(): void {
+    this.secureService.getLeaveDays(this.month).subscribe({
+      next: (data: any) => {
+        this.leaveDays = data.leave || [];
+        this.buildRows();
+      },
+      error: (err: HttpErrorResponse) => this.handleAuthError(err),
+    });
+  }
+
+  loadOverview(): void {
+    this.secureService.getOvertimeOverview(this.todayIso()).subscribe({
+      next: (data: any) => (this.overview = data),
+      // The month view works without it; the banner simply stays hidden.
+      error: (err: HttpErrorResponse) => this.handleAuthError(err),
+    });
+  }
+
+  // Anything that changes a balance or a total: the month and the overview both move.
+  private reloadAll(): void {
+    this.loadMonth();
+    this.loadOverview();
+  }
+
+  private buildRows(): void {
+    const rows: MonthRow[] = [
+      ...this.entries.map((entry): MonthRow => ({
+        kind: "work", id: `w${entry._id}`, date: this.isoDay(entry.date), entry,
+      })),
+      ...this.leaveDays.map((leave): MonthRow => ({
+        kind: "leave", id: `l${leave._id}`, date: this.isoDay(leave.date), leave,
+      })),
+    ];
+    // Newest first, like the entries endpoint.
+    this.rows = rows.sort((a, b) => b.date.localeCompare(a.date));
   }
 
   loadSummary(): void {
@@ -227,6 +320,21 @@ export class OvertimeTrackerComponent implements OnInit {
       ? JSON.parse(JSON.stringify(this.settings))
       : this.blankSettings();
     if (!this.settingsForm.company) this.settingsForm.company = {};
+    // Dates come back as full ISO instants; <input type="date"> only shows "yyyy-MM-dd"
+    // and would otherwise render blank.
+    const company = this.settingsForm.company;
+    company.contractStart = this.isoDay(company.contractStart) || undefined;
+    company.contractEnd = this.isoDay(company.contractEnd) || undefined;
+    const leave = this.settingsForm.leave;
+    this.settingsForm.leave = {
+      mode: leave?.mode || "statutory",
+      accrualStart: this.isoDay(leave?.accrualStart) || undefined,
+      perMonth: leave?.perMonth ?? 1,
+      balanceAsOf: {
+        days: leave?.balanceAsOf?.days ?? null,
+        date: this.isoDay(leave?.balanceAsOf?.date) || "",
+      },
+    };
     // Settings saved before rest-day support have none of these paths. Fill them in
     // rather than trust the server's defaults, so the form never binds to undefined.
     if (!this.settingsForm.workDays || !this.settingsForm.workDays.length) {
@@ -258,6 +366,13 @@ export class OvertimeTrackerComponent implements OnInit {
       this.errorMessage = this.translate.instant("overtime.errors.workDaysRequired");
       return;
     }
+    // The HR balance only means something with the date it was true on.
+    const cal = this.settingsForm.leave?.balanceAsOf;
+    const hasCalDays = cal && cal.days !== null && cal.days !== undefined && (cal.days as any) !== "";
+    if (cal && hasCalDays !== !!cal.date) {
+      this.errorMessage = this.translate.instant("overtime.errors.balanceNeedsBoth");
+      return;
+    }
     this.isSavingSettings = true;
     this.errorMessage = null;
     this.secureService.saveOvertimeSettings(this.settingsForm).subscribe({
@@ -265,7 +380,7 @@ export class OvertimeTrackerComponent implements OnInit {
         this.settings = data.data;
         this.isSavingSettings = false;
         this.showSettings = false;
-        this.loadMonth();
+        this.reloadAll();
       },
       error: (err: HttpErrorResponse) => {
         this.isSavingSettings = false;
@@ -320,8 +435,30 @@ export class OvertimeTrackerComponent implements OnInit {
 
   // ---------- Entries ----------
 
+  // Log a new day off, or edit one from the table.
+  openDayOffModal(leave?: LeaveDay): void {
+    this.errorMessage = null;
+    this.isDayOff = true;
+    this.isEditingEntry = !!leave;
+    this.leaveForm = leave
+      ? { ...leave, date: this.isoDay(leave.date) }
+      : { date: this.todayIso(), amount: 1, note: "" };
+    this.showEntryModal = true;
+  }
+
+  // The day-off switch on a new record: carry the date across so it is not lost.
+  onDayOffToggle(): void {
+    if (this.isDayOff) {
+      this.leaveForm = { date: this.entryForm.date, amount: 1, note: this.entryForm.note || "" };
+    } else {
+      this.entryForm.date = this.leaveForm.date;
+      this.detectRestDay();
+    }
+  }
+
   openEntryModal(entry?: OvertimeEntry): void {
     this.errorMessage = null;
+    this.isDayOff = false;
     this.resnapshot = false;
     this.restDayNote = null;
     if (entry) {
@@ -329,6 +466,8 @@ export class OvertimeTrackerComponent implements OnInit {
       this.entryForm = {
         ...entry,
         date: this.isoDay(entry.date),
+        // Copied, so editing the rows does not change the table before saving.
+        breaks: (entry.breaks || []).map((b) => ({ ...b })),
       };
     } else {
       this.isEditingEntry = false;
@@ -348,6 +487,23 @@ export class OvertimeTrackerComponent implements OnInit {
   // Re-detect whenever the date moves — the answer is a property of the date.
   onEntryDateChange(): void {
     this.detectRestDay();
+  }
+
+  // ---------- Time away ----------
+
+  // A new row starts where the last one (or the clock-in) left off, one hour long.
+  addTimeAway(): void {
+    const breaks = (this.entryForm.breaks = this.entryForm.breaks || []);
+    const from = breaks.length ? breaks[breaks.length - 1].end : "12:00";
+    const t = (this.toMinutes(from || "12:00") + 60) % MINUTES_PER_DAY;
+    const to = `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`;
+    breaks.push({ start: from || "12:00", end: to });
+    this.updatePreview();
+  }
+
+  removeTimeAway(index: number): void {
+    this.entryForm.breaks?.splice(index, 1);
+    this.updatePreview();
   }
 
   // A manual tick overrides detection; the reason becomes the user's own say-so.
@@ -471,8 +627,20 @@ export class OvertimeTrackerComponent implements OnInit {
 
   saveEntry(): void {
     if (this.isSaving) return;
+    if (this.isDayOff) {
+      this.saveDayOff();
+      return;
+    }
     if (!this.entryForm.date || !this.entryForm.startTime || !this.entryForm.endTime) {
       this.errorMessage = this.translate.instant("overtime.errors.entryFieldsRequired");
+      return;
+    }
+    // Half-filled rows are dropped rather than rejected: an empty "Add time away" row
+    // left behind should not block saving the day.
+    this.entryForm.breaks = (this.entryForm.breaks || []).filter((b) => b.start && b.end);
+    const away = this.awayMinutes(this.entryForm);
+    if (away.errorKey) {
+      this.errorMessage = this.translate.instant(away.errorKey);
       return;
     }
     this.isSaving = true;
@@ -486,7 +654,28 @@ export class OvertimeTrackerComponent implements OnInit {
       next: () => {
         this.isSaving = false;
         this.showEntryModal = false;
-        this.loadMonth();
+        // The overview too: all-time hours may have crossed a milestone.
+        this.reloadAll();
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isSaving = false;
+        this.showError(err);
+      },
+    });
+  }
+
+  private saveDayOff(): void {
+    if (!this.leaveForm.date) {
+      this.errorMessage = this.translate.instant("overtime.errors.dateRequired");
+      return;
+    }
+    this.isSaving = true;
+    this.errorMessage = null;
+    this.secureService.saveLeaveDay(this.leaveForm).subscribe({
+      next: () => {
+        this.isSaving = false;
+        this.showEntryModal = false;
+        this.reloadAll();
       },
       error: (err: HttpErrorResponse) => {
         this.isSaving = false;
@@ -502,7 +691,19 @@ export class OvertimeTrackerComponent implements OnInit {
     });
     if (!confirm(confirmMessage)) return;
     this.secureService.deleteOvertimeEntry(entry._id).subscribe({
-      next: () => this.loadMonth(),
+      next: () => this.reloadAll(),
+      error: (err: HttpErrorResponse) => this.showError(err),
+    });
+  }
+
+  deleteLeaveDay(leave: LeaveDay): void {
+    if (!leave._id) return;
+    const confirmMessage = this.translate.instant("overtime.leave.deleteConfirm", {
+      date: this.isoDay(leave.date),
+    });
+    if (!confirm(confirmMessage)) return;
+    this.secureService.deleteLeaveDay(leave._id).subscribe({
+      next: () => this.reloadAll(),
       error: (err: HttpErrorResponse) => this.showError(err),
     });
   }
@@ -510,6 +711,9 @@ export class OvertimeTrackerComponent implements OnInit {
   // Recomputed on every edit of the entry form.
   updatePreview(): void {
     const s = this.settings;
+    const away = this.entryForm.startTime && this.entryForm.endTime ? this.awayMinutes(this.entryForm) : {};
+    this.awayTotal = away.minutes || 0;
+    this.awayError = away.errorKey ? this.translate.instant(away.errorKey) : null;
     if (!s || !this.entryForm.startTime || !this.entryForm.endTime) {
       this.preview = null;
       return;
@@ -527,6 +731,36 @@ export class OvertimeTrackerComponent implements OnInit {
   // stays authoritative — everything shown in the table and totals comes from what it
   // saved. This copy exists only so the entry form can show the result as it is typed.
 
+  /**
+   * Total time away, or the reason it is invalid. Mirrors awayMinutesOf() in
+   * OvertimeEntry.js: each time lies on the shift's timeline, so anything earlier than
+   * clock-in reads as after midnight.
+   */
+  private awayMinutes(entry: OvertimeEntry): { minutes?: number; errorKey?: string } {
+    const start = this.toMinutes(entry.startTime);
+    const onLine = (hhmm: string) => {
+      const t = this.toMinutes(hhmm);
+      return t < start ? t + MINUTES_PER_DAY : t;
+    };
+    let end = this.toMinutes(entry.endTime);
+    if (end <= start) end += MINUTES_PER_DAY;
+
+    const spans = (entry.breaks || [])
+      .filter((b) => b.start && b.end)
+      .map((b) => ({ from: onLine(b.start), to: onLine(b.end) }))
+      .sort((a, b) => a.from - b.from);
+    let minutes = 0;
+    let last = start;
+    for (const s of spans) {
+      if (s.to <= s.from) return { errorKey: "overtime.away.errorOrder" };
+      if (s.from < last) return { errorKey: "overtime.away.errorOverlap" };
+      if (s.to > end) return { errorKey: "overtime.away.errorOutside" };
+      minutes += s.to - s.from;
+      last = s.to;
+    }
+    return { minutes };
+  }
+
   private computeOvertime(entry: OvertimeEntry, rules: OvertimeSettings): OvertimePreview {
     const start = this.toMinutes(entry.startTime);
     // Clocking out at or before clock-in means the shift ran past midnight.
@@ -534,13 +768,14 @@ export class OvertimeTrackerComponent implements OnInit {
     if (end <= start) end += MINUTES_PER_DAY;
 
     const isRestDay = !!entry.isRestDay;
+    const away = this.awayMinutes(entry).minutes || 0;
     let rawOtMinutes: number;
 
     if (isRestDay) {
       // No scheduled hours to subtract — the whole day is overtime, less the break the
-      // law assumes was taken.
+      // law assumes was taken. Time away is a break too: the larger comes off, not both.
       const elapsed = end - start;
-      rawOtMinutes = Math.max(0, elapsed - this.statutoryBreak(elapsed));
+      rawOtMinutes = Math.max(0, elapsed - Math.max(away, this.statutoryBreak(elapsed)));
     } else {
       // Pull the scheduled start onto the same day as the actual one, so a night shift
       // logged just after midnight reads as slightly late rather than ~22 hours early.
@@ -548,7 +783,8 @@ export class OvertimeTrackerComponent implements OnInit {
       if (shift - start > HALF_DAY_MINUTES) shift -= MINUTES_PER_DAY;
       else if (start - shift > HALF_DAY_MINUTES) shift += MINUTES_PER_DAY;
 
-      const boundary = shift + rules.workHours * 60 + rules.lunchBreakMinutes;
+      // Time away has to be made up before overtime starts.
+      const boundary = shift + rules.workHours * 60 + rules.lunchBreakMinutes + away;
 
       const eveningOt = Math.max(0, end - boundary);
       const earlyOt = rules.countEarlyArrival ? Math.max(0, shift - start) : 0;
@@ -623,6 +859,9 @@ export class OvertimeTrackerComponent implements OnInit {
 
   // The unit suffixes and their spacing differ per language ("2h 30m", "2시간 30분"),
   // so the whole duration is built from a translated pattern rather than concatenated.
+  // Bound once for child components, so they format durations the same way.
+  readonly minutesFormatter = (minutes: number) => this.formatMinutes(minutes);
+
   formatMinutes(minutes: number | undefined): string {
     const m = minutes || 0;
     const h = Math.floor(m / 60);
@@ -689,9 +928,19 @@ export class OvertimeTrackerComponent implements OnInit {
 
   // The clock time at which overtime starts, derived from the scheduled day.
   get boundaryLabel(): string {
+    return this.clockAfterSchedule(0);
+  }
+
+  // When overtime starts on the day in the form: later by however long you were away.
+  get entryBoundaryLabel(): string {
+    return this.clockAfterSchedule(this.awayTotal);
+  }
+
+  private clockAfterSchedule(extraMinutes: number): string {
     const s = this.settings;
     if (!s) return "";
-    const total = this.toMinutes(s.shiftStart) + s.workHours * 60 + s.lunchBreakMinutes;
+    const total =
+      this.toMinutes(s.shiftStart) + s.workHours * 60 + s.lunchBreakMinutes + extraMinutes;
     const wrapped = ((total % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY;
     const h = Math.floor(wrapped / 60);
     const m = wrapped % 60;
@@ -708,28 +957,51 @@ export class OvertimeTrackerComponent implements OnInit {
     const days = this.summary.byDay || [];
     if (!days.length) return;
 
+    const hours = (minutes: number) => Math.round((minutes / 60) * 100) / 100;
+    // One bar per day whose full height is the hours worked: the regular part, then the
+    // paid and unpaid overtime stacked on top. An early start just makes the bar taller.
+    const regular = days.map((d) => hours(Math.max(0, (d.workedMinutes ?? 0) - d.rawOtMinutes)));
+    const contracted = this.settings?.workHours ?? 8;
+
     this.otChart = new Chart(canvas, {
       type: "bar",
       data: {
         labels: days.map((d) => this.isoDay(d.date).slice(-2)),
         datasets: [
           {
+            label: this.translate.instant("overtime.chart.regular"),
+            data: regular,
+            backgroundColor: "#b6c8e6",
+          },
+          {
             label: this.translate.instant("overtime.chart.paidOvertime"),
-            data: days.map((d) => Math.round((d.paidOtMinutes / 60) * 100) / 100),
+            data: days.map((d) => hours(d.paidOtMinutes)),
             backgroundColor: "#0d6efd",
           },
           {
             label: this.translate.instant("overtime.chart.unpaid"),
-            data: days.map(
-              (d) => Math.round(((d.rawOtMinutes - d.paidOtMinutes) / 60) * 100) / 100
-            ),
+            data: days.map((d) => hours(d.rawOtMinutes - d.paidOtMinutes)),
             backgroundColor: "#dc3545",
           },
         ],
       },
+      plugins: [contractedLine(contracted)],
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              // Total for the day under the per-series lines.
+              footer: (items) => {
+                const d = days[items[0].dataIndex];
+                return this.translate.instant("overtime.chart.workedTotal", {
+                  time: this.formatMinutes(d.workedMinutes ?? 0),
+                });
+              },
+            },
+          },
+        },
         scales: {
           x: {
             stacked: true,
@@ -738,6 +1010,8 @@ export class OvertimeTrackerComponent implements OnInit {
           y: {
             stacked: true,
             beginAtZero: true,
+            // Keep the contracted-hours guide on screen even in a light month.
+            suggestedMax: contracted + 1,
             title: { display: true, text: this.translate.instant("overtime.chart.hours") },
           },
         },
@@ -764,6 +1038,7 @@ export class OvertimeTrackerComponent implements OnInit {
       restDayBeyondMultiplier: 2,
       minimumOnRestDays: false,
       company: {},
+      leave: { mode: "statutory", perMonth: 1, balanceAsOf: { days: null, date: "" } },
     };
   }
 
@@ -773,6 +1048,7 @@ export class OvertimeTrackerComponent implements OnInit {
       date: this.todayIso(),
       startTime: start,
       endTime: this.boundaryLabel || "18:00",
+      breaks: [],
       note: "",
     };
   }

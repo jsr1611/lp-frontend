@@ -7,6 +7,9 @@
         <button class="btn btn-outline-secondary" (click)="openSettings()">
           <i class="bi bi-gear me-1"></i>{{ 'overtime.settings' | translate }}
         </button>
+        <button class="btn btn-outline-primary" (click)="openDayOffModal()">
+          <i class="bi bi-sun me-1"></i>{{ 'overtime.leave.logDayOff' | translate }}
+        </button>
         <button class="btn btn-primary" (click)="openEntryModal()">
           <i class="bi bi-plus-lg me-1"></i>{{ 'overtime.logDay' | translate }}
         </button>
@@ -271,6 +274,54 @@
             </div>
           }
 
+          <h6 class="text-muted text-uppercase small mt-4">
+            {{ 'overtime.sections.leave' | translate }}
+          </h6>
+          <p class="text-muted small mb-2">{{ 'overtime.leave.settingsIntro' | translate }}</p>
+          @if (settingsForm.leave; as leave) {
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label" for="leaveMode">{{ 'overtime.leave.mode' | translate }}</label>
+                <select id="leaveMode" name="leaveMode" class="form-select" [(ngModel)]="leave.mode">
+                  <option value="statutory">{{ 'overtime.leave.modeStatutoryOption' | translate }}</option>
+                  <option value="flat">{{ 'overtime.leave.modeFlatOption' | translate }}</option>
+                </select>
+                <div class="form-text">
+                  {{ (leave.mode === 'flat' ? 'overtime.leave.modeFlatHelp'
+                                            : 'overtime.leave.modeStatutoryHelp') | translate }}
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <label class="form-label" for="accrualStart">{{ 'overtime.leave.accrualStart' | translate }}</label>
+                <input id="accrualStart" name="accrualStart" type="date" class="form-control"
+                       [(ngModel)]="leave.accrualStart" />
+                <div class="form-text">{{ 'overtime.leave.accrualStartHelp' | translate }}</div>
+              </div>
+              @if (leave.mode === 'flat') {
+                <div class="col-12 col-md-3">
+                  <label class="form-label" for="perMonth">{{ 'overtime.leave.perMonth' | translate }}</label>
+                  <input id="perMonth" name="perMonth" type="number" min="0" step="0.5" class="form-control"
+                         [(ngModel)]="leave.perMonth" />
+                </div>
+              }
+              @if (leave.balanceAsOf; as cal) {
+                <div class="col-6 col-md-3">
+                  <label class="form-label" for="balanceDays">{{ 'overtime.leave.balanceDays' | translate }}</label>
+                  <input id="balanceDays" name="balanceDays" type="number" step="0.5" class="form-control"
+                         [(ngModel)]="cal.days" />
+                </div>
+                <div class="col-6 col-md-3">
+                  <label class="form-label" for="balanceDate">{{ 'overtime.leave.balanceDate' | translate }}</label>
+                  <input id="balanceDate" name="balanceDate" type="date" class="form-control"
+                         [(ngModel)]="cal.date" />
+                </div>
+                <div class="col-12 col-md-6 form-text align-self-end">
+                  {{ 'overtime.leave.balanceHelp' | translate }}
+                </div>
+              }
+            </div>
+          }
+
           @if (errorMessage) {
             <div class="alert alert-danger mt-3 mb-0" role="alert">{{ errorMessage }}</div>
           }
@@ -295,6 +346,12 @@
   <!-- ============ Month view ============ -->
   @if (settings && !showSettings) {
 
+    @if (overview) {
+      <app-tenure-banner [tenure]="overview.tenure" [leave]="overview.leave"
+                         [company]="settings.company" [upcoming]="overview.milestones?.upcoming"
+                         (addStartDate)="openSettings()" />
+    }
+
     <div class="card shadow-sm mb-3">
       <div class="card-body">
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
@@ -316,6 +373,9 @@
     </div>
 
     @if (summary) {
+      <h5 class="text-muted mb-2">
+        <i class="bi bi-clock-history me-1"></i>{{ 'overtime.sectionTitle' | translate }}
+      </h5>
       <div class="row g-3 mb-3">
         <div class="col-12 col-md-6 col-xl-3">
           <div class="card shadow-sm h-100">
@@ -385,6 +445,17 @@
         </div>
       </div>
 
+      <div class="row g-3 mb-3">
+        <div class="col-12 col-lg-7">
+          <app-payslip-card [summary]="summary" [month]="month" [currencyCode]="currencyCode"
+                            [formatMinutes]="minutesFormatter" (changed)="loadSummary()" />
+        </div>
+        <div class="col-12 col-lg-5">
+          <app-leave-card [leave]="overview?.leave ?? null" [usedThisMonth]="summary.leaveUsed || 0"
+                          (logDayOff)="openDayOffModal()" (openSettings)="openSettings()" />
+        </div>
+      </div>
+
       @if (summary.byDay.length) {
         <div class="card shadow-sm mb-3">
           <div class="card-body">
@@ -399,7 +470,7 @@
 
     <div class="card shadow-sm">
       <div class="card-body">
-        @if (!entries.length) {
+        @if (!rows.length) {
           <div class="text-center text-muted py-4">
             <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
             {{ 'overtime.empty' | translate }}
@@ -425,7 +496,33 @@
                 </tr>
               </thead>
               <tbody>
-                @for (entry of entries; track entry._id) {
+                @for (row of rows; track row.id) {
+                  @if (row.kind === 'leave') {
+                    <tr class="leave-row">
+                      <td>
+                        {{ row.leave.date | date: ('overtime.table.dateFormat' | translate) : 'UTC' }}
+                        <span class="badge rounded-pill text-bg-success ms-1">
+                          <i class="bi bi-sun me-1"></i>
+                          {{ (row.leave.amount === 0.5 ? 'overtime.leave.halfDay' : 'overtime.leave.dayOff') | translate }}
+                        </span>
+                      </td>
+                      <td colspan="5" class="text-muted small">{{ row.leave.note }}</td>
+                      <td class="text-nowrap text-muted small">
+                        {{ (row.leave.updated_at || row.leave.created_at) | date: 'short' }}
+                      </td>
+                      <td class="text-end text-nowrap">
+                        <button class="btn btn-sm btn-outline-secondary" (click)="openDayOffModal(row.leave)"
+                                [attr.aria-label]="'overtime.leave.edit' | translate">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger ms-1" (click)="deleteLeaveDay(row.leave)"
+                                [attr.aria-label]="'overtime.leave.delete' | translate">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  } @else {
+                  @let entry = row.entry;
                   <tr [class.table-light]="!entry.qualified">
                     <td>
                       <!-- 'UTC' is deliberate: the backend stores the day at UTC midnight, so
@@ -440,7 +537,14 @@
                         </span>
                       }
                     </td>
-                    <td>{{ entry.startTime }}</td>
+                    <td>
+                      {{ entry.startTime }}
+                      @for (b of entry.breaks; track $index) {
+                        <div class="small text-muted text-nowrap" [title]="'overtime.away.title' | translate">
+                          <i class="bi bi-box-arrow-right me-1"></i>{{ b.start }}–{{ b.end }}
+                        </div>
+                      }
+                    </td>
                     <td>
                       {{ entry.endTime }}
                       @if (crossesMidnight(entry)) {
@@ -490,6 +594,7 @@
                       </button>
                     </td>
                   </tr>
+                  }
                 }
               </tbody>
             </table>
@@ -504,10 +609,54 @@
     <div class="ot-modal" (click)="closeEntryModal()">
       <div class="ot-modal-content" (click)="$event.stopPropagation()">
         <h5 class="mb-3">
-          {{ (isEditingEntry ? 'overtime.editDay' : 'overtime.logADay') | translate }}
+          {{ (isDayOff
+                ? (isEditingEntry ? 'overtime.leave.editDayOff' : 'overtime.leave.logDayOff')
+                : (isEditingEntry ? 'overtime.editDay' : 'overtime.logADay')) | translate }}
         </h5>
 
         <form (ngSubmit)="saveEntry()">
+          <!-- Switching kind mid-edit would mean deleting one record and creating another;
+               only a new record can choose. -->
+          @if (!isEditingEntry) {
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" role="switch" id="isDayOff" name="isDayOff"
+                     [(ngModel)]="isDayOff" (ngModelChange)="onDayOffToggle()" />
+              <label class="form-check-label" for="isDayOff">
+                <i class="bi bi-sun me-1"></i>{{ 'overtime.leave.dayOffSwitch' | translate }}
+              </label>
+            </div>
+          }
+
+          @if (isDayOff) {
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label" for="leaveDate">{{ 'common.date' | translate }}</label>
+                <input id="leaveDate" name="leaveDate" type="date" class="form-control" required
+                       [(ngModel)]="leaveForm.date" />
+              </div>
+              <div class="col-12">
+                <div class="btn-group w-100" role="group" [attr.aria-label]="'overtime.leave.length' | translate">
+                  <input type="radio" class="btn-check" name="leaveAmount" id="leaveFull"
+                         [value]="1" [(ngModel)]="leaveForm.amount" />
+                  <label class="btn btn-outline-primary" for="leaveFull">{{ 'overtime.leave.fullDay' | translate }}</label>
+                  <input type="radio" class="btn-check" name="leaveAmount" id="leaveHalf"
+                         [value]="0.5" [(ngModel)]="leaveForm.amount" />
+                  <label class="btn btn-outline-primary" for="leaveHalf">{{ 'overtime.leave.halfDay' | translate }}</label>
+                </div>
+                <div class="form-text">{{ 'overtime.leave.halfDayHelp' | translate }}</div>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="leaveNote">{{ 'overtime.note' | translate }}</label>
+                <input id="leaveNote" name="leaveNote" type="text" class="form-control"
+                       [(ngModel)]="leaveForm.note" />
+              </div>
+              @if (overview?.leave; as ledger) {
+                <div class="col-12 form-text">
+                  {{ 'overtime.leave.balanceNow' | translate: { n: ledger.available } }}
+                </div>
+              }
+            </div>
+          } @else {
           <div class="row g-3">
             <div class="col-12">
               <label class="form-label" for="entryDate">{{ 'common.date' | translate }}</label>
@@ -544,6 +693,35 @@
               <input id="endTime" name="endTime" type="time" class="form-control" required
                      [(ngModel)]="entryForm.endTime" (ngModelChange)="updatePreview()" />
               <div class="form-text">{{ 'overtime.endTimeHelp' | translate }}</div>
+            </div>
+            <div class="col-12">
+              <label class="form-label mb-1">{{ 'overtime.away.title' | translate }}</label>
+              @for (b of entryForm.breaks; track $index) {
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <span class="text-muted small text-nowrap">{{ 'overtime.away.left' | translate }}</span>
+                  <input type="time" class="form-control form-control-sm" [name]="'awayStart' + $index"
+                         [(ngModel)]="b.start" (ngModelChange)="updatePreview()"
+                         [attr.aria-label]="'overtime.away.left' | translate" />
+                  <span class="text-muted small text-nowrap">{{ 'overtime.away.back' | translate }}</span>
+                  <input type="time" class="form-control form-control-sm" [name]="'awayEnd' + $index"
+                         [(ngModel)]="b.end" (ngModelChange)="updatePreview()"
+                         [attr.aria-label]="'overtime.away.back' | translate" />
+                  <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeTimeAway($index)"
+                          [attr.aria-label]="'overtime.away.remove' | translate">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                </div>
+              }
+              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="addTimeAway()">
+                <i class="bi bi-plus-lg me-1"></i>{{ 'overtime.away.add' | translate }}
+              </button>
+              @if (awayError) {
+                <div class="form-text text-danger">{{ awayError }}</div>
+              } @else if (awayTotal) {
+                <div class="form-text">{{ 'overtime.away.total' | translate: { time: formatMinutes(awayTotal) } }}</div>
+              } @else {
+                <div class="form-text">{{ 'overtime.away.help' | translate }}</div>
+              }
             </div>
             <div class="col-12">
               <label class="form-label" for="entryNote">{{ 'overtime.note' | translate }}</label>
@@ -594,10 +772,11 @@
                 </div>
               } @else {
                 <div class="form-text mt-1">
-                  {{ 'overtime.preview.startsAt' | translate: { time: boundaryLabel } }}
+                  {{ 'overtime.preview.startsAt' | translate: { time: entryBoundaryLabel } }}
                 </div>
               }
             </div>
+          }
           }
 
           @if (errorMessage) {
@@ -616,5 +795,8 @@
       </div>
     </div>
   }
+
+  <app-milestone-celebration [reached]="overview?.milestones?.reached"
+                             [company]="settings?.company?.name" />
 
 </div>

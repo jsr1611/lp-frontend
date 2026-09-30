@@ -40,6 +40,10 @@ import { GithubService } from './services/GithubService';
 import { DownloaderComponent } from './components/downloader/downloader.component';
 import { LoanTrackerComponent } from './components/loan-tracker/loan-tracker.component';
 import { OvertimeTrackerComponent } from './components/overtime-tracker/overtime-tracker.component';
+import { TenureBannerComponent } from './components/overtime-tracker/tenure-banner/tenure-banner.component';
+import { LeaveCardComponent } from './components/overtime-tracker/leave-card/leave-card.component';
+import { PayslipCardComponent } from './components/overtime-tracker/payslip-card/payslip-card.component';
+import { MilestoneCelebrationComponent } from './components/overtime-tracker/milestone-celebration/milestone-celebration.component';
 
 registerAppLocales();
 
@@ -62,7 +66,11 @@ registerAppLocales();
         GithubRepoManagerComponent,
         DownloaderComponent,
         LoanTrackerComponent,
-        OvertimeTrackerComponent
+        OvertimeTrackerComponent,
+        TenureBannerComponent,
+        LeaveCardComponent,
+        PayslipCardComponent,
+        MilestoneCelebrationComponent
     ],
     bootstrap: [AppComponent],
     imports: [

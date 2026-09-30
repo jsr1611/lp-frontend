@@ -1,0 +1,56 @@
+<div class="card shadow-sm h-100">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-start">
+      <h6 class="card-title text-muted mb-1">
+        <i class="bi bi-sun me-1"></i>{{ 'overtime.leave.title' | translate }}
+      </h6>
+      <button class="btn btn-sm btn-outline-primary" (click)="logDayOff.emit()">
+        <i class="bi bi-plus-lg me-1"></i>{{ 'overtime.leave.logDayOff' | translate }}
+      </button>
+    </div>
+
+    @if (!leave) {
+      <p class="text-muted small mb-0 mt-2">{{ 'overtime.leave.needsStart' | translate }}</p>
+      <button class="btn btn-sm btn-link px-0" (click)="openSettings.emit()">
+        {{ 'overtime.tenure.addStart' | translate }}
+      </button>
+    } @else {
+      <div class="fs-2 fw-semibold" [class.text-danger]="leave.available < 0">
+        {{ leave.available }}
+        <span class="fs-6 text-muted fw-normal">{{ 'overtime.leave.available' | translate }}</span>
+      </div>
+
+      <div class="leave-grid small mt-1">
+        <span class="text-muted">{{ 'overtime.leave.used' | translate }}</span>
+        <span>{{ leave.used }}</span>
+        <span class="text-muted">{{ 'overtime.leave.accrued' | translate }}</span>
+        <span>{{ leave.accrued }}</span>
+        <span class="text-muted">{{ 'overtime.leave.thisMonth' | translate }}</span>
+        <span>{{ usedThisMonth }}</span>
+        @if (leave.planned) {
+          <span class="text-muted">{{ 'overtime.leave.planned' | translate }}</span>
+          <span>{{ leave.planned }}</span>
+        }
+        @if (leave.lapsed) {
+          <span class="text-muted" [title]="'overtime.leave.lapsedHelp' | translate">
+            {{ 'overtime.leave.lapsed' | translate }}
+          </span>
+          <span class="text-danger">{{ leave.lapsed }}</span>
+        }
+      </div>
+
+      @for (e of leave.expiringSoon; track $index) {
+        <div class="alert alert-warning py-1 px-2 small mt-2 mb-0">
+          <i class="bi bi-exclamation-triangle me-1"></i>
+          {{ 'overtime.leave.expiring' | translate: { days: e.days, date: e.on, n: e.inDays } }}
+        </div>
+      }
+      @if (leave.available < 0) {
+        <div class="form-text text-danger">{{ 'overtime.leave.overdrawnHelp' | translate }}</div>
+      }
+      <div class="form-text">
+        {{ (leave.mode === 'flat' ? 'overtime.leave.modeFlat' : 'overtime.leave.modeStatutory') | translate }}
+      </div>
+    }
+  </div>
+</div>
