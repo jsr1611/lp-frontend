@@ -1,0 +1,33 @@
+/* The global `.btn { margin: 10px }` rule in styles.css would break tight button groups here. */
+.btn {
+  margin: 0;
+}
+
+.payslip-table td,
+.payslip-table th {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+/* Same overlay as the entry modal. Repeated rather than shared: component styles are
+   encapsulated, so the parent's rules do not reach in here. */
+.ot-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem;
+  z-index: 1050;
+  overflow-y: auto;
+}
+
+.ot-modal-content {
+  background: #fff;
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+}

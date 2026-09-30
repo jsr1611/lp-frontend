@@ -17,6 +17,18 @@ export interface CompanyInfo {
   note?: string;
 }
 
+// 'statutory' follows 근로기준법 §60 (1/month in year one, 15+ each anniversary, each
+// lapsing after a year); 'flat' is perMonth days a month that never lapse.
+export type LeaveMode = 'statutory' | 'flat';
+
+export interface LeaveSettings {
+  mode: LeaveMode;
+  accrualStart?: string;  // ISO date; empty = company.contractStart
+  perMonth?: number;      // flat mode only
+  // The balance HR reported on a date, to calibrate a ledger started mid-job.
+  balanceAsOf?: { days?: number | null; date?: string };
+}
+
 export interface OvertimeSettings {
   _id?: string;
   userId?: string;
@@ -43,6 +55,9 @@ export interface OvertimeSettings {
   // Whether minimumOtMinutes also gates rest days. Usually not.
   minimumOnRestDays: boolean;
   company?: CompanyInfo;
+  leave?: LeaveSettings;
+  // Milestone ids already celebrated. Written only through /milestones/seen.
+  seenMilestones?: string[];
   created_at?: string;
   updated_at?: string;
 }
@@ -63,12 +78,21 @@ export interface HolidayLookup {
   reason?: string;
 }
 
+export interface TimeAway {
+  start: string;  // "HH:MM", left
+  end: string;    // "HH:MM", came back
+}
+
 export interface OvertimeEntry {
   _id?: string;
   userId?: string;
   date: string;        // ISO date (yyyy-MM-dd); a night shift stays on its start date
   startTime: string;   // 출근 시간, "HH:MM"
   endTime: string;     // 퇴근 시간, "HH:MM"; earlier than startTime = ran past midnight
+  // Stretches away mid-shift: left at start, back at end. startTime/endTime stay the
+  // first arrival and the final departure.
+  breaks?: TimeAway[];
+  awayMinutes?: number;
   note?: string;
   // Weekend or 공휴일: every worked hour counts, at the 휴일근로 premium. Auto-detected
   // but overridable. `undefined` on entries logged before rest days were supported,
@@ -107,6 +131,8 @@ export interface OvertimeDay {
   qualified: boolean;
   isRestDay?: boolean;
   earnings: number;
+  // Clock-in to clock-out, less time away and the unpaid break.
+  workedMinutes: number;
 }
 
 export interface OvertimeSummary {
@@ -127,6 +153,98 @@ export interface OvertimeSummary {
   mixedRates: boolean;
   hasRestDays: boolean;
   byDay: OvertimeDay[];
+  leaveUsed: number;        // days off in this month, taken or planned
+  payslip: Payslip | null;
+}
+
+// A day of annual leave (연차). amount 0.5 = half day (반차).
+export interface LeaveDay {
+  _id?: string;
+  date: string;  // ISO date
+  amount: 0.5 | 1;
+  note?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+// What the payslip paid for a month's overtime. `month` is the month the work was
+// done, not the month it was paid.
+export interface Payslip {
+  _id?: string;
+  month: string;
+  paidOtMinutes?: number | null;
+  paidOtAmount?: number | null;
+  payDate?: string;
+  note?: string;
+  // From /summary: payslip minus logged. Negative = underpaid. Null when the payslip
+  // left that figure out.
+  diffMinutes?: number | null;
+  diffAmount?: number | null;
+}
+
+// A dated grant, as the ledger reports "next" and "expiring" ones.
+export interface LeaveEvent {
+  days: number;
+  on: string;
+  inDays: number;
+}
+
+export interface LeaveLedger {
+  mode: LeaveMode;
+  accrualStart: string;
+  accrued: number;
+  used: number;
+  planned: number;
+  lapsed: number;
+  overdrawn: number;
+  adjustment: number;
+  available: number;
+  expiringSoon: LeaveEvent[];
+  nextGrant: LeaveEvent | null;
+  nextAnnualGrant: LeaveEvent | null;
+}
+
+export interface Tenure {
+  start: string;
+  started: boolean;
+  startsIn?: number;
+  dayNumber?: number;
+  years?: number;
+  months?: number;
+  days?: number;
+  totalMonths?: number;
+  nextAnniversary?: { year: number; on: string; inDays: number; progress: number };
+  daysLeftInMonth: number;
+  workdaysLeftInMonth: number;
+  workdaysApproximate: boolean;
+  contractEnd: string | null;
+  contractEndsIn: number | null;
+}
+
+export type MilestoneKind = 'days' | 'months' | 'years' | 'hours' | 'earnings';
+
+export interface Milestone {
+  id: string;
+  kind: MilestoneKind;
+  value: number;
+  on?: string;          // date-based kinds only
+  leaveDays?: number;   // years, statutory mode: the grant that lands with it
+  currency?: string;    // earnings
+  // Reached:
+  seen?: boolean;
+  celebrate?: boolean;
+  // Upcoming:
+  inDays?: number;
+  soon?: boolean;
+  remaining?: number;   // hours / earnings still to go
+}
+
+// Figures that span the whole job rather than one month.
+export interface OvertimeOverview {
+  today?: string;
+  tenure: Tenure | null;
+  leave: LeaveLedger | null;
+  milestones: { reached: Milestone[]; upcoming: Milestone[] } | null;
 }
 
 // Result of the client-side preview shown while filling in the daily form.

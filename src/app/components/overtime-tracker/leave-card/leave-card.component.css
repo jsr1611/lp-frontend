@@ -1,0 +1,12 @@
+/* The global `.btn { margin: 10px }` rule in styles.css would break tight button groups here. */
+.btn {
+  margin: 0;
+}
+
+/* Label / value pairs in two tidy columns. */
+.leave-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 1rem;
+  row-gap: 0.1rem;
+}

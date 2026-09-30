@@ -5,7 +5,7 @@ import { Expense } from "../models/expense";
 import { HttpParams } from "@angular/common/http";
 import { Contact } from "../models/contact";
 import { Loan, LoanFilters, Repayment } from "../models/loan";
-import { OvertimeEntry, OvertimeSettings } from "../models/overtime";
+import { LeaveDay, OvertimeEntry, OvertimeSettings, Payslip } from "../models/overtime";
 
 @Injectable({
   providedIn: "root",
@@ -193,6 +193,53 @@ export class SecureService extends AuthService {
 
   deleteOvertimeEntry(id: string) {
     return this.http.delete(this.url + `/overtime/entries/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  // Tenure, leave balance and milestones. `today` is the viewer's local "YYYY-MM-DD",
+  // so day counts flip at their midnight rather than the server's.
+  getOvertimeOverview(today: string) {
+    return this.http.get(this.url + `/overtime/overview`, {
+      headers: this.getHeaders(),
+      params: new HttpParams().set('today', today),
+    });
+  }
+
+  markMilestonesSeen(ids: string[]) {
+    return this.http.post(this.url + `/overtime/milestones/seen`, { ids }, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  getLeaveDays(month: string) {
+    return this.http.get(this.url + `/overtime/leave`, {
+      headers: this.getHeaders(),
+      params: new HttpParams().set('month', month),
+    });
+  }
+
+  saveLeaveDay(leave: LeaveDay) {
+    return leave._id
+      ? this.http.put(this.url + `/overtime/leave/${leave._id}`, { leave }, { headers: this.getHeaders() })
+      : this.http.post(this.url + `/overtime/leave`, { leave }, { headers: this.getHeaders() });
+  }
+
+  deleteLeaveDay(id: string) {
+    return this.http.delete(this.url + `/overtime/leave/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  // Create or replace the payslip for the month the overtime was worked.
+  savePayslip(payslip: Payslip) {
+    return this.http.put(this.url + `/overtime/payslip`, { payslip }, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  deletePayslip(month: string) {
+    return this.http.delete(this.url + `/overtime/payslip/${month}`, {
       headers: this.getHeaders(),
     });
   }

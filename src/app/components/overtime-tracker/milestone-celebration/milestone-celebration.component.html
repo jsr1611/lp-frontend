@@ -1,0 +1,26 @@
+@if (shown.length) {
+  <div class="ot-modal" (click)="close()">
+    <div class="ot-modal-content text-center" role="dialog" aria-modal="true"
+         aria-labelledby="milestoneTitle" (click)="$event.stopPropagation()">
+      <div class="celebrate-emoji" aria-hidden="true">🎉</div>
+      <h4 id="milestoneTitle" class="mb-1">{{ 'overtime.milestones.congrats' | translate }}</h4>
+      @if (company) {
+        <div class="text-muted small mb-3">{{ company }}</div>
+      }
+      <ul class="list-unstyled text-start mb-4">
+        @for (m of shown; track m.id) {
+          <li class="d-flex gap-3 align-items-start py-2 milestone-item">
+            <i class="bi fs-3 text-warning" [class]="icon(m)"></i>
+            <div>
+              <div class="fw-semibold">{{ label(m) }}</div>
+              <div class="text-muted small">{{ detail(m) }}</div>
+            </div>
+          </li>
+        }
+      </ul>
+      <button class="btn btn-primary px-4" (click)="close()">
+        {{ 'overtime.milestones.thanks' | translate }}
+      </button>
+    </div>
+  </div>
+}
