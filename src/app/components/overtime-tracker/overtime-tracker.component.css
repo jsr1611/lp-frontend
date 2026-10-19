@@ -50,3 +50,70 @@
 .ot-month-input {
   max-width: 12rem;
 }
+
+/* ---------- Calendar placement ----------
+   Wide screens: page in the middle column, calendar sticky in the right-hand space.
+   Everything narrower: a collapsed bar under the tenure banner instead. */
+.ot-aside {
+  display: none;
+}
+
+@media (min-width: 1640px) {
+  .ot-layout {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 1000px) 1fr;
+    column-gap: 1.5rem;
+  }
+  .overtime-tracker {
+    grid-column: 2;
+    max-width: none;
+  }
+  .ot-aside {
+    display: block;
+    grid-column: 3;
+    padding-top: 6.25rem;
+  }
+  .ot-aside-inner {
+    position: sticky;
+    top: 1rem;
+    max-width: 340px;
+  }
+  .ot-cal-inline {
+    display: none;
+  }
+}
+
+/* Today's special day: a coloured strip that stays until midnight. */
+.special-banner {
+  border-radius: 0.5rem;
+  padding: 0.6rem 1rem;
+  color: #fff;
+  background-size: 200% 100%;
+  animation: banner-shift 6s ease-in-out infinite alternate;
+}
+.sp-seollal { background-image: linear-gradient(90deg, #c92a2a, #f08c00, #c92a2a); }
+.sp-chuseok { background-image: linear-gradient(90deg, #1c2a5a, #b08900, #1c2a5a); }
+.sp-eidFitr, .sp-eidAdha { background-image: linear-gradient(90deg, #087f5b, #2b8a3e, #b08900); }
+.sp-birthday { background-image: linear-gradient(90deg, #ae3ec9, #f06595, #fab005); }
+.sp-holiday { background-image: linear-gradient(90deg, #1971c2, #495057); }
+
+@keyframes banner-shift {
+  from { background-position: 0% 0; }
+  to { background-position: 100% 0; }
+}
+
+/* Late arrival in the entry form. */
+.late-box {
+  border: 1px solid #f5c2c7;
+  background: #f8d7da;
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.8rem;
+}
+.late-box.excused {
+  border-color: #ffe69c;
+  background: #fff3cd;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .special-banner { animation: none; }
+}

@@ -1,0 +1,62 @@
+.fx-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  cursor: pointer;
+  animation: fx-fade 0.3s ease-out;
+}
+
+/* Each preset tints the whole screen in its own mood. */
+.fx-confetti, .fx-fireworks { background: radial-gradient(circle at center, rgba(13, 110, 253, 0.25), rgba(10, 15, 40, 0.75)); }
+.fx-lanterns { background: radial-gradient(circle at center, rgba(250, 82, 82, 0.3), rgba(60, 10, 10, 0.78)); }
+.fx-moon { background: radial-gradient(circle at 50% 30%, rgba(255, 224, 102, 0.35), rgba(15, 20, 50, 0.85)); }
+.fx-crescent { background: radial-gradient(circle at 50% 30%, rgba(99, 230, 190, 0.25), rgba(8, 40, 35, 0.85)); }
+.fx-balloons { background: radial-gradient(circle at center, rgba(218, 119, 242, 0.3), rgba(40, 15, 60, 0.7)); }
+.fx-late { background: radial-gradient(circle at center, rgba(73, 80, 87, 0.55), rgba(120, 10, 20, 0.7)); }
+
+.fx-card {
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 1rem;
+  padding: 1.5rem 2rem;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  animation: fx-pop 0.45s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.fx-emoji {
+  font-size: 3.5rem;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.fx-title {
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.fx-subtitle {
+  color: #6c757d;
+  margin-top: 0.35rem;
+}
+
+.fx-shake {
+  animation: fx-pop 0.3s ease-out, fx-shake 0.5s 0.3s ease-in-out;
+}
+
+@keyframes fx-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fx-pop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes fx-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-backdrop, .fx-card, .fx-shake { animation: none; }
+}

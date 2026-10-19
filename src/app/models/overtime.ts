@@ -56,6 +56,10 @@ export interface OvertimeSettings {
   minimumOnRestDays: boolean;
   company?: CompanyInfo;
   leave?: LeaveSettings;
+  // Minutes after shiftStart still counted as on time. 0 = 09:00 on time, 09:01 late.
+  lateGraceMinutes?: number;
+  // For the birthday greeting; ISO date, only month and day are used.
+  birthday?: string | null;
   // Milestone ids already celebrated. Written only through /milestones/seen.
   seenMilestones?: string[];
   created_at?: string;
@@ -94,6 +98,9 @@ export interface OvertimeEntry {
   breaks?: TimeAway[];
   awayMinutes?: number;
   note?: string;
+  // Late with a reason the user accepts; does not break the on-time streak.
+  lateExcused?: boolean;
+  lateReason?: string;
   // Weekend or 공휴일: every worked hour counts, at the 휴일근로 premium. Auto-detected
   // but overridable. `undefined` on entries logged before rest days were supported,
   // which is the signal to auto-detect on open.
@@ -245,6 +252,34 @@ export interface OvertimeOverview {
   tenure: Tenure | null;
   leave: LeaveLedger | null;
   milestones: { reached: Milestone[]; upcoming: Milestone[] } | null;
+  punctuality?: Punctuality;
+}
+
+// An on-time streak mark: `months` of calendar time with no unexcused late arrival.
+export interface StreakMilestone {
+  id: string;
+  months: number;
+  on: string;          // the day the mark is complete
+  inDays?: number;     // upcoming only
+  celebrate?: boolean; // reached recently enough to still surprise
+  seen?: boolean;
+}
+
+// The current run of logged working days without an unexcused late arrival.
+export interface Punctuality {
+  current: number;        // on-time working days in the run
+  best: number;
+  since: string | null;   // first day of the run
+  calendarDays: number;   // calendar days since `since`, inclusive
+  lastLate: { date: string; minutes: number } | null;
+  lateCount: number;
+  excusedCount: number;
+  graceMinutes: number;
+  milestones: {
+    reached: StreakMilestone[];
+    upcoming: StreakMilestone | null;
+    today: StreakMilestone | null;  // a mark completed today: glow until midnight
+  };
 }
 
 // Result of the client-side preview shown while filling in the daily form.

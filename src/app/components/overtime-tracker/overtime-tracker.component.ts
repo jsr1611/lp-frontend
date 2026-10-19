@@ -4,6 +4,7 @@ import {
   Inject,
   OnInit,
   ChangeDetectionStrategy,
+  ViewChild,
   inject,
 } from "@angular/core";
 import { Router } from "@angular/router";
@@ -23,6 +24,9 @@ import {
 import { Currency } from "src/app/models/user";
 import { popularCurrencies, findCurrency, currencyNameKey } from "src/app/mappings/currencies";
 import { Chart, registerables } from "chart.js";
+import { FxOverlayComponent, FxEffect } from "./fx-overlay/fx-overlay.component";
+import { SpecialDay, specialDaysOf } from "./special-days";
+import { lateMinutesOf } from "./punctuality";
 
 Chart.register(...registerables);
 
@@ -149,6 +153,7 @@ export class OvertimeTrackerComponent implements OnInit {
   isEditingEntry = false;
   isSaving = false; // in-flight guard: disables Save and blocks re-entrant submits
   entryForm: OvertimeEntry = this.blankEntry();
+  private editingOriginal: OvertimeEntry | null = null;
   // Live result of the entry form, recomputed on each edit rather than bound as a
   // method call — Eager change detection would re-run a bound method every cycle.
   preview: OvertimePreview | null = null;
@@ -200,6 +205,20 @@ export class OvertimeTrackerComponent implements OnInit {
 
   private otChart: any = null;
 
+  @ViewChild(FxOverlayComponent) private fx?: FxOverlayComponent;
+  // Special days in the month on screen, for the calendar.
+  specialDays: SpecialDay[] = [];
+  // Today's special days: the banner stays up until midnight.
+  todaySpecials: SpecialDay[] = [];
+  todayIsoValue = this.todayIso();
+  // Effect ids already played this page load, while the "seen" post is in flight.
+  private played = new Set<string>();
+  // Minutes late on the day in the entry form, 0 when on time or a rest day.
+  entryLateMinutes = 0;
+
+  // Grace choices: 0 is strict (09:00 on time, 09:01 late).
+  graceOptions = [0, 1, 2, 3, 5, 10, 15];
+
   constructor(
     private authService: AuthService,
     @Inject(Router) private router: Router,
@@ -237,6 +256,7 @@ export class OvertimeTrackerComponent implements OnInit {
   }
 
   loadMonth(): void {
+    this.loadSpecialDays();
     this.loadEntries();
     this.loadLeaveDays();
     this.loadSummary();
@@ -264,10 +284,80 @@ export class OvertimeTrackerComponent implements OnInit {
 
   loadOverview(): void {
     this.secureService.getOvertimeOverview(this.todayIso()).subscribe({
-      next: (data: any) => (this.overview = data),
+      next: (data: any) => {
+        this.overview = data;
+        this.celebrateStreak();
+        this.loadTodaySpecials();
+      },
       // The month view works without it; the banner simply stays hidden.
       error: (err: HttpErrorResponse) => this.handleAuthError(err),
     });
+  }
+
+  // ---------- Streak & special days ----------
+
+  private loadSpecialDays(): void {
+    const month = this.month;
+    this.loadHolidays(month, (lookup) => {
+      if (month !== this.month) return;
+      this.specialDays = specialDaysOf(month, lookup.available ? lookup.holidays : [], this.settings?.birthday);
+    });
+  }
+
+  // Today's specials, whatever month is on screen. Festive ones play once per day.
+  private loadTodaySpecials(): void {
+    const today = this.todayIsoValue;
+    this.loadHolidays(today.slice(0, 7), (lookup) => {
+      this.todaySpecials = specialDaysOf(today.slice(0, 7), lookup.available ? lookup.holidays : [], this.settings?.birthday)
+        .filter((d) => d.date === today);
+      for (const d of this.todaySpecials) {
+        if (!d.preset) continue;
+        const name = this.translate.instant(`overtime.special.${d.kind}.name`);
+        this.playOnce(`day:${today}:${d.kind}`, {
+          preset: d.preset, emoji: d.emoji,
+          title: this.translate.instant(`overtime.special.${d.kind}.greeting`, { name }),
+          subtitle: this.translate.instant(`overtime.special.${d.kind}.wish`),
+        });
+      }
+    });
+  }
+
+  // A streak mark reached recently and not yet seen: fireworks, once.
+  private celebrateStreak(): void {
+    const reached = this.overview?.punctuality?.milestones?.reached || [];
+    const fresh = reached.filter((m) => !m.seen && !this.played.has(m.id));
+    if (!fresh.length) return;
+    // Older marks are recorded quietly, so a backfilled log does not replay them all.
+    const top = fresh.filter((m) => m.celebrate).sort((a, b) => b.months - a.months)[0];
+    fresh.forEach((m) => this.played.add(m.id));
+    this.secureService.markMilestonesSeen(fresh.map((m) => m.id)).subscribe({ error: () => {} });
+    if (top) {
+      this.fx?.play({
+        preset: "fireworks", emoji: "🏆", ms: 3000,
+        title: this.translate.instant("overtime.streak.fxTitle", { n: top.months }),
+        subtitle: this.translate.instant("overtime.streak.fxSubtitle", { n: top.months }),
+      });
+    }
+  }
+
+  private playOnce(id: string, effect: FxEffect): void {
+    if (this.played.has(id) || this.settings?.seenMilestones?.includes(id)) return;
+    this.played.add(id);
+    this.fx?.play(effect);
+    this.secureService.markMilestonesSeen([id]).subscribe({ error: () => {} });
+  }
+
+  // Calendar click: bring that day's row into view.
+  scrollToDay(iso: string): void {
+    document.getElementById(`day-${iso}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  lateOf(entry: OvertimeEntry): number {
+    return lateMinutesOf(entry, this.settings?.lateGraceMinutes || 0, this.settings?.shiftStart);
+  }
+
+  onLateExcusedChange(): void {
+    if (!this.entryForm.lateExcused) this.entryForm.lateReason = "";
   }
 
   // Anything that changes a balance or a total: the month and the overview both move.
@@ -325,6 +415,8 @@ export class OvertimeTrackerComponent implements OnInit {
     const company = this.settingsForm.company;
     company.contractStart = this.isoDay(company.contractStart) || undefined;
     company.contractEnd = this.isoDay(company.contractEnd) || undefined;
+    this.settingsForm.birthday = this.isoDay(this.settingsForm.birthday || undefined) || null;
+    this.settingsForm.lateGraceMinutes = this.settingsForm.lateGraceMinutes ?? 0;
     const leave = this.settingsForm.leave;
     this.settingsForm.leave = {
       mode: leave?.mode || "statutory",
@@ -461,6 +553,7 @@ export class OvertimeTrackerComponent implements OnInit {
     this.isDayOff = false;
     this.resnapshot = false;
     this.restDayNote = null;
+    this.editingOriginal = entry || null;
     if (entry) {
       this.isEditingEntry = true;
       this.entryForm = {
@@ -643,6 +736,21 @@ export class OvertimeTrackerComponent implements OnInit {
       this.errorMessage = this.translate.instant(away.errorKey);
       return;
     }
+    // On time: nothing to excuse, so nothing is kept.
+    if (!this.entryLateMinutes) {
+      this.entryForm.lateExcused = false;
+      this.entryForm.lateReason = "";
+    }
+    if (this.entryForm.lateExcused && !(this.entryForm.lateReason || "").trim()) {
+      this.errorMessage = this.translate.instant("overtime.late.reasonRequired");
+      return;
+    }
+    // Only a change into "late, no excuse" earns the reminder, not re-saving one.
+    const before = this.editingOriginal;
+    const wasUnexcusedLate = this.isEditingEntry && !!before && this.lateOf(before) > 0 && !before.lateExcused;
+    const lateNow = this.entryLateMinutes;
+    const unexcused = lateNow > 0 && !this.entryForm.lateExcused;
+    const date = this.entryForm.date;
     this.isSaving = true;
     this.errorMessage = null;
 
@@ -654,6 +762,7 @@ export class OvertimeTrackerComponent implements OnInit {
       next: () => {
         this.isSaving = false;
         this.showEntryModal = false;
+        if (unexcused && !wasUnexcusedLate) this.remindLate(date, lateNow);
         // The overview too: all-time hours may have crossed a milestone.
         this.reloadAll();
       },
@@ -661,6 +770,20 @@ export class OvertimeTrackerComponent implements OnInit {
         this.isSaving = false;
         this.showError(err);
       },
+    });
+  }
+
+  // The full-screen nudge after logging an unexcused late day.
+  private remindLate(date: string, minutes: number): void {
+    const p = this.overview?.punctuality;
+    // Only a day inside the current run actually breaks it.
+    const broke = !!p && !!p.since && date >= p.since && p.current > 0;
+    this.fx?.play({
+      preset: "late", emoji: "⏰", ms: 2800,
+      title: this.translate.instant("overtime.late.fxTitle", { time: this.formatMinutes(minutes) }),
+      subtitle: broke
+        ? this.translate.instant("overtime.late.fxBroke", { n: p!.current })
+        : this.translate.instant("overtime.late.fxTip"),
     });
   }
 
@@ -714,6 +837,12 @@ export class OvertimeTrackerComponent implements OnInit {
     const away = this.entryForm.startTime && this.entryForm.endTime ? this.awayMinutes(this.entryForm) : {};
     this.awayTotal = away.minutes || 0;
     this.awayError = away.errorKey ? this.translate.instant(away.errorKey) : null;
+    // Judged against the start the day will be saved under, like the overtime.
+    this.entryLateMinutes = s && this.entryForm.startTime
+      ? lateMinutesOf(
+          { ...this.entryForm, shiftStart: this.isEditingEntry && !this.resnapshot ? this.entryForm.shiftStart : s.shiftStart },
+          s.lateGraceMinutes || 0, s.shiftStart)
+      : 0;
     if (!s || !this.entryForm.startTime || !this.entryForm.endTime) {
       this.preview = null;
       return;
@@ -1037,6 +1166,8 @@ export class OvertimeTrackerComponent implements OnInit {
       restDayFirst8Multiplier: 1.5,
       restDayBeyondMultiplier: 2,
       minimumOnRestDays: false,
+      lateGraceMinutes: 0,
+      birthday: null,
       company: {},
       leave: { mode: "statutory", perMonth: 1, balanceAsOf: { days: null, date: "" } },
     };
@@ -1050,6 +1181,8 @@ export class OvertimeTrackerComponent implements OnInit {
       endTime: this.boundaryLabel || "18:00",
       breaks: [],
       note: "",
+      lateExcused: false,
+      lateReason: "",
     };
   }
 
