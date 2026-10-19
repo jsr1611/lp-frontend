@@ -345,7 +345,9 @@ export class UserPageComponent implements OnInit, AfterViewInit {
       password: "",
       firstname: this.user.firstname,
       lastname: this.user.lastname,
-      email: this.user.email
+      email: this.user.email,
+      // "" rather than null: an emptied date input clears it on the backend.
+      birthday: this.user.birthday || ""
     };
     this.displayUserModal = !this.displayUserModal;
   }

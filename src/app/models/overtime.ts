@@ -58,8 +58,6 @@ export interface OvertimeSettings {
   leave?: LeaveSettings;
   // Minutes after shiftStart still counted as on time. 0 = 09:00 on time, 09:01 late.
   lateGraceMinutes?: number;
-  // For the birthday greeting; ISO date, only month and day are used.
-  birthday?: string | null;
   // Milestone ids already celebrated. Written only through /milestones/seen.
   seenMilestones?: string[];
   created_at?: string;
@@ -253,6 +251,8 @@ export interface OvertimeOverview {
   leave: LeaveLedger | null;
   milestones: { reached: Milestone[]; upcoming: Milestone[] } | null;
   punctuality?: Punctuality;
+  // From the user's profile, for the birthday greeting.
+  birthday?: string | null;
 }
 
 // An on-time streak mark: `months` of calendar time with no unexcused late arrival.

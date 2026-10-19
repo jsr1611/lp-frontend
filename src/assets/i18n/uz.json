@@ -539,8 +539,6 @@
       "errorOverlap": "Chiqib turgan vaqtlar bir-birining ustiga tushmasligi kerak.",
       "errorOutside": "Chiqib turgan vaqt kelish va ketish vaqti orasida bo'lishi kerak."
     },
-    "birthday": "Tug'ilgan kun",
-    "birthdayHelp": "Shu kuni sizni tabriklaymiz. Faqat oy va kun ishlatiladi.",
     "calendar": {
       "title": "Kalendar",
       "onTime": "O'z vaqtida",
@@ -552,7 +550,9 @@
       "wd4": "Pa",
       "wd5": "Ju",
       "wd6": "Sh",
-      "wd0": "Ya"
+      "wd0": "Ya",
+      "restWork": "Dam olish kunida ish",
+      "leave": "Ta'til"
     },
     "streak": {
       "short": "{{n}} kun",
@@ -560,7 +560,6 @@
       "since": "{{date}} dan beri · {{n}} kalendar kun",
       "next": "{{n}} oylik marragacha {{days}} kun qoldi",
       "best": "Eng yaxshi natija: {{n}} kun",
-      "lastLate": "oxirgi kechikish: {{date}}",
       "milestoneToday": "Bugun: {{n}} oy kechikishsiz!",
       "fxTitle": "{{n}} oy kechikishsiz!",
       "fxSubtitle": "{{n}} oy davomida har kuni o'z vaqtida keldingiz. Ajoyib intizom!"
@@ -663,7 +662,9 @@
     "total": "Jami:",
     "update": "Yangilash",
     "username": "Foydalanuvchi nomi:",
-    "yes": "Ha"
+    "yes": "Ha",
+    "birthday": "Tug'ilgan kun:",
+    "birthdayHelp": "Ixtiyoriy. Ish hisobida shu kuni sizni tabriklaymiz."
   },
   "shell": {
     "dailyVisits": "Kunlik tashriflar soni: {{count}}"

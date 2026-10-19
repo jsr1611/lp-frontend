@@ -58,10 +58,11 @@
   display: none;
 }
 
-@media (min-width: 1640px) {
+@media (min-width: 1660px) {
   .ot-layout {
     display: grid;
-    grid-template-columns: 1fr minmax(0, 1000px) 1fr;
+    /* Side columns match so the page stays centred; 300px is the calendar's width. */
+    grid-template-columns: minmax(300px, 1fr) minmax(0, 1000px) minmax(300px, 1fr);
     column-gap: 1.5rem;
   }
   .overtime-tracker {
@@ -76,7 +77,7 @@
   .ot-aside-inner {
     position: sticky;
     top: 1rem;
-    max-width: 340px;
+    width: 300px;
   }
   .ot-cal-inline {
     display: none;
