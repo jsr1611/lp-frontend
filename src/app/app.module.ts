@@ -44,6 +44,8 @@ import { TenureBannerComponent } from './components/overtime-tracker/tenure-bann
 import { LeaveCardComponent } from './components/overtime-tracker/leave-card/leave-card.component';
 import { PayslipCardComponent } from './components/overtime-tracker/payslip-card/payslip-card.component';
 import { MilestoneCelebrationComponent } from './components/overtime-tracker/milestone-celebration/milestone-celebration.component';
+import { FxOverlayComponent } from './components/overtime-tracker/fx-overlay/fx-overlay.component';
+import { WorkCalendarComponent } from './components/overtime-tracker/work-calendar/work-calendar.component';
 
 registerAppLocales();
 
@@ -70,7 +72,9 @@ registerAppLocales();
         TenureBannerComponent,
         LeaveCardComponent,
         PayslipCardComponent,
-        MilestoneCelebrationComponent
+        MilestoneCelebrationComponent,
+        FxOverlayComponent,
+        WorkCalendarComponent
     ],
     bootstrap: [AppComponent],
     imports: [

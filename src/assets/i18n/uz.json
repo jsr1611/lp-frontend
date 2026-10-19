@@ -538,6 +538,79 @@
       "errorOrder": "Har bir chiqish qaytishdan oldin bo'lishi kerak.",
       "errorOverlap": "Chiqib turgan vaqtlar bir-birining ustiga tushmasligi kerak.",
       "errorOutside": "Chiqib turgan vaqt kelish va ketish vaqti orasida bo'lishi kerak."
+    },
+    "birthday": "Tug'ilgan kun",
+    "birthdayHelp": "Shu kuni sizni tabriklaymiz. Faqat oy va kun ishlatiladi.",
+    "calendar": {
+      "title": "Kalendar",
+      "onTime": "O'z vaqtida",
+      "late": "Kechikdi",
+      "excused": "Uzrli kechikish",
+      "wd1": "Du",
+      "wd2": "Se",
+      "wd3": "Ch",
+      "wd4": "Pa",
+      "wd5": "Ju",
+      "wd6": "Sh",
+      "wd0": "Ya"
+    },
+    "streak": {
+      "short": "{{n}} kun",
+      "daysOnTime": "kun ketma-ket o'z vaqtida",
+      "since": "{{date}} dan beri · {{n}} kalendar kun",
+      "next": "{{n}} oylik marragacha {{days}} kun qoldi",
+      "best": "Eng yaxshi natija: {{n}} kun",
+      "lastLate": "oxirgi kechikish: {{date}}",
+      "milestoneToday": "Bugun: {{n}} oy kechikishsiz!",
+      "fxTitle": "{{n}} oy kechikishsiz!",
+      "fxSubtitle": "{{n}} oy davomida har kuni o'z vaqtida keldingiz. Ajoyib intizom!"
+    },
+    "late": {
+      "notice": "Siz {{time}} kechikdingiz.",
+      "excused": "Uzrli kechikish",
+      "reason": "Sabab",
+      "reasonPlaceholder": "Masalan: shifokorga bordim, rahbar ruxsat berdi",
+      "reasonRequired": "Uzrli kechikish uchun sababni kiriting.",
+      "badgeTitle": "Kechikish",
+      "fxTitle": "{{time}} kechikish",
+      "fxBroke": "{{n}} kunlik seriya uzildi. Ertaga yangidan boshlaymiz!",
+      "fxTip": "Ertaga biroz ertaroq chiqing — o'z vaqtida kelish odati sizni kutmoqda.",
+      "grace": "Kechikishga ruxsat",
+      "graceNone": "Yo'q — 09:01 kechikish hisoblanadi",
+      "graceN": "{{n}} daqiqa",
+      "graceHelp": "Ish boshlanishidan keyin shuncha daqiqagacha o'z vaqtida hisoblanadi. Ertaroq kelish talab qilinsa, ish boshlanish vaqtini o'zgartiring."
+    },
+    "special": {
+      "seollal": {
+        "name": "Seollal (설날)",
+        "greeting": "{{name}} muborak!",
+        "wish": "새해 복 많이 받으세요! Yangi yilingiz baxtli bo'lsin."
+      },
+      "chuseok": {
+        "name": "Chuseok (추석)",
+        "greeting": "{{name}} muborak!",
+        "wish": "풍성한 한가위 보내세요! Oilangiz bilan to'kin bayram."
+      },
+      "eidFitr": {
+        "name": "Ramazon hayiti",
+        "greeting": "{{name}} muborak bo'lsin!",
+        "wish": "Ro'za va ibodatlaringiz qabul bo'lsin."
+      },
+      "eidAdha": {
+        "name": "Qurbon hayiti",
+        "greeting": "{{name}} muborak bo'lsin!",
+        "wish": "Xonadoningizga tinchlik va baraka tilaymiz."
+      },
+      "birthday": {
+        "name": "Tug'ilgan kun",
+        "greeting": "Tug'ilgan kuningiz bilan!",
+        "wish": "Sog'lik, omad va quvonch tilaymiz! 🎉"
+      },
+      "holiday": {
+        "name": "Bayram",
+        "greeting": "Bugun bayram: {{name}}",
+        "wish": ""
+      }
     }
   },
   "profile": {

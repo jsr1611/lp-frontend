@@ -1,0 +1,88 @@
+.btn {
+  margin: 0;
+}
+
+.card-header {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.streak-flame {
+  font-size: 1.6rem;
+}
+
+/* A milestone day: a warm glow on the whole card until midnight. */
+.streak-glow {
+  border: 2px solid #ffc107;
+  animation: glow 2.4s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 0.5rem rgba(255, 193, 7, 0.35); }
+  50% { box-shadow: 0 0 1.5rem rgba(255, 193, 7, 0.8); }
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.cal-head {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #6c757d;
+  padding-bottom: 2px;
+}
+
+.cal-cell {
+  position: relative;
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 0.4rem;
+  background: #f8f9fa;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.cal-cell.out { opacity: 0.35; }
+.cal-cell.weekend .cal-num, .cal-cell.holiday .cal-num { color: #dc3545; }
+.cal-cell.today { outline: 2px solid #0d6efd; outline-offset: -2px; font-weight: 600; }
+
+.cal-mark {
+  position: absolute;
+  top: -3px;
+  right: -2px;
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+/* Day states: the background says how the day went. */
+.st-ontime { background: #d1e7dd; }
+.st-late { background: #f8d7da; }
+.st-excused { background: #fff3cd; }
+.st-restWork { background: #cfe2ff; }
+.st-leave { background: #e2e3e5; }
+.cal-cell.st-late .cal-num { color: #842029; font-weight: 600; }
+
+.cal-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+}
+
+.dot {
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  margin-right: 0.25rem;
+  vertical-align: -1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .streak-glow { animation: none; }
+}

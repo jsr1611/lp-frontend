@@ -538,6 +538,79 @@
       "errorOrder": "Each time away must end after it starts.",
       "errorOverlap": "Times away cannot overlap.",
       "errorOutside": "Time away must fall between clock-in and clock-out."
+    },
+    "birthday": "Birthday",
+    "birthdayHelp": "We'll celebrate you on the day. Only month and day are used.",
+    "calendar": {
+      "title": "Calendar",
+      "onTime": "On time",
+      "late": "Late",
+      "excused": "Excused late",
+      "wd1": "Mo",
+      "wd2": "Tu",
+      "wd3": "We",
+      "wd4": "Th",
+      "wd5": "Fr",
+      "wd6": "Sa",
+      "wd0": "Su"
+    },
+    "streak": {
+      "short": "{{n}} days",
+      "daysOnTime": "days on time in a row",
+      "since": "since {{date}} · {{n}} calendar days",
+      "next": "{{days}} days to the {{n}}-month mark",
+      "best": "Best: {{n}} days",
+      "lastLate": "last late: {{date}}",
+      "milestoneToday": "Today: {{n}} months without being late!",
+      "fxTitle": "{{n}} months without being late!",
+      "fxSubtitle": "On time every single day for {{n}} months. Great discipline!"
+    },
+    "late": {
+      "notice": "You were {{time}} late.",
+      "excused": "Excused lateness",
+      "reason": "Reason",
+      "reasonPlaceholder": "e.g. doctor's appointment, approved by manager",
+      "reasonRequired": "Enter a reason for the excused lateness.",
+      "badgeTitle": "Late",
+      "fxTitle": "{{time}} late",
+      "fxBroke": "Your {{n}}-day streak ended. Fresh start tomorrow!",
+      "fxTip": "Leave a little earlier tomorrow — your on-time habit is waiting.",
+      "grace": "Late grace period",
+      "graceNone": "None — 09:01 counts as late",
+      "graceN": "{{n}} minutes",
+      "graceHelp": "Arrivals up to this many minutes after the start still count as on time. If you're expected earlier, change the scheduled start instead."
+    },
+    "special": {
+      "seollal": {
+        "name": "Seollal (설날)",
+        "greeting": "Happy {{name}}!",
+        "wish": "새해 복 많이 받으세요! Wishing you a lucky new year."
+      },
+      "chuseok": {
+        "name": "Chuseok (추석)",
+        "greeting": "Happy {{name}}!",
+        "wish": "풍성한 한가위 보내세요! A bountiful harvest festival to you."
+      },
+      "eidFitr": {
+        "name": "Eid al-Fitr",
+        "greeting": "Eid Mubarak!",
+        "wish": "May your fasting and prayers be accepted."
+      },
+      "eidAdha": {
+        "name": "Eid al-Adha",
+        "greeting": "Eid Mubarak!",
+        "wish": "Peace and blessings to your home."
+      },
+      "birthday": {
+        "name": "Birthday",
+        "greeting": "Happy birthday!",
+        "wish": "Wishing you health, luck and joy! 🎉"
+      },
+      "holiday": {
+        "name": "Holiday",
+        "greeting": "Holiday today: {{name}}",
+        "wish": ""
+      }
     }
   },
   "profile": {

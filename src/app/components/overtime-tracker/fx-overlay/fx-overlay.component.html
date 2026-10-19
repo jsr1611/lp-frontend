@@ -1,0 +1,11 @@
+@if (current) {
+  <div class="fx-backdrop" [class]="'fx-' + current.preset" (click)="dismiss()" role="status" aria-live="polite">
+    <div class="fx-card" [class.fx-shake]="current.preset === 'late'">
+      <div class="fx-emoji" aria-hidden="true">{{ current.emoji }}</div>
+      <div class="fx-title">{{ current.title }}</div>
+      @if (current.subtitle) {
+        <div class="fx-subtitle">{{ current.subtitle }}</div>
+      }
+    </div>
+  </div>
+}

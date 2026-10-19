@@ -538,6 +538,79 @@
       "errorOrder": "복귀 시간은 외출 시간보다 늦어야 합니다.",
       "errorOverlap": "외출 시간이 서로 겹칠 수 없습니다.",
       "errorOutside": "외출 시간은 출근과 퇴근 사이여야 합니다."
+    },
+    "birthday": "생일",
+    "birthdayHelp": "생일에 축하해 드려요. 월과 일만 사용합니다.",
+    "calendar": {
+      "title": "달력",
+      "onTime": "정시 출근",
+      "late": "지각",
+      "excused": "사유 있는 지각",
+      "wd1": "월",
+      "wd2": "화",
+      "wd3": "수",
+      "wd4": "목",
+      "wd5": "금",
+      "wd6": "토",
+      "wd0": "일"
+    },
+    "streak": {
+      "short": "{{n}}일",
+      "daysOnTime": "일 연속 정시 출근",
+      "since": "{{date}}부터 · 달력 기준 {{n}}일",
+      "next": "{{n}}개월까지 {{days}}일 남음",
+      "best": "최고 기록: {{n}}일",
+      "lastLate": "마지막 지각: {{date}}",
+      "milestoneToday": "오늘: {{n}}개월 무지각!",
+      "fxTitle": "{{n}}개월 무지각!",
+      "fxSubtitle": "{{n}}개월 동안 매일 정시에 출근했어요. 대단한 자기관리!"
+    },
+    "late": {
+      "notice": "{{time}} 지각했어요.",
+      "excused": "사유 있는 지각",
+      "reason": "사유",
+      "reasonPlaceholder": "예: 병원 진료, 팀장 승인",
+      "reasonRequired": "사유 있는 지각의 사유를 입력하세요.",
+      "badgeTitle": "지각",
+      "fxTitle": "{{time}} 지각",
+      "fxBroke": "{{n}}일 연속 기록이 끝났어요. 내일 다시 시작해요!",
+      "fxTip": "내일은 조금 일찍 출발해 보세요.",
+      "grace": "지각 유예 시간",
+      "graceNone": "없음 — 09:01부터 지각",
+      "graceN": "{{n}}분",
+      "graceHelp": "출근 시간 후 이 시간까지는 정시로 봅니다. 더 일찍 와야 한다면 출근 시간을 바꾸세요."
+    },
+    "special": {
+      "seollal": {
+        "name": "설날",
+        "greeting": "즐거운 {{name}} 보내세요!",
+        "wish": "새해 복 많이 받으세요!"
+      },
+      "chuseok": {
+        "name": "추석",
+        "greeting": "즐거운 {{name}} 보내세요!",
+        "wish": "풍성한 한가위 보내세요!"
+      },
+      "eidFitr": {
+        "name": "이드 알피트르",
+        "greeting": "이드 무바라크!",
+        "wish": "평화와 축복이 함께하길."
+      },
+      "eidAdha": {
+        "name": "이드 알아드하",
+        "greeting": "이드 무바라크!",
+        "wish": "가정에 평화와 축복이 가득하길."
+      },
+      "birthday": {
+        "name": "생일",
+        "greeting": "생일 축하해요!",
+        "wish": "건강과 행운, 기쁨이 가득하길! 🎉"
+      },
+      "holiday": {
+        "name": "공휴일",
+        "greeting": "오늘은 {{name}}",
+        "wish": ""
+      }
     }
   },
   "profile": {

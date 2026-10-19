@@ -1,0 +1,100 @@
+<div class="card shadow-sm work-calendar" [class.streak-glow]="glowing">
+  @if (collapsible) {
+    <button type="button" class="card-header d-flex align-items-center justify-content-between w-100 border-0 bg-white"
+            (click)="open = !open" [attr.aria-expanded]="open">
+      <span>
+        <i class="bi bi-calendar3 me-2"></i>{{ 'overtime.calendar.title' | translate }}
+        @if (punctuality) {
+          <span class="ms-2 badge rounded-pill text-bg-warning">🔥 {{ 'overtime.streak.short' | translate: { n: punctuality.current } }}</span>
+        }
+      </span>
+      <i class="bi" [class.bi-chevron-down]="!open" [class.bi-chevron-up]="open"></i>
+    </button>
+  }
+
+  @if (!collapsible || open) {
+    <div class="card-body">
+      <!-- Streak -->
+      @if (punctuality; as p) {
+        <div class="mb-3">
+          @if (glowing) {
+            <div class="text-center fw-semibold text-warning-emphasis mb-1">
+              🏆 {{ 'overtime.streak.milestoneToday' | translate: { n: p.milestones.today?.months } }}
+            </div>
+          }
+          <div class="d-flex align-items-baseline gap-2">
+            <span class="streak-flame" aria-hidden="true">🔥</span>
+            <span class="fs-3 fw-semibold">{{ p.current }}</span>
+            <span class="text-muted">{{ 'overtime.streak.daysOnTime' | translate }}</span>
+          </div>
+          @if (p.since) {
+            <div class="small text-muted">
+              {{ 'overtime.streak.since' | translate: { date: (p.since | date: 'mediumDate' : 'UTC'), n: p.calendarDays } }}
+            </div>
+          }
+          @if (p.milestones.upcoming; as next) {
+            <div class="progress mt-2" style="height: 6px" role="progressbar">
+              <div class="progress-bar bg-warning" [style.width.%]="progress * 100"></div>
+            </div>
+            <div class="small text-muted mt-1">
+              {{ 'overtime.streak.next' | translate: { n: next.months, days: next.inDays } }}
+            </div>
+          }
+          <div class="small text-muted mt-1">
+            {{ 'overtime.streak.best' | translate: { n: p.best } }}
+            @if (p.lastLate) {
+              · {{ 'overtime.streak.lastLate' | translate: { date: (p.lastLate.date | date: 'mediumDate' : 'UTC') } }}
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Month grid -->
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <button class="btn btn-sm btn-link text-secondary p-0" (click)="monthShift.emit(-1)"
+                [attr.aria-label]="'overtime.prevMonth' | translate"><i class="bi bi-chevron-left"></i></button>
+        <span class="fw-semibold">{{ monthDate | date: 'LLLL yyyy' : 'UTC' }}</span>
+        <button class="btn btn-sm btn-link text-secondary p-0" (click)="monthShift.emit(1)"
+                [attr.aria-label]="'overtime.nextMonth' | translate"><i class="bi bi-chevron-right"></i></button>
+      </div>
+      <div class="cal-grid">
+        @for (w of weekdays; track w) {
+          <div class="cal-head">{{ ('overtime.calendar.wd' + w) | translate }}</div>
+        }
+        @for (c of cells; track c.iso) {
+          <button type="button" class="cal-cell" [class]="'st-' + c.state"
+                  [class.out]="!c.inMonth" [class.weekend]="c.weekend" [class.today]="c.today"
+                  [class.holiday]="c.special?.kind === 'holiday' || c.special?.kind === 'seollal' || c.special?.kind === 'chuseok'"
+                  [title]="c.title" (click)="pick(c)">
+            <span class="cal-num">{{ c.day }}</span>
+            @if (c.milestone) {
+              <span class="cal-mark" aria-hidden="true">🏆</span>
+            } @else if (c.special) {
+              <span class="cal-mark" aria-hidden="true">{{ c.special.emoji }}</span>
+            }
+          </button>
+        }
+      </div>
+      <div class="cal-legend small text-muted mt-2">
+        <span><i class="dot st-ontime"></i>{{ 'overtime.calendar.onTime' | translate }}</span>
+        <span><i class="dot st-late"></i>{{ 'overtime.calendar.late' | translate }}</span>
+        <span><i class="dot st-excused"></i>{{ 'overtime.calendar.excused' | translate }}</span>
+        <span><i class="dot st-restWork"></i>{{ 'overtime.restDay' | translate }}</span>
+        <span><i class="dot st-leave"></i>{{ 'overtime.leave.dayOff' | translate }}</span>
+      </div>
+
+      <!-- Special days this month -->
+      @if (specialDays.length) {
+        <ul class="list-unstyled small mt-3 mb-0">
+          @for (s of specialDays; track s.date + s.kind) {
+            <li class="d-flex gap-2" [class.fw-semibold]="s.date === today">
+              <span>{{ s.emoji }}</span>
+              <span class="text-muted text-nowrap">{{ s.date | date: 'd MMM' : 'UTC' }}</span>
+              <span>{{ s.name || ('overtime.special.' + s.kind + '.name' | translate) }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  }
+</div>
