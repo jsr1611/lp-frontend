@@ -13,6 +13,8 @@ export interface User {
   created_at?: string;
   last_session?: string;
   currency?: Currency;
+  // "yyyy-MM-dd"; only month and day are used, for the work log's birthday greeting.
+  birthday?: string | null;
 }
 
 
