@@ -8,7 +8,14 @@
 }
 
 .streak-flame {
-  font-size: 1.6rem;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.streak-count {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 /* A milestone day: a warm glow on the whole card until midnight. */

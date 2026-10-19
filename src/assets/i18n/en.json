@@ -539,8 +539,6 @@
       "errorOverlap": "Times away cannot overlap.",
       "errorOutside": "Time away must fall between clock-in and clock-out."
     },
-    "birthday": "Birthday",
-    "birthdayHelp": "We'll celebrate you on the day. Only month and day are used.",
     "calendar": {
       "title": "Calendar",
       "onTime": "On time",
@@ -552,7 +550,9 @@
       "wd4": "Th",
       "wd5": "Fr",
       "wd6": "Sa",
-      "wd0": "Su"
+      "wd0": "Su",
+      "restWork": "Worked a rest day",
+      "leave": "Day off"
     },
     "streak": {
       "short": "{{n}} days",
@@ -560,7 +560,6 @@
       "since": "since {{date}} · {{n}} calendar days",
       "next": "{{days}} days to the {{n}}-month mark",
       "best": "Best: {{n}} days",
-      "lastLate": "last late: {{date}}",
       "milestoneToday": "Today: {{n}} months without being late!",
       "fxTitle": "{{n}} months without being late!",
       "fxSubtitle": "On time every single day for {{n}} months. Great discipline!"
@@ -663,7 +662,9 @@
     "total": "Total:",
     "update": "Update",
     "username": "Username:",
-    "yes": "Yes"
+    "yes": "Yes",
+    "birthday": "Birthday:",
+    "birthdayHelp": "Optional. The work log celebrates you on the day."
   },
   "shell": {
     "dailyVisits": "Daily visits: {{count}}"

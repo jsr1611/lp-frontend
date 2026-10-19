@@ -539,8 +539,6 @@
       "errorOverlap": "외출 시간이 서로 겹칠 수 없습니다.",
       "errorOutside": "외출 시간은 출근과 퇴근 사이여야 합니다."
     },
-    "birthday": "생일",
-    "birthdayHelp": "생일에 축하해 드려요. 월과 일만 사용합니다.",
     "calendar": {
       "title": "달력",
       "onTime": "정시 출근",
@@ -552,7 +550,9 @@
       "wd4": "목",
       "wd5": "금",
       "wd6": "토",
-      "wd0": "일"
+      "wd0": "일",
+      "restWork": "휴일 근무",
+      "leave": "연차"
     },
     "streak": {
       "short": "{{n}}일",
@@ -560,7 +560,6 @@
       "since": "{{date}}부터 · 달력 기준 {{n}}일",
       "next": "{{n}}개월까지 {{days}}일 남음",
       "best": "최고 기록: {{n}}일",
-      "lastLate": "마지막 지각: {{date}}",
       "milestoneToday": "오늘: {{n}}개월 무지각!",
       "fxTitle": "{{n}}개월 무지각!",
       "fxSubtitle": "{{n}}개월 동안 매일 정시에 출근했어요. 대단한 자기관리!"
@@ -663,7 +662,9 @@
     "total": "합계:",
     "update": "저장",
     "username": "사용자 이름:",
-    "yes": "예"
+    "yes": "예",
+    "birthday": "생일:",
+    "birthdayHelp": "선택 사항. 근무 기록에서 생일을 축하해 드려요."
   },
   "shell": {
     "dailyVisits": "일일 방문 수: {{count}}"

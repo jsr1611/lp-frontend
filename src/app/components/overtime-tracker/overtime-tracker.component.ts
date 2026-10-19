@@ -286,6 +286,8 @@ export class OvertimeTrackerComponent implements OnInit {
     this.secureService.getOvertimeOverview(this.todayIso()).subscribe({
       next: (data: any) => {
         this.overview = data;
+        // The birthday comes with the overview, so the month's special days follow it.
+        this.loadSpecialDays();
         this.celebrateStreak();
         this.loadTodaySpecials();
       },
@@ -300,7 +302,7 @@ export class OvertimeTrackerComponent implements OnInit {
     const month = this.month;
     this.loadHolidays(month, (lookup) => {
       if (month !== this.month) return;
-      this.specialDays = specialDaysOf(month, lookup.available ? lookup.holidays : [], this.settings?.birthday);
+      this.specialDays = specialDaysOf(month, lookup.available ? lookup.holidays : [], this.overview?.birthday);
     });
   }
 
@@ -308,7 +310,7 @@ export class OvertimeTrackerComponent implements OnInit {
   private loadTodaySpecials(): void {
     const today = this.todayIsoValue;
     this.loadHolidays(today.slice(0, 7), (lookup) => {
-      this.todaySpecials = specialDaysOf(today.slice(0, 7), lookup.available ? lookup.holidays : [], this.settings?.birthday)
+      this.todaySpecials = specialDaysOf(today.slice(0, 7), lookup.available ? lookup.holidays : [], this.overview?.birthday)
         .filter((d) => d.date === today);
       for (const d of this.todaySpecials) {
         if (!d.preset) continue;
@@ -415,7 +417,6 @@ export class OvertimeTrackerComponent implements OnInit {
     const company = this.settingsForm.company;
     company.contractStart = this.isoDay(company.contractStart) || undefined;
     company.contractEnd = this.isoDay(company.contractEnd) || undefined;
-    this.settingsForm.birthday = this.isoDay(this.settingsForm.birthday || undefined) || null;
     this.settingsForm.lateGraceMinutes = this.settingsForm.lateGraceMinutes ?? 0;
     const leave = this.settingsForm.leave;
     this.settingsForm.leave = {
@@ -1167,7 +1168,6 @@ export class OvertimeTrackerComponent implements OnInit {
       restDayBeyondMultiplier: 2,
       minimumOnRestDays: false,
       lateGraceMinutes: 0,
-      birthday: null,
       company: {},
       leave: { mode: "statutory", perMonth: 1, balanceAsOf: { days: null, date: "" } },
     };

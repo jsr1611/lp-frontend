@@ -22,11 +22,11 @@
               🏆 {{ 'overtime.streak.milestoneToday' | translate: { n: p.milestones.today?.months } }}
             </div>
           }
-          <div class="d-flex align-items-baseline gap-2">
+          <div class="d-flex align-items-center gap-2">
             <span class="streak-flame" aria-hidden="true">🔥</span>
-            <span class="fs-3 fw-semibold">{{ p.current }}</span>
-            <span class="text-muted">{{ 'overtime.streak.daysOnTime' | translate }}</span>
+            <span class="streak-count">{{ p.current }}</span>
           </div>
+          <div class="fw-semibold">{{ 'overtime.streak.daysOnTime' | translate }}</div>
           @if (p.since) {
             <div class="small text-muted">
               {{ 'overtime.streak.since' | translate: { date: (p.since | date: 'mediumDate' : 'UTC'), n: p.calendarDays } }}
@@ -40,10 +40,10 @@
               {{ 'overtime.streak.next' | translate: { n: next.months, days: next.inDays } }}
             </div>
           }
-          <div class="small text-muted mt-1">
-            {{ 'overtime.streak.best' | translate: { n: p.best } }}
+          <div class="d-flex justify-content-between small text-muted mt-2 pt-2 border-top">
+            <span>🏅 {{ 'overtime.streak.best' | translate: { n: p.best } }}</span>
             @if (p.lastLate) {
-              · {{ 'overtime.streak.lastLate' | translate: { date: (p.lastLate.date | date: 'mediumDate' : 'UTC') } }}
+              <span>⏰ {{ p.lastLate.date | date: 'd MMM' : 'UTC' }}</span>
             }
           </div>
         </div>
@@ -79,8 +79,8 @@
         <span><i class="dot st-ontime"></i>{{ 'overtime.calendar.onTime' | translate }}</span>
         <span><i class="dot st-late"></i>{{ 'overtime.calendar.late' | translate }}</span>
         <span><i class="dot st-excused"></i>{{ 'overtime.calendar.excused' | translate }}</span>
-        <span><i class="dot st-restWork"></i>{{ 'overtime.restDay' | translate }}</span>
-        <span><i class="dot st-leave"></i>{{ 'overtime.leave.dayOff' | translate }}</span>
+        <span><i class="dot st-restWork"></i>{{ 'overtime.calendar.restWork' | translate }}</span>
+        <span><i class="dot st-leave"></i>{{ 'overtime.calendar.leave' | translate }}</span>
       </div>
 
       <!-- Special days this month -->

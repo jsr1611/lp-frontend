@@ -24,6 +24,9 @@
       class="bi bi-database-fill-gear mx-2" [attr.title]="'profile.siteAdmin' | translate"></i>
     }</p>
     <p><strong>{{ 'profile.email' | translate }}</strong> {{ user.email }}</p>
+    @if (user.birthday) {
+      <p><strong>{{ 'profile.birthday' | translate }}</strong> {{ user.birthday | date: 'longDate' : 'UTC' }}</p>
+    }
     <p><strong>{{ 'profile.username' | translate }}</strong> {{ user.username }}</p>
     <p><strong>{{ 'profile.activated' | translate }}</strong> {{ (user.is_activated ? "profile.yes" : "profile.no") | translate }}</p>
   </div>
@@ -47,6 +50,11 @@
         <div class="form-group">
           <label for="email">{{ 'profile.email' | translate }}</label>
           <input type="email" id="email" name="email" required [(ngModel)]="userInfo.email" />
+        </div>
+        <div class="form-group">
+          <label for="birthday">{{ 'profile.birthday' | translate }}</label>
+          <input type="date" id="birthday" name="birthday" [(ngModel)]="userInfo.birthday" />
+          <small class="text-muted">{{ 'profile.birthdayHelp' | translate }}</small>
         </div>
         @if (errorMessage) {
           <div class="alert alert-danger mt-2">{{ errorMessage }}</div>
