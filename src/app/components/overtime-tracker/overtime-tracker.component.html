@@ -356,6 +356,18 @@
 
   <!-- ============ Month view ============ -->
   @if (settings && !showSettings) {
+    <!-- Wraps the month view so the sidebar's top lines up with its first card. -->
+    <div class="ot-month-view">
+
+    <!-- Wide screens: the calendar hangs in the empty space to the right. -->
+    <aside class="ot-aside">
+      <div class="ot-aside-inner">
+        <app-work-calendar [month]="month" [today]="todayIsoValue" [entries]="entries" [leaveDays]="leaveDays"
+                           [specialDays]="specialDays" [punctuality]="overview?.punctuality"
+                           [graceMinutes]="settings.lateGraceMinutes || 0" [shiftStart]="settings.shiftStart"
+                           (dayPick)="scrollToDay($event)" (monthShift)="shiftMonth($event)" />
+      </div>
+    </aside>
 
     <!-- Today's special days, up until midnight. -->
     @for (d of todaySpecials; track d.kind) {
@@ -640,6 +652,7 @@
         }
       </div>
     </div>
+    </div>
   }
 
   <!-- ============ Daily entry modal ============ -->
@@ -861,16 +874,4 @@
   <app-fx-overlay />
 
 </div>
-
-<!-- Wide screens: the calendar lives in the empty space to the right. -->
-@if (settings && !showSettings) {
-  <aside class="ot-aside">
-    <div class="ot-aside-inner">
-      <app-work-calendar [month]="month" [today]="todayIsoValue" [entries]="entries" [leaveDays]="leaveDays"
-                         [specialDays]="specialDays" [punctuality]="overview?.punctuality"
-                         [graceMinutes]="settings.lateGraceMinutes || 0" [shiftStart]="settings.shiftStart"
-                         (dayPick)="scrollToDay($event)" (monthShift)="shiftMonth($event)" />
-    </div>
-  </aside>
-}
 </div>

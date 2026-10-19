@@ -52,32 +52,38 @@
 }
 
 /* ---------- Calendar placement ----------
-   Wide screens: page in the middle column, calendar sticky in the right-hand space.
-   Everything narrower: a collapsed bar under the tenure banner instead. */
+   Wide screens: the calendar hangs just outside the page's right edge, in the empty
+   margin. It takes no width from the page: every route sits inside the app shell's
+   1320px .container, so a grid column here would squeeze the page instead.
+   Everything narrower: a collapsed bar under the tenure banner. */
 .ot-aside {
   display: none;
 }
 
-@media (min-width: 1660px) {
-  .ot-layout {
-    display: grid;
-    /* Side columns match so the page stays centred; 300px is the calendar's width. */
-    grid-template-columns: minmax(300px, 1fr) minmax(0, 1000px) minmax(300px, 1fr);
-    column-gap: 1.5rem;
-  }
-  .overtime-tracker {
-    grid-column: 2;
-    max-width: none;
-  }
+.ot-layout {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* The sidebar's anchor: its top is the month view's first card. */
+.ot-month-view {
+  position: relative;
+}
+
+/* The page is 1000px centred; the margin each side must fit 300px + a 24px gap. */
+@media (min-width: 1680px) {
   .ot-aside {
     display: block;
-    grid-column: 3;
-    padding-top: 6.25rem;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    /* The page's container adds 12px of padding outside the cards; 1.5rem gap beyond it. */
+    left: calc(100% + 12px + 1.5rem);
+    width: 300px;
   }
   .ot-aside-inner {
     position: sticky;
     top: 1rem;
-    width: 300px;
   }
   .ot-cal-inline {
     display: none;
