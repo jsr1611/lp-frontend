@@ -29,7 +29,7 @@
           <div class="fw-semibold">{{ 'overtime.streak.daysOnTime' | translate }}</div>
           @if (p.since) {
             <div class="small text-muted">
-              {{ 'overtime.streak.since' | translate: { date: (p.since | date: 'mediumDate' : 'UTC'), n: p.calendarDays } }}
+              {{ 'overtime.streak.since' | translate: { date: (p.since | date: 'mediumDate'), n: p.calendarDays } }}
             </div>
           }
           @if (p.milestones.upcoming; as next) {
@@ -43,7 +43,7 @@
           <div class="d-flex justify-content-between small text-muted mt-2 pt-2 border-top">
             <span>🏅 {{ 'overtime.streak.best' | translate: { n: p.best } }}</span>
             @if (p.lastLate) {
-              <span>⏰ {{ p.lastLate.date | date: 'd MMM' : 'UTC' }}</span>
+              <span>⏰ {{ p.lastLate.date | date: 'd MMM' }}</span>
             }
           </div>
         </div>
@@ -89,7 +89,7 @@
           @for (s of specialDays; track s.date + s.kind) {
             <li class="d-flex gap-2" [class.fw-semibold]="s.date === today">
               <span>{{ s.emoji }}</span>
-              <span class="text-muted text-nowrap">{{ s.date | date: 'd MMM' : 'UTC' }}</span>
+              <span class="text-muted text-nowrap">{{ s.date | date: 'd MMM' }}</span>
               <span>{{ s.name || ('overtime.special.' + s.kind + '.name' | translate) }}</span>
             </li>
           }

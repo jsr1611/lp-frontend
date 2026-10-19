@@ -25,7 +25,7 @@
     }</p>
     <p><strong>{{ 'profile.email' | translate }}</strong> {{ user.email }}</p>
     @if (user.birthday) {
-      <p><strong>{{ 'profile.birthday' | translate }}</strong> {{ user.birthday | date: 'longDate' : 'UTC' }}</p>
+      <p><strong>{{ 'profile.birthday' | translate }}</strong> {{ user.birthday | date: 'longDate' }}</p>
     }
     <p><strong>{{ 'profile.username' | translate }}</strong> {{ user.username }}</p>
     <p><strong>{{ 'profile.activated' | translate }}</strong> {{ (user.is_activated ? "profile.yes" : "profile.no") | translate }}</p>
