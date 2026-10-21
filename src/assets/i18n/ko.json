@@ -256,6 +256,7 @@
     "tests": "테스트 풀기",
     "toggle": "메뉴 열기",
     "userIcon": "사용자 아이콘",
+    "wirds": "위르드 & 메모",
     "words": "새 단어"
   },
   "notFound": {
@@ -692,6 +693,106 @@
     "stop": "테스트 종료",
     "stopTitle": "여기서 테스트를 종료하시겠습니까?",
     "testNumber": "테스트 번호"
+  },
+  "wirds": {
+    "addEntry": "항목 추가",
+    "allLists": "전체",
+    "cancel": "취소",
+    "clearCompleted": "완료 항목 지우기",
+    "clearConfirm": "기록에 보관되지 않은 완료 항목을 모두 삭제할까요?",
+    "close": "닫기",
+    "completedOn": "완료 {{date}}",
+    "count": "횟수",
+    "countHint": "1보다 크면 단계별로 기록할 수 있습니다 (예: 놓친 파즈르 30회, 살라와트 100회).",
+    "countOf": "{{count}}개 중 {{done}}개 완료",
+    "date": "날짜",
+    "delete": "삭제",
+    "deleteConfirm": "이 항목을 삭제할까요? 되돌릴 수 없습니다.",
+    "deleteListConfirm": "\"{{name}}\" 목록과 모든 항목을 삭제할까요? 되돌릴 수 없습니다.",
+    "dueDate": "기한",
+    "dueOn": "기한 {{date}}",
+    "edit": "수정",
+    "editEntry": "항목 수정",
+    "editList": "목록 수정",
+    "empty": {
+      "all": "아직 아무것도 없습니다.",
+      "done": "완료된 항목이 없습니다.",
+      "history": "기록에 보관된 항목이 없습니다. 완료 후에도 남기려면 항목에 책갈피를 표시하세요.",
+      "open": "남은 일이 없습니다. 알함두릴라!"
+    },
+    "errors": {
+      "countPositive": "횟수는 1 이상의 정수여야 합니다.",
+      "generic": "문제가 발생했습니다.",
+      "nameRequired": "이름을 입력하세요.",
+      "titleRequired": "제목을 입력하거나 라벨을 선택하세요."
+    },
+    "icon": "아이콘",
+    "keep": "기록에 보관됨",
+    "keepByDefault": "새 항목을 완료 후에도 기록에 보관",
+    "keepLabel": "완료 후에도 기록에 보관 (예: 빌린 물건)",
+    "keepToggle": "기록에 보관",
+    "label": "라벨",
+    "labels": "빠른 카운터 (선택)",
+    "labelsHint": "쉼표로 구분합니다. 각각 + (하나 더)와 ✓ (하나 완료, 오래된 것부터) 버튼이 있는 타일이 생깁니다.",
+    "labelsPlaceholder": "예: 파즈르, 이샤, 위트르",
+    "list": "목록",
+    "listName": "이름",
+    "logProgress": "진행 기록",
+    "markDone": "완료",
+    "newEntry": "새 항목",
+    "newList": "새 목록",
+    "noList": "— 목록 없음 —",
+    "noListsHint": "목록을 만들어 항목을 정리하세요 — 예: 놓친 예배(까다), 매일의 위르드, 빌린 물건, 일반 메모. 목록 없이 항목을 추가할 수도 있습니다.",
+    "note": "메모",
+    "oldestFirst": "오래된 것부터",
+    "presets": {
+      "blank": {
+        "name": "빈 목록"
+      },
+      "borrowed": {
+        "name": "빌린 것 & 빌려준 것"
+      },
+      "notes": {
+        "name": "메모"
+      },
+      "prayers": {
+        "asr": "아스르",
+        "dhuhr": "주흐르",
+        "fajr": "파즈르",
+        "isha": "이샤",
+        "maghrib": "마그립",
+        "witr": "위트르"
+      },
+      "qada": {
+        "name": "까다 예배"
+      },
+      "wirds": {
+        "name": "매일의 위르드"
+      }
+    },
+    "remaining": "{{n}}개 남음",
+    "reopen": "다시 열기",
+    "reopenConfirm": "이 항목을 다시 열까요? 기록된 진행 상황이 지워집니다.",
+    "save": "저장",
+    "startFrom": "템플릿",
+    "tiles": {
+      "addDetails": "자세히 추가",
+      "addNow": "지금 하나 더 (+1)",
+      "doneOne": "하나 완료 (−1, 오래된 것부터)",
+      "doneSeveral": "여러 개 기록…",
+      "doneSoFar": "지금까지 {{n}}개 완료",
+      "hint": "+ 지금 하나 더 · ✓ 하나 완료 (오래된 것부터) · … 날짜·시간·횟수와 함께"
+    },
+    "time": "시간",
+    "title": "위르드 & 메모",
+    "titleLabel": "제목",
+    "titlePlaceholder": "예: 아흐마드에게 책 돌려주기, 늦잠, 카흐프 장 읽기",
+    "unlisted": "목록 없음",
+    "views": {
+      "done": "완료",
+      "history": "기록",
+      "open": "진행 중"
+    }
   },
   "word": {
     "audioUnsupported": "이 브라우저는 오디오 재생을 지원하지 않습니다.",

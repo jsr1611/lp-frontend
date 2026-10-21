@@ -5,6 +5,7 @@ import { Expense } from "../models/expense";
 import { HttpParams } from "@angular/common/http";
 import { Contact } from "../models/contact";
 import { Loan, LoanFilters, Repayment } from "../models/loan";
+import { Wird, WirdList, WirdListStatus, WirdProgress, WirdStatus } from "../models/wird";
 import { LeaveDay, OvertimeEntry, OvertimeSettings, Payslip } from "../models/overtime";
 
 @Injectable({
@@ -130,6 +131,99 @@ export class SecureService extends AuthService {
   deleteRepayment(loanId: string, repaymentId: string) {
     return this.http.delete(this.url + `/loans/${loanId}/repayments/${repaymentId}`, {
       headers: this.getHeaders(),
+    });
+  }
+
+  // ---------- Wirds (lists of notes, tasks, things owed) ----------
+  getWirdLists() {
+    return this.http.get(this.url + `/wirds/lists`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  saveWirdList(list: WirdList) {
+    return this.http.post(this.url + `/wirds/lists`, { list }, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  updateWirdList(list: WirdList) {
+    return this.http.put(this.url + `/wirds/lists/${list._id}`, { list }, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  deleteWirdList(id: string) {
+    return this.http.delete(this.url + `/wirds/lists/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  // listId: a list id, 'none' for entries outside any list, or omitted for all.
+  getWirds(status: WirdListStatus = 'open', listId?: string) {
+    let params = new HttpParams().set('status', status);
+    if (listId) params = params.set('listId', listId);
+    return this.http.get(this.url + `/wirds`, {
+      headers: this.getHeaders(),
+      params,
+    });
+  }
+
+  getWirdSummary() {
+    return this.http.get(this.url + `/wirds/summary`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  saveWird(wird: Wird) {
+    return this.http.post(this.url + `/wirds`, { wird }, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  updateWird(wird: Wird) {
+    return this.http.put(this.url + `/wirds/${wird._id}`, { wird }, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  deleteWird(id: string) {
+    return this.http.delete(this.url + `/wirds/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  setWirdStatus(id: string, status: WirdStatus, keep?: boolean) {
+    return this.http.post(this.url + `/wirds/${id}/status`, { status, keep }, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  addWirdProgress(id: string, progress: WirdProgress) {
+    return this.http.post(this.url + `/wirds/${id}/progress`, { progress }, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  deleteWirdProgress(id: string, progressId: string) {
+    return this.http.delete(this.url + `/wirds/${id}/progress/${progressId}`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  // Progress against one label of a list, oldest entries first (e.g. make up 3 Fajr).
+  catchUpWirds(listId: string | undefined, label: string, progress: WirdProgress) {
+    return this.http.post(this.url + `/wirds/catch-up`, { listId, label, progress }, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  clearCompletedWirds(listId?: string) {
+    let params = new HttpParams();
+    if (listId) params = params.set('listId', listId);
+    return this.http.delete(this.url + `/wirds/completed`, {
+      headers: this.getHeaders(),
+      params,
     });
   }
 

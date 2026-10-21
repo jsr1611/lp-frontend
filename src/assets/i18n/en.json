@@ -256,6 +256,7 @@
     "tests": "Take a test",
     "toggle": "Toggle navigation",
     "userIcon": "User icon",
+    "wirds": "Wirds & Notes",
     "words": "New words"
   },
   "notFound": {
@@ -692,6 +693,106 @@
     "stop": "Finish the test",
     "stopTitle": "Finish the test here?",
     "testNumber": "Test number"
+  },
+  "wirds": {
+    "addEntry": "Add entry",
+    "allLists": "All",
+    "cancel": "Cancel",
+    "clearCompleted": "Clear completed",
+    "clearConfirm": "Delete all completed entries that are not kept in history?",
+    "close": "Close",
+    "completedOn": "done {{date}}",
+    "count": "How many",
+    "countHint": "More than 1 lets you track it step by step (e.g. 30 missed Fajr, or 100 salawat).",
+    "countOf": "{{done}} of {{count}} done",
+    "date": "Date",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this entry? This cannot be undone.",
+    "deleteListConfirm": "Delete the list \"{{name}}\" and all its entries? This cannot be undone.",
+    "dueDate": "Due date",
+    "dueOn": "due {{date}}",
+    "edit": "Edit",
+    "editEntry": "Edit entry",
+    "editList": "Edit list",
+    "empty": {
+      "all": "Nothing here yet.",
+      "done": "No completed entries.",
+      "history": "Nothing kept in history yet. Bookmark an entry to keep it here once done.",
+      "open": "Nothing pending. Alhamdulillah!"
+    },
+    "errors": {
+      "countPositive": "Count must be a whole number of at least 1.",
+      "generic": "Something went wrong.",
+      "nameRequired": "Enter a name.",
+      "titleRequired": "Enter a title or pick a label."
+    },
+    "icon": "Icon",
+    "keep": "Kept in history",
+    "keepByDefault": "Keep new entries in history after they're done",
+    "keepLabel": "Keep in history after it's done (e.g. something borrowed)",
+    "keepToggle": "Keep in history",
+    "label": "Label",
+    "labels": "Quick counters (optional)",
+    "labelsHint": "Comma-separated. Each one gets a tile with + (one more owed) and ✓ (one done, oldest first).",
+    "labelsPlaceholder": "e.g. Fajr, Isha, Witr",
+    "list": "List",
+    "listName": "Name",
+    "logProgress": "Log progress",
+    "markDone": "Mark done",
+    "newEntry": "New entry",
+    "newList": "New list",
+    "noList": "— No list —",
+    "noListsHint": "Create lists to organise your entries — e.g. missed prayers (qada), daily wirds, things borrowed, or plain notes. You can also add entries without a list.",
+    "note": "Note",
+    "oldestFirst": "oldest first",
+    "presets": {
+      "blank": {
+        "name": "Blank"
+      },
+      "borrowed": {
+        "name": "Borrowed & lent"
+      },
+      "notes": {
+        "name": "Notes"
+      },
+      "prayers": {
+        "asr": "Asr",
+        "dhuhr": "Dhuhr",
+        "fajr": "Fajr",
+        "isha": "Isha",
+        "maghrib": "Maghrib",
+        "witr": "Witr"
+      },
+      "qada": {
+        "name": "Qada prayers"
+      },
+      "wirds": {
+        "name": "Daily wirds"
+      }
+    },
+    "remaining": "{{n}} remaining",
+    "reopen": "Reopen",
+    "reopenConfirm": "Reopen this entry? Its logged progress will be cleared.",
+    "save": "Save",
+    "startFrom": "Start from",
+    "tiles": {
+      "addDetails": "Add with details",
+      "addNow": "One more, now (+1)",
+      "doneOne": "One done (−1, oldest first)",
+      "doneSeveral": "Log several…",
+      "doneSoFar": "{{n}} done so far",
+      "hint": "+ one more owed now · ✓ one done (oldest first) · … with date, time, count"
+    },
+    "time": "Time",
+    "title": "Wirds & Notes",
+    "titleLabel": "Title",
+    "titlePlaceholder": "e.g. Return the book to Ahmad, overslept, read Surah Al-Kahf",
+    "unlisted": "No list",
+    "views": {
+      "done": "All done",
+      "history": "History",
+      "open": "Open"
+    }
   },
   "word": {
     "audioUnsupported": "Your browser does not support the audio element.",

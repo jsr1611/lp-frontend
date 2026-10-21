@@ -46,6 +46,7 @@ import { PayslipCardComponent } from './components/overtime-tracker/payslip-card
 import { MilestoneCelebrationComponent } from './components/overtime-tracker/milestone-celebration/milestone-celebration.component';
 import { FxOverlayComponent } from './components/overtime-tracker/fx-overlay/fx-overlay.component';
 import { WorkCalendarComponent } from './components/overtime-tracker/work-calendar/work-calendar.component';
+import { WirdTrackerComponent } from './components/wird-tracker/wird-tracker.component';
 
 registerAppLocales();
 
@@ -74,7 +75,8 @@ registerAppLocales();
         PayslipCardComponent,
         MilestoneCelebrationComponent,
         FxOverlayComponent,
-        WorkCalendarComponent
+        WorkCalendarComponent,
+        WirdTrackerComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -99,6 +101,7 @@ registerAppLocales();
             { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
             { path: 'loans', component: LoanTrackerComponent, canActivate: [authGuard] },
             { path: 'overtime', component: OvertimeTrackerComponent, canActivate: [authGuard] },
+            { path: 'wirds', component: WirdTrackerComponent, canActivate: [authGuard] },
             { path: 'home', component: HomeComponent },
             { path: 'add-word', component: AddWordComponent },
             { path: 'words', component: WordsComponent },

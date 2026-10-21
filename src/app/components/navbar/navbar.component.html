@@ -36,6 +36,11 @@
             <a class="nav-link" href="/overtime">{{ 'nav.overtime' | translate }}</a>
           </li>
         }
+        @if (authService.getToken()) {
+          <li class="nav-item">
+            <a class="nav-link" href="/wirds">{{ 'nav.wirds' | translate }}</a>
+          </li>
+        }
       </ul>
       <div class="d-flex" role="search">
         <input class="form-control me-2" type="search" [attr.placeholder]="'nav.searchPlaceholder' | translate"

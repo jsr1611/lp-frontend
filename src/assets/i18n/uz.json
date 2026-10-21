@@ -256,6 +256,7 @@
     "tests": "Test yechish",
     "toggle": "Menyuni ochish",
     "userIcon": "Foydalanuvchi rasmi",
+    "wirds": "Virdlar va eslatmalar",
     "words": "Yangi so'zlar"
   },
   "notFound": {
@@ -692,6 +693,106 @@
     "stop": "Testni yakunlash",
     "stopTitle": "Testni shu yerda yakunlaysizmi?",
     "testNumber": "Test raqami"
+  },
+  "wirds": {
+    "addEntry": "Qo'shish",
+    "allLists": "Hammasi",
+    "cancel": "Bekor qilish",
+    "clearCompleted": "Bajarilganlarni tozalash",
+    "clearConfirm": "Tarixda saqlanmagan barcha bajarilgan yozuvlar o'chirilsinmi?",
+    "close": "Yopish",
+    "completedOn": "bajarildi {{date}}",
+    "count": "Soni",
+    "countHint": "1 dan ko'p bo'lsa, bosqichma-bosqich belgilash mumkin (masalan, 30 ta qazo bomdod yoki 100 ta salovot).",
+    "countOf": "{{count}} dan {{done}} tasi bajarildi",
+    "date": "Sana",
+    "delete": "O'chirish",
+    "deleteConfirm": "Bu yozuv o'chirilsinmi? Buni qaytarib bo'lmaydi.",
+    "deleteListConfirm": "\"{{name}}\" ro'yxati va undagi barcha yozuvlar o'chirilsinmi? Buni qaytarib bo'lmaydi.",
+    "dueDate": "Muddat",
+    "dueOn": "muddat {{date}}",
+    "edit": "Tahrirlash",
+    "editEntry": "Yozuvni tahrirlash",
+    "editList": "Ro'yxatni tahrirlash",
+    "empty": {
+      "all": "Hozircha bo'sh.",
+      "done": "Bajarilgan yozuvlar yo'q.",
+      "history": "Tarixda hali hech narsa yo'q. Bajarilgandan keyin ham saqlash uchun yozuvni belgilang.",
+      "open": "Kutilayotgan narsa yo'q. Alhamdulillah!"
+    },
+    "errors": {
+      "countPositive": "Soni kamida 1 bo'lgan butun son bo'lishi kerak.",
+      "generic": "Xatolik yuz berdi.",
+      "nameRequired": "Nomini kiriting.",
+      "titleRequired": "Sarlavha kiriting yoki belgi tanlang."
+    },
+    "icon": "Belgicha",
+    "keep": "Tarixda saqlanadi",
+    "keepByDefault": "Yangi yozuvlarni bajarilgandan keyin tarixda saqlash",
+    "keepLabel": "Bajarilgandan keyin tarixda saqlash (masalan, qarzga olingan narsa)",
+    "keepToggle": "Tarixda saqlash",
+    "label": "Belgi",
+    "labels": "Tezkor hisoblagichlar (ixtiyoriy)",
+    "labelsHint": "Vergul bilan ajrating. Har biriga + (yana bitta) va ✓ (bittasi bajarildi, eng eskisidan) tugmali katak beriladi.",
+    "labelsPlaceholder": "masalan, Bomdod, Xufton, Vitr",
+    "list": "Ro'yxat",
+    "listName": "Nomi",
+    "logProgress": "Bajarilganini yozish",
+    "markDone": "Bajarildi",
+    "newEntry": "Yangi yozuv",
+    "newList": "Yangi ro'yxat",
+    "noList": "— Ro'yxatsiz —",
+    "noListsHint": "Yozuvlarni tartiblash uchun ro'yxatlar yarating — masalan, qazo namozlar, kundalik virdlar, qarzga olingan narsalar yoki oddiy eslatmalar. Yozuvlarni ro'yxatsiz ham qo'shish mumkin.",
+    "note": "Izoh",
+    "oldestFirst": "eng eskisidan",
+    "presets": {
+      "blank": {
+        "name": "Bo'sh"
+      },
+      "borrowed": {
+        "name": "Qarz olingan va berilgan"
+      },
+      "notes": {
+        "name": "Eslatmalar"
+      },
+      "prayers": {
+        "asr": "Asr",
+        "dhuhr": "Peshin",
+        "fajr": "Bomdod",
+        "isha": "Xufton",
+        "maghrib": "Shom",
+        "witr": "Vitr"
+      },
+      "qada": {
+        "name": "Qazo namozlar"
+      },
+      "wirds": {
+        "name": "Kundalik virdlar"
+      }
+    },
+    "remaining": "{{n}} ta qoldi",
+    "reopen": "Qayta ochish",
+    "reopenConfirm": "Yozuv qayta ochilsinmi? Yozilgan natijalar o'chiriladi.",
+    "save": "Saqlash",
+    "startFrom": "Andoza",
+    "tiles": {
+      "addDetails": "Batafsil qo'shish",
+      "addNow": "Yana bitta, hozir (+1)",
+      "doneOne": "Bittasi bajarildi (−1, eng eskisidan)",
+      "doneSeveral": "Bir nechtasini yozish…",
+      "doneSoFar": "{{n}} ta bajarildi",
+      "hint": "+ hozir yana bitta · ✓ bittasi bajarildi (eng eskisidan) · … sana, vaqt, soni bilan"
+    },
+    "time": "Vaqt",
+    "title": "Virdlar va eslatmalar",
+    "titleLabel": "Sarlavha",
+    "titlePlaceholder": "masalan, kitobni Ahmadga qaytarish, uxlab qoldim, Kahf surasini o'qish",
+    "unlisted": "Ro'yxatsiz",
+    "views": {
+      "done": "Bajarilganlar",
+      "history": "Tarix",
+      "open": "Ochiq"
+    }
   },
   "word": {
     "audioUnsupported": "Brauzeringiz audio ijro etishni qo'llab-quvvatlamaydi.",
