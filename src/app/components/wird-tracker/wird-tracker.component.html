@@ -89,9 +89,23 @@
                     {{ 'wirds.tiles.doneSeveral' | translate }}
                   </button>
                 }
+                @if (!summaryFor(l._id).remaining[label]) {
+                  <button class="btn btn-link btn-sm p-0 mt-1 text-muted remove-counter" (click)="removeCounter(l, label)">
+                    {{ 'wirds.tiles.remove' | translate }}
+                  </button>
+                }
               </div>
             </div>
           }
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="add-tile border border-dashed rounded p-2 h-100 d-flex flex-column justify-content-center gap-1">
+              <input class="form-control form-control-sm" [(ngModel)]="newCounter[l._id!]"
+                [placeholder]="'wirds.tiles.newCounter' | translate" (keydown.enter)="addCounter(l)" />
+              <button class="btn btn-sm btn-outline-primary" [disabled]="!newCounter[l._id!]?.trim()" (click)="addCounter(l)">
+                <i class="bi bi-plus-lg me-1"></i>{{ 'wirds.tiles.addCounter' | translate }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -123,12 +137,12 @@
     }
   </div>
 
-  @if (!wirds.length) {
+  @if (!visibleWirds.length && !hiddenCounterEntries) {
     <div class="alert alert-light border text-center">{{ 'wirds.empty.' + view | translate }}</div>
   }
 
-  <div class="list-group mb-4">
-    @for (w of wirds; track w._id) {
+  <div class="list-group mb-2">
+    @for (w of visibleWirds; track w._id) {
       <div class="list-group-item" [class.list-group-item-warning]="isOverdue(w)">
         <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap">
           <div class="flex-grow-1">
@@ -193,6 +207,12 @@
       </div>
     }
   </div>
+  @if (hiddenCounterEntries) {
+    <button class="btn btn-link btn-sm p-0 mb-4 text-muted" (click)="toggleCounterLog()">
+      <i class="bi me-1" [class.bi-chevron-down]="!showCounterLog" [class.bi-chevron-up]="showCounterLog"></i>
+      {{ (showCounterLog ? 'wirds.hideCounterLog' : 'wirds.showCounterLog') | translate: { n: hiddenCounterEntries } }}
+    </button>
+  }
 </div>
 
 <!-- ===================== ENTRY MODAL ===================== -->
@@ -312,6 +332,24 @@
         <input class="form-check-input" type="checkbox" id="listKeep" [(ngModel)]="listForm.keepByDefault" />
         <label class="form-check-label" for="listKeep">{{ 'wirds.keepByDefault' | translate }}</label>
       </div>
+
+      @if (listForm._id && mergeTargets.length) {
+        <div class="border-top pt-3 mb-3">
+          <label class="form-label small mb-1">{{ 'wirds.mergeInto' | translate }}</label>
+          <div class="d-flex gap-2">
+            <select class="form-select" [(ngModel)]="mergeIntoId">
+              <option value="">—</option>
+              @for (l of mergeTargets; track l._id) {
+                <option [value]="l._id">{{ l.icon }} {{ l.name }}</option>
+              }
+            </select>
+            <button class="btn btn-outline-primary text-nowrap" [disabled]="!mergeIntoId" (click)="mergeList()">
+              {{ 'wirds.merge' | translate }}
+            </button>
+          </div>
+          <p class="small text-muted mb-0 mt-1">{{ 'wirds.mergeHint' | translate }}</p>
+        </div>
+      }
 
       @if (errorMessage) {
         <div class="alert alert-danger py-2">{{ errorMessage }}</div>

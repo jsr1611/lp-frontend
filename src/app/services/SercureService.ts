@@ -153,6 +153,12 @@ export class SecureService extends AuthService {
     });
   }
 
+  mergeWirdList(id: string, intoId: string) {
+    return this.http.post(this.url + `/wirds/lists/${id}/merge`, { intoId }, {
+      headers: this.getHeaders(),
+    });
+  }
+
   deleteWirdList(id: string) {
     return this.http.delete(this.url + `/wirds/lists/${id}`, {
       headers: this.getHeaders(),

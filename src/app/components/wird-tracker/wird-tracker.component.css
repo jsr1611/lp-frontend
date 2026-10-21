@@ -35,6 +35,15 @@
   background: rgba(220, 53, 69, 0.04);
 }
 
+.add-tile {
+  border-style: dashed !important;
+  min-height: 140px;
+}
+
+.remove-counter {
+  font-size: 0.75rem;
+}
+
 /* "·" only between the parts that are present. */
 .meta > span + span::before {
   content: " · ";
