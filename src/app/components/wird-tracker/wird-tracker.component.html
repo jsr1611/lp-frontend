@@ -1,0 +1,393 @@
+<div class="container my-4 wird-tracker">
+
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h2 class="mb-0"><i class="bi bi-journal-bookmark me-2"></i>{{ 'wirds.title' | translate }}</h2>
+    <button class="btn btn-primary" (click)="openModal()">
+      <i class="bi bi-plus-lg me-1"></i>{{ 'wirds.addEntry' | translate }}
+    </button>
+  </div>
+
+  @if (errorMessage && !showModal && !showProgressModal && !showListModal) {
+    <div class="alert alert-danger py-2">{{ errorMessage }}</div>
+  }
+
+  <!-- ===================== LISTS ===================== -->
+  <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+    <button class="btn btn-sm rounded-pill" [class.btn-dark]="selectedListId === ''"
+      [class.btn-outline-dark]="selectedListId !== ''" (click)="selectList('')">
+      {{ 'wirds.allLists' | translate }}
+    </button>
+    @for (l of lists; track l._id) {
+      <button class="btn btn-sm rounded-pill" [class.btn-dark]="selectedListId === l._id"
+        [class.btn-outline-dark]="selectedListId !== l._id" (click)="selectList(l._id!)">
+        {{ l.icon }} {{ l.name }}
+        @if (summaryFor(l._id).open) {
+          <span class="badge rounded-pill ms-1" [class.bg-danger]="summaryFor(l._id).overdue"
+            [class.bg-secondary]="!summaryFor(l._id).overdue">{{ summaryFor(l._id).open }}</span>
+        }
+      </button>
+    }
+    @if (summaryFor('none').open) {
+      <button class="btn btn-sm rounded-pill" [class.btn-dark]="selectedListId === 'none'"
+        [class.btn-outline-dark]="selectedListId !== 'none'" (click)="selectList('none')">
+        {{ 'wirds.unlisted' | translate }}
+        <span class="badge rounded-pill bg-secondary ms-1">{{ summaryFor('none').open }}</span>
+      </button>
+    }
+    <button class="btn btn-sm btn-outline-primary rounded-pill" (click)="openListModal()">
+      <i class="bi bi-plus-lg me-1"></i>{{ 'wirds.newList' | translate }}
+    </button>
+    @if (selectedList) {
+      <button class="btn btn-sm btn-link" (click)="openListModal(selectedList)" [title]="'wirds.editList' | translate">
+        <i class="bi bi-gear"></i>
+      </button>
+    }
+  </div>
+
+  @if (!lists.length) {
+    <div class="alert alert-light border">
+      {{ 'wirds.noListsHint' | translate }}
+    </div>
+  }
+
+  <!-- ===================== LABEL TILES ===================== -->
+  @for (l of tileLists; track l._id) {
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-baseline flex-wrap gap-2 mb-3">
+          <h5 class="mb-0">{{ l.icon }} {{ l.name }}</h5>
+          <span class="small text-muted">{{ 'wirds.tiles.hint' | translate }}</span>
+        </div>
+        <div class="row g-2">
+          @for (label of l.labels; track label) {
+            <div class="col-6 col-md-4 col-lg-2">
+              <div class="label-tile border rounded p-2 text-center h-100" [class.owed]="summaryFor(l._id).remaining[label]">
+                <div class="fw-semibold text-truncate" [title]="label">{{ label }}</div>
+                <div class="display-6 my-1" [class.text-danger]="summaryFor(l._id).remaining[label]"
+                  [class.text-success]="!summaryFor(l._id).remaining[label]">
+                  {{ summaryFor(l._id).remaining[label] || 0 }}
+                </div>
+                @if (summaryFor(l._id).done[label]) {
+                  <div class="small text-muted mb-1">{{ 'wirds.tiles.doneSoFar' | translate: { n: summaryFor(l._id).done[label] } }}</div>
+                }
+                <div class="d-flex justify-content-center gap-1">
+                  <button class="btn btn-sm btn-outline-danger" [disabled]="busy" (click)="quickAdd(l, label)"
+                    [title]="'wirds.tiles.addNow' | translate">
+                    <i class="bi bi-plus-lg"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-success" [disabled]="busy || !summaryFor(l._id).remaining[label]"
+                    (click)="quickDone(l, label)" [title]="'wirds.tiles.doneOne' | translate">
+                    <i class="bi bi-check-lg"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-secondary" (click)="openModal(undefined, l, label)"
+                    [title]="'wirds.tiles.addDetails' | translate">
+                    <i class="bi bi-three-dots"></i>
+                  </button>
+                </div>
+                @if (summaryFor(l._id).remaining[label] > 1) {
+                  <button class="btn btn-link btn-sm p-0 mt-1" (click)="openProgressModal(null, l, label)">
+                    {{ 'wirds.tiles.doneSeveral' | translate }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ===================== ENTRIES ===================== -->
+  <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-2">
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="view === 'open'" (click)="setView('open')">
+          {{ 'wirds.views.open' | translate }}
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="view === 'history'" (click)="setView('history')">
+          <i class="bi bi-bookmark-star me-1"></i>{{ 'wirds.views.history' | translate }}
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="view === 'done'" (click)="setView('done')">
+          {{ 'wirds.views.done' | translate }}
+        </button>
+      </li>
+    </ul>
+    @if (view === 'done' && wirds.length) {
+      <button class="btn btn-sm btn-outline-danger" (click)="clearCompleted()">
+        <i class="bi bi-trash me-1"></i>{{ 'wirds.clearCompleted' | translate }}
+      </button>
+    }
+  </div>
+
+  @if (!wirds.length) {
+    <div class="alert alert-light border text-center">{{ 'wirds.empty.' + view | translate }}</div>
+  }
+
+  <div class="list-group mb-4">
+    @for (w of wirds; track w._id) {
+      <div class="list-group-item" [class.list-group-item-warning]="isOverdue(w)">
+        <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap">
+          <div class="flex-grow-1">
+            <div class="fw-semibold">
+              @if (!selectedListId && listById(w.listId); as wl) {
+                <span class="badge text-bg-light border me-1">{{ wl.icon }} {{ wl.name }}</span>
+              }
+              @if (w.label) {
+                <span class="badge text-bg-secondary me-1">{{ w.label }}</span>
+              }
+              {{ w.title }}
+              @if (w.keep) {
+                <i class="bi bi-bookmark-star-fill text-warning ms-1" [title]="'wirds.keep' | translate"></i>
+              }
+            </div>
+            <div class="small text-muted meta">
+              @if (w.date) { <span>{{ w.date | date: 'mediumDate' : 'UTC' }}</span> }
+              @if (w.time) { <span>{{ w.time }}</span> }
+              @if (w.count > 1) { <span>{{ 'wirds.countOf' | translate: { done: w.doneCount || 0, count: w.count } }}</span> }
+              @if (w.dueDate) {
+                <span [class.text-danger]="isOverdue(w)">{{ 'wirds.dueOn' | translate: { date: (w.dueDate | date: 'mediumDate' : 'UTC') } }}</span>
+              }
+              @if (w.completedAt) { <span>{{ 'wirds.completedOn' | translate: { date: (w.completedAt | date: 'mediumDate') } }}</span> }
+            </div>
+            @if (w.note) {
+              <div class="small mt-1 text-pre">{{ w.note }}</div>
+            }
+            @if (w.count > 1 && w.status === 'open') {
+              <div class="progress mt-2" style="height: 6px">
+                <div class="progress-bar bg-success" [style.width.%]="percentDone(w)"></div>
+              </div>
+            }
+          </div>
+          <div class="d-flex gap-1 flex-shrink-0">
+            @if (w.status === 'open') {
+              @if (w.count > 1) {
+                <button class="btn btn-sm btn-outline-success" (click)="openProgressModal(w)"
+                  [title]="'wirds.logProgress' | translate">
+                  <i class="bi bi-plus-slash-minus"></i>
+                </button>
+              }
+              <button class="btn btn-sm btn-success" (click)="markDone(w)" [title]="'wirds.markDone' | translate">
+                <i class="bi bi-check-lg"></i>
+              </button>
+            } @else {
+              <button class="btn btn-sm btn-outline-secondary" (click)="reopen(w)" [title]="'wirds.reopen' | translate">
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+            }
+            <button class="btn btn-sm" [class.btn-warning]="w.keep" [class.btn-outline-warning]="!w.keep"
+              (click)="toggleKeep(w)" [title]="'wirds.keepToggle' | translate">
+              <i class="bi bi-bookmark-star"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-primary" (click)="openModal(w)" [title]="'wirds.edit' | translate">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="delete(w)" [title]="'wirds.delete' | translate">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- ===================== ENTRY MODAL ===================== -->
+@if (showModal) {
+  <div class="lt-modal" (click)="closeModal()">
+    <div class="lt-modal-content" (click)="$event.stopPropagation()">
+      <h5 class="mb-3">{{ (isEditing ? 'wirds.editEntry' : 'wirds.newEntry') | translate }}</h5>
+
+      <div class="row g-2 mb-2">
+        <div class="col">
+          <label class="form-label small mb-1">{{ 'wirds.list' | translate }}</label>
+          <select class="form-select" [(ngModel)]="form.listId" (ngModelChange)="onFormListChange($event)">
+            <option value="">{{ 'wirds.noList' | translate }}</option>
+            @for (l of lists; track l._id) {
+              <option [value]="l._id">{{ l.icon }} {{ l.name }}</option>
+            }
+          </select>
+        </div>
+        @if (formLabels.length) {
+          <div class="col">
+            <label class="form-label small mb-1">{{ 'wirds.label' | translate }}</label>
+            <select class="form-select" [(ngModel)]="form.label">
+              <option value="">—</option>
+              @for (lb of formLabels; track lb) {
+                <option [value]="lb">{{ lb }}</option>
+              }
+            </select>
+          </div>
+        }
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label small mb-1">{{ 'wirds.titleLabel' | translate }}</label>
+        <input class="form-control" [(ngModel)]="form.title" [placeholder]="'wirds.titlePlaceholder' | translate" />
+      </div>
+
+      <div class="row g-2 mb-2">
+        <div class="col-7">
+          <label class="form-label small mb-1">{{ 'wirds.date' | translate }}</label>
+          <input type="date" class="form-control" [(ngModel)]="form.date" />
+        </div>
+        <div class="col-5">
+          <label class="form-label small mb-1">{{ 'wirds.time' | translate }}</label>
+          <input type="time" class="form-control" [(ngModel)]="form.time" />
+        </div>
+      </div>
+
+      <div class="row g-2 mb-1">
+        <div class="col-5">
+          <label class="form-label small mb-1">{{ 'wirds.count' | translate }}</label>
+          <input type="number" min="1" step="1" class="form-control" [(ngModel)]="form.count" />
+        </div>
+        <div class="col-7">
+          <label class="form-label small mb-1">{{ 'wirds.dueDate' | translate }}</label>
+          <input type="date" class="form-control" [(ngModel)]="form.dueDate" />
+        </div>
+      </div>
+      <p class="small text-muted">{{ 'wirds.countHint' | translate }}</p>
+
+      <div class="mb-2">
+        <label class="form-label small mb-1">{{ 'wirds.note' | translate }}</label>
+        <textarea class="form-control" rows="3" [(ngModel)]="form.note"></textarea>
+      </div>
+
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="wirdKeep" [(ngModel)]="form.keep" />
+        <label class="form-check-label" for="wirdKeep">{{ 'wirds.keepLabel' | translate }}</label>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger py-2">{{ errorMessage }}</div>
+      }
+      <div class="d-flex justify-content-end gap-2">
+        <button class="btn btn-secondary" (click)="closeModal()">{{ 'wirds.cancel' | translate }}</button>
+        <button class="btn btn-primary" [disabled]="isSaving" (click)="save()">{{ 'wirds.save' | translate }}</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ===================== LIST MODAL ===================== -->
+@if (showListModal) {
+  <div class="lt-modal" (click)="closeListModal()">
+    <div class="lt-modal-content" (click)="$event.stopPropagation()">
+      <h5 class="mb-3">{{ (listForm._id ? 'wirds.editList' : 'wirds.newList') | translate }}</h5>
+
+      @if (!listForm._id) {
+        <label class="form-label small mb-1">{{ 'wirds.startFrom' | translate }}</label>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          @for (p of presets; track p.key) {
+            <button class="btn btn-sm rounded-pill" [class.btn-primary]="presetKey === p.key"
+              [class.btn-outline-primary]="presetKey !== p.key" (click)="applyPreset(p.key)">
+              {{ p.icon }} {{ 'wirds.presets.' + p.key + '.name' | translate }}
+            </button>
+          }
+        </div>
+      }
+
+      <div class="row g-2 mb-2">
+        <div class="col-3">
+          <label class="form-label small mb-1">{{ 'wirds.icon' | translate }}</label>
+          <input class="form-control text-center" maxlength="4" [(ngModel)]="listForm.icon" />
+        </div>
+        <div class="col-9">
+          <label class="form-label small mb-1">{{ 'wirds.listName' | translate }}</label>
+          <input class="form-control" [(ngModel)]="listForm.name" />
+        </div>
+      </div>
+
+      <div class="mb-1">
+        <label class="form-label small mb-1">{{ 'wirds.labels' | translate }}</label>
+        <input class="form-control" [(ngModel)]="labelsText" [placeholder]="'wirds.labelsPlaceholder' | translate" />
+      </div>
+      <p class="small text-muted">{{ 'wirds.labelsHint' | translate }}</p>
+
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="listKeep" [(ngModel)]="listForm.keepByDefault" />
+        <label class="form-check-label" for="listKeep">{{ 'wirds.keepByDefault' | translate }}</label>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger py-2">{{ errorMessage }}</div>
+      }
+      <div class="d-flex justify-content-between gap-2">
+        <div>
+          @if (listForm._id) {
+            <button class="btn btn-outline-danger" (click)="deleteList(listForm)">
+              <i class="bi bi-trash me-1"></i>{{ 'wirds.delete' | translate }}
+            </button>
+          }
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-secondary" (click)="closeListModal()">{{ 'wirds.cancel' | translate }}</button>
+          <button class="btn btn-primary" [disabled]="isSaving" (click)="saveList()">{{ 'wirds.save' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ===================== PROGRESS MODAL ===================== -->
+@if (showProgressModal) {
+  <div class="lt-modal" (click)="closeProgressModal()">
+    <div class="lt-modal-content" (click)="$event.stopPropagation()">
+      <h5 class="mb-1">
+        @if (progressItem) {
+          {{ progressItem.label }} {{ progressItem.title }}
+        } @else {
+          {{ progressList?.icon }} {{ progressLabel }}
+        }
+      </h5>
+      <p class="small text-muted">
+        {{ 'wirds.remaining' | translate: { n: progressMax } }}
+        @if (!progressItem) { · {{ 'wirds.oldestFirst' | translate }} }
+      </p>
+
+      @if (progressItem?.progress?.length) {
+        <ul class="list-group list-group-flush mb-3">
+          @for (p of progressItem!.progress!; track p._id) {
+            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+              <span>{{ p.date | date: 'mediumDate' : 'UTC' }} · ×{{ p.count }} @if (p.note) { · {{ p.note }} }</span>
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteProgress(p._id)">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+
+      @if (progressMax > 0) {
+        <div class="row g-2 mb-2">
+          <div class="col-7">
+            <label class="form-label small mb-1">{{ 'wirds.date' | translate }}</label>
+            <input type="date" class="form-control" [(ngModel)]="newProgress.date" />
+          </div>
+          <div class="col-5">
+            <label class="form-label small mb-1">{{ 'wirds.count' | translate }}</label>
+            <input type="number" min="1" [max]="progressMax" step="1" class="form-control" [(ngModel)]="newProgress.count" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label small mb-1">{{ 'wirds.note' | translate }}</label>
+          <input class="form-control" [(ngModel)]="newProgress.note" />
+        </div>
+      }
+
+      @if (errorMessage) {
+        <div class="alert alert-danger py-2">{{ errorMessage }}</div>
+      }
+      <div class="d-flex justify-content-end gap-2">
+        <button class="btn btn-secondary" (click)="closeProgressModal()">{{ 'wirds.close' | translate }}</button>
+        @if (progressMax > 0) {
+          <button class="btn btn-success" (click)="addProgress()">{{ 'wirds.logProgress' | translate }}</button>
+        }
+      </div>
+    </div>
+  </div>
+}
