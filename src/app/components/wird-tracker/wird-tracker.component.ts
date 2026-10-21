@@ -50,6 +50,17 @@ export class WirdTrackerComponent implements OnInit {
   selectedListId = ""; // '' = all lists
   view: WirdListStatus = "open";
 
+  // Open entries under a counter are its log: the tile already shows the total and
+  // ✓ decrements it, so they stay hidden unless asked for.
+  showCounterLog = false;
+  visibleWirds: Wird[] = [];
+  hiddenCounterEntries = 0;
+
+  // Inline "add counter" input, per list id.
+  newCounter: { [listId: string]: string } = {};
+  // Merge target chosen in the list modal.
+  mergeIntoId = "";
+
   // Entry add/edit modal
   showModal = false;
   isEditing = false;
@@ -151,6 +162,7 @@ export class WirdTrackerComponent implements OnInit {
           this.selectedListId = "";
         }
         this.updateTileLists();
+        this.updateVisibleWirds(); // which entries are counter logs depends on the labels
       },
       error: (err: HttpErrorResponse) => this.handleError(err),
     });
@@ -158,9 +170,29 @@ export class WirdTrackerComponent implements OnInit {
 
   loadWirds(): void {
     this.secureService.getWirds(this.view, this.selectedListId || undefined).subscribe({
-      next: (data: any) => (this.wirds = data.wirds || []),
+      next: (data: any) => {
+        this.wirds = data.wirds || [];
+        this.updateVisibleWirds();
+      },
       error: (err: HttpErrorResponse) => this.handleError(err),
     });
+  }
+
+  updateVisibleWirds(): void {
+    const isCounterLog = (w: Wird) =>
+      this.view === "open" && !!w.label && !!this.listById(w.listId)?.labels.includes(w.label);
+    this.hiddenCounterEntries = this.wirds.filter(isCounterLog).length;
+    this.visibleWirds = this.showCounterLog ? this.wirds : this.wirds.filter((w) => !isCounterLog(w));
+  }
+
+  toggleCounterLog(): void {
+    this.showCounterLog = !this.showCounterLog;
+    this.updateVisibleWirds();
+  }
+
+  // Lists other than the one being edited, for "merge into".
+  get mergeTargets(): WirdList[] {
+    return this.lists.filter((l) => l._id !== this.listForm._id);
   }
 
   loadSummary(): void {
@@ -227,6 +259,26 @@ export class WirdTrackerComponent implements OnInit {
         this.busy = false;
         this.handleError(err);
       },
+    });
+  }
+
+  addCounter(list: WirdList): void {
+    const label = (this.newCounter[list._id!] || "").trim();
+    if (!label || list.labels.includes(label)) return;
+    this.saveLabels(list, [...list.labels, label]);
+    this.newCounter[list._id!] = "";
+  }
+
+  // Only offered at 0, so no open entries lose their tile.
+  removeCounter(list: WirdList, label: string): void {
+    if (!confirm(this.translate.instant("wirds.tiles.removeConfirm", { label }))) return;
+    this.saveLabels(list, list.labels.filter((l) => l !== label));
+  }
+
+  private saveLabels(list: WirdList, labels: string[]): void {
+    this.secureService.updateWirdList({ ...list, labels }).subscribe({
+      next: () => this.loadLists(),
+      error: (err: HttpErrorResponse) => this.handleError(err),
     });
   }
 
@@ -310,6 +362,7 @@ export class WirdTrackerComponent implements OnInit {
       this.applyPreset("blank");
     }
     this.labelsText = this.listForm.labels.join(", ");
+    this.mergeIntoId = "";
     this.showListModal = true;
   }
 
@@ -352,6 +405,21 @@ export class WirdTrackerComponent implements OnInit {
         this.isSaving = false;
         this.handleError(err);
       },
+    });
+  }
+
+  mergeList(): void {
+    const target = this.listById(this.mergeIntoId);
+    if (!this.listForm._id || !target) return;
+    if (!confirm(this.translate.instant("wirds.mergeConfirm", { from: this.listForm.name, into: target.name }))) return;
+    this.secureService.mergeWirdList(this.listForm._id, target._id!).subscribe({
+      next: () => {
+        this.closeListModal();
+        this.selectedListId = target._id!;
+        this.loadLists();
+        this.refresh();
+      },
+      error: (err: HttpErrorResponse) => this.handleError(err),
     });
   }
 
