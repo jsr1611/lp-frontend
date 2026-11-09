@@ -235,17 +235,35 @@ export class SecureService extends AuthService {
 
   // ---------- Overtime ----------
 
-  // Resolves with { settings: null } when the user has never run setup.
+  // The job every overtime call below works on, sent as X-Job-Id. Set by the tracker
+  // from its route; null while setting up a new job.
+  overtimeJobId: string | null = null;
+
+  private jobHeaders() {
+    const headers = this.getHeaders();
+    return this.overtimeJobId ? headers.set('X-Job-Id', this.overtimeJobId) : headers;
+  }
+
+  getOvertimeJobs() {
+    return this.http.get(this.url + `/overtime/jobs`, { headers: this.getHeaders() });
+  }
+
+  // Removes the job and every day, day off and payslip logged under it.
+  deleteOvertimeJob(id: string) {
+    return this.http.delete(this.url + `/overtime/jobs/${id}`, { headers: this.getHeaders() });
+  }
+
+  // Resolves with { settings: null } when no job is selected (setting up a new one).
   getOvertimeSettings() {
     return this.http.get(this.url + `/overtime/settings`, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
     });
   }
 
   // Upsert — the first save doubles as creation.
   saveOvertimeSettings(settings: OvertimeSettings) {
     return this.http.put(this.url + `/overtime/settings`, { settings }, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
     });
   }
 
@@ -254,7 +272,7 @@ export class SecureService extends AuthService {
     let params = new HttpParams();
     if (month) params = params.set('month', month);
     return this.http.get(this.url + `/overtime/entries`, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
       params,
     });
   }
@@ -263,7 +281,7 @@ export class SecureService extends AuthService {
     let params = new HttpParams();
     if (month) params = params.set('month', month);
     return this.http.get(this.url + `/overtime/summary`, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
       params,
     });
   }
@@ -273,27 +291,27 @@ export class SecureService extends AuthService {
   getOvertimeHolidays(month: string) {
     let params = new HttpParams().set('month', month);
     return this.http.get(this.url + `/overtime/holidays`, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
       params,
     });
   }
 
   saveOvertimeEntry(entry: OvertimeEntry) {
     return this.http.post(this.url + `/overtime/entries`, { entry }, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
     });
   }
 
   // resnapshot re-applies the current settings to an entry logged under older ones.
   updateOvertimeEntry(entry: OvertimeEntry, resnapshot = false) {
     return this.http.put(this.url + `/overtime/entries/${entry._id}`, { entry, resnapshot }, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
     });
   }
 
   deleteOvertimeEntry(id: string) {
     return this.http.delete(this.url + `/overtime/entries/${id}`, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
     });
   }
 
@@ -301,46 +319,46 @@ export class SecureService extends AuthService {
   // so day counts flip at their midnight rather than the server's.
   getOvertimeOverview(today: string) {
     return this.http.get(this.url + `/overtime/overview`, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
       params: new HttpParams().set('today', today),
     });
   }
 
   markMilestonesSeen(ids: string[]) {
     return this.http.post(this.url + `/overtime/milestones/seen`, { ids }, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
     });
   }
 
   getLeaveDays(month: string) {
     return this.http.get(this.url + `/overtime/leave`, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
       params: new HttpParams().set('month', month),
     });
   }
 
   saveLeaveDay(leave: LeaveDay) {
     return leave._id
-      ? this.http.put(this.url + `/overtime/leave/${leave._id}`, { leave }, { headers: this.getHeaders() })
-      : this.http.post(this.url + `/overtime/leave`, { leave }, { headers: this.getHeaders() });
+      ? this.http.put(this.url + `/overtime/leave/${leave._id}`, { leave }, { headers: this.jobHeaders() })
+      : this.http.post(this.url + `/overtime/leave`, { leave }, { headers: this.jobHeaders() });
   }
 
   deleteLeaveDay(id: string) {
     return this.http.delete(this.url + `/overtime/leave/${id}`, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
     });
   }
 
   // Create or replace the payslip for the month the overtime was worked.
   savePayslip(payslip: Payslip) {
     return this.http.put(this.url + `/overtime/payslip`, { payslip }, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
     });
   }
 
   deletePayslip(month: string) {
     return this.http.delete(this.url + `/overtime/payslip/${month}`, {
-      headers: this.getHeaders(),
+      headers: this.jobHeaders(),
     });
   }
 }

@@ -1,13 +1,18 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import { OvertimeSummary, Payslip } from "src/app/models/overtime";
+import { DeductionItem, MonthPay, OvertimeSummary, Payslip } from "src/app/models/overtime";
 import { SecureService } from "src/app/services/SercureService";
+
+// Won either side of the expected net still counted as a match.
+const NET_TOLERANCE = 10;
 
 // The payslip form works in hours, which is how payslips print them; the API in minutes.
 interface PayslipForm {
   hours: number | null;
   amount: number | null;
+  gross: number | null;
+  net: number | null;
   payDate: string;
   note: string;
 }
@@ -41,6 +46,25 @@ export class PayslipCardComponent {
   errorMessage: string | null = null;
   form: PayslipForm = this.blankForm();
 
+  get pay(): MonthPay | null {
+    return this.summary?.pay ?? null;
+  }
+
+  // The breakdown to show: off the payslip's own gross when entered, else the estimate.
+  get deductionItems(): DeductionItem[] {
+    return (this.payslip?.expectedDeductions ?? this.pay?.deductions)?.items ?? [];
+  }
+
+  get expectedNet(): number | null {
+    return this.payslip?.expectedNet ?? this.pay?.net ?? null;
+  }
+
+  // "+₩1,200" / "−₩1,200".
+  signed(amount: number): string {
+    const abs = Math.abs(amount).toLocaleString(undefined, { maximumFractionDigits: 0 });
+    return (amount > 0 ? "+" : amount < 0 ? "−" : "") + abs;
+  }
+
   get payslip(): Payslip | null {
     return this.summary?.payslip ?? null;
   }
@@ -55,7 +79,10 @@ export class PayslipCardComponent {
   get status(): "under" | "over" | "match" | null {
     const p = this.payslip;
     if (!p) return null;
-    const diffs = [p.diffMinutes, p.diffAmount].filter((d): d is number => typeof d === "number");
+    // Net is checked with a small tolerance: insurances are truncated per item, so an
+    // honest payslip can land a few won off the estimate.
+    const net = typeof p.diffNet === "number" && Math.abs(p.diffNet) <= NET_TOLERANCE ? 0 : p.diffNet;
+    const diffs = [p.diffMinutes, p.diffAmount, net].filter((d): d is number => typeof d === "number");
     if (diffs.some((d) => d < 0)) return "under";
     if (diffs.some((d) => d > 0)) return "over";
     return "match";
@@ -67,6 +94,8 @@ export class PayslipCardComponent {
       ? {
           hours: typeof p.paidOtMinutes === "number" ? Math.round((p.paidOtMinutes / 60) * 100) / 100 : null,
           amount: p.paidOtAmount ?? null,
+          gross: p.grossPaid ?? null,
+          net: p.netPaid ?? null,
           payDate: p.payDate ? String(p.payDate).slice(0, 10) : "",
           note: p.note || "",
         }
@@ -82,9 +111,10 @@ export class PayslipCardComponent {
 
   save(): void {
     if (this.isSaving) return;
-    const hasHours = this.form.hours !== null && (this.form.hours as any) !== "";
-    const hasAmount = this.form.amount !== null && (this.form.amount as any) !== "";
-    if (!hasHours && !hasAmount) {
+    const filled = (v: number | null) => v !== null && (v as any) !== "";
+    const hasHours = filled(this.form.hours);
+    const hasAmount = filled(this.form.amount);
+    if (![this.form.hours, this.form.amount, this.form.gross, this.form.net].some(filled)) {
       this.errorMessage = this.translate.instant("overtime.payslip.needOne");
       return;
     }
@@ -95,6 +125,8 @@ export class PayslipCardComponent {
         month: this.month,
         paidOtMinutes: hasHours ? Math.round(Number(this.form.hours) * 60) : null,
         paidOtAmount: hasAmount ? Number(this.form.amount) : null,
+        grossPaid: filled(this.form.gross) ? Number(this.form.gross) : null,
+        netPaid: filled(this.form.net) ? Number(this.form.net) : null,
         payDate: this.form.payDate || undefined,
         note: this.form.note || undefined,
       })
@@ -123,6 +155,6 @@ export class PayslipCardComponent {
   }
 
   private blankForm(): PayslipForm {
-    return { hours: null, amount: null, payDate: "", note: "" };
+    return { hours: null, amount: null, gross: null, net: null, payDate: "", note: "" };
   }
 }

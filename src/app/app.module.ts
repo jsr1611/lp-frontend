@@ -40,6 +40,7 @@ import { GithubService } from './services/GithubService';
 import { DownloaderComponent } from './components/downloader/downloader.component';
 import { LoanTrackerComponent } from './components/loan-tracker/loan-tracker.component';
 import { OvertimeTrackerComponent } from './components/overtime-tracker/overtime-tracker.component';
+import { OvertimeJobsComponent } from './components/overtime-jobs/overtime-jobs.component';
 import { TenureBannerComponent } from './components/overtime-tracker/tenure-banner/tenure-banner.component';
 import { LeaveCardComponent } from './components/overtime-tracker/leave-card/leave-card.component';
 import { PayslipCardComponent } from './components/overtime-tracker/payslip-card/payslip-card.component';
@@ -70,6 +71,7 @@ registerAppLocales();
         DownloaderComponent,
         LoanTrackerComponent,
         OvertimeTrackerComponent,
+        OvertimeJobsComponent,
         TenureBannerComponent,
         LeaveCardComponent,
         PayslipCardComponent,
@@ -100,7 +102,8 @@ registerAppLocales();
             { path: 'profile', component: UserPageComponent, canActivate: [authGuard] },
             { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
             { path: 'loans', component: LoanTrackerComponent, canActivate: [authGuard] },
-            { path: 'overtime', component: OvertimeTrackerComponent, canActivate: [authGuard] },
+            { path: 'overtime', component: OvertimeJobsComponent, canActivate: [authGuard] },
+            { path: 'overtime/:jobId', component: OvertimeTrackerComponent, canActivate: [authGuard] },
             { path: 'wirds', component: WirdTrackerComponent, canActivate: [authGuard] },
             { path: 'home', component: HomeComponent },
             { path: 'add-word', component: AddWordComponent },

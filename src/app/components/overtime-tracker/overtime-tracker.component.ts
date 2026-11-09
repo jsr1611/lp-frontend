@@ -7,11 +7,12 @@ import {
   ViewChild,
   inject,
 } from "@angular/core";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "src/app/services/AuthService";
 import { SecureService } from "src/app/services/SercureService";
 import {
+  DeductionRateKey,
   Holiday,
   HolidayLookup,
   LeaveDay,
@@ -120,6 +121,11 @@ export class OvertimeTrackerComponent implements OnInit {
   // Declared first: field initializers run in order, and inject() is only valid
   // inside the injection context these run in.
   private readonly translate = inject(TranslateService);
+  private readonly route = inject(ActivatedRoute);
+
+  // The job in view, from /overtime/:jobId. Null on /overtime/new, the setup form for
+  // a job that does not exist yet.
+  jobId: string | null = null;
 
   protected token: string | null = null;
 
@@ -227,7 +233,22 @@ export class OvertimeTrackerComponent implements OnInit {
 
   ngOnInit(): void {
     this.token = this.authService.getToken();
-    this.loadSettings();
+    // Subscribed rather than read once: going from one job to another reuses this
+    // component, and everything on screen has to reload for the new job.
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get("jobId");
+      this.jobId = id && id !== "new" ? id : null;
+      this.secureService.overtimeJobId = this.jobId;
+      this.settings = null;
+      this.settingsLoaded = false;
+      this.showSettings = false;
+      this.loadSettings();
+    });
+  }
+
+  // Back to the jobs list. Also how the setup form for a new job is cancelled.
+  backToJobs(): void {
+    this.router.navigate(["/overtime"]);
   }
 
   // ---------- Loading ----------
@@ -238,9 +259,8 @@ export class OvertimeTrackerComponent implements OnInit {
         this.settings = data.settings || null;
         this.settingsLoaded = true;
         if (!this.settings) {
-          // First visit: nothing to show until the rate and rules are known.
-          this.settingsForm = this.blankSettings();
-          this.showSettings = true;
+          // A new job: nothing to show until the rate and rules are known.
+          this.openSettings();
           return;
         }
         this.loadMonth();
@@ -407,6 +427,27 @@ export class OvertimeTrackerComponent implements OnInit {
 
   // ---------- Settings ----------
 
+  // The rates the chosen deduction scheme uses, with the backend's defaults as
+  // placeholders (lib/deductions.js — keep in step). A blank field means "default".
+  readonly deductionDefaults: Record<DeductionRateKey, number> = {
+    pension: 4.75, health: 3.595, longTermCare: 13.14, employment: 0.9, incomeTax: 0, businessTax: 3.3,
+  };
+
+  get deductionRateKeys(): DeductionRateKey[] {
+    switch (this.settingsForm.deductions?.mode) {
+      case "tax33": return ["businessTax"];
+      case "insurance4": return ["pension", "health", "longTermCare", "employment", "incomeTax"];
+      default: return [];
+    }
+  }
+
+  // Part-time jobs are usually booked as business income (3.3%) — a sensible default
+  // when switching, but only while the user has not picked a scheme yet.
+  onEmploymentTypeChange(): void {
+    const d = this.settingsForm.deductions;
+    if (d && d.mode === "none" && this.settingsForm.employmentType === "parttime") d.mode = "tax33";
+  }
+
   openSettings(): void {
     this.settingsForm = this.settings
       ? JSON.parse(JSON.stringify(this.settings))
@@ -418,6 +459,11 @@ export class OvertimeTrackerComponent implements OnInit {
     company.contractStart = this.isoDay(company.contractStart) || undefined;
     company.contractEnd = this.isoDay(company.contractEnd) || undefined;
     this.settingsForm.lateGraceMinutes = this.settingsForm.lateGraceMinutes ?? 0;
+    this.settingsForm.employmentType = this.settingsForm.employmentType || "fulltime";
+    this.settingsForm.deductions = {
+      mode: this.settingsForm.deductions?.mode || "none",
+      rates: { ...(this.settingsForm.deductions?.rates || {}) },
+    };
     const leave = this.settingsForm.leave;
     this.settingsForm.leave = {
       mode: leave?.mode || "statutory",
@@ -470,8 +516,13 @@ export class OvertimeTrackerComponent implements OnInit {
     this.errorMessage = null;
     this.secureService.saveOvertimeSettings(this.settingsForm).subscribe({
       next: (data: any) => {
-        this.settings = data.data;
         this.isSavingSettings = false;
+        // A new job: move to its own URL, and the route change loads everything.
+        if (!this.jobId) {
+          this.router.navigate(["/overtime", data.data._id], { replaceUrl: true });
+          return;
+        }
+        this.settings = data.data;
         this.showSettings = false;
         this.reloadAll();
       },

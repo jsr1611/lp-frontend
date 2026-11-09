@@ -1,0 +1,18 @@
+.job-card {
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.job-card:hover,
+.job-card:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.12) !important;
+}
+
+.past .job-card {
+  opacity: 0.75;
+}
+
+.min-w-0 {
+  min-width: 0;
+}
