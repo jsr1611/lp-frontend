@@ -385,7 +385,8 @@
       "pay": "급여",
       "restDays": "휴일근로",
       "workingDay": "근무일 설정",
-      "leave": "연차"
+      "leave": "연차",
+      "deductions": "급여 및 공제"
     },
     "settings": "설정",
     "settingsIntro": "변경 사항은 앞으로 기록하는 날부터 적용됩니다. 이미 기록된 날은 기존 시급과 규칙을 유지합니다.",
@@ -526,7 +527,10 @@
       "payDate": "지급일",
       "delete": "삭제",
       "deleteConfirm": "{{month}} 급여명세서를 삭제할까요?",
-      "needOne": "시간이나 금액 중 하나 이상을 입력하세요."
+      "needOne": "명세서의 항목을 하나 이상 입력하세요.",
+      "grossPaid": "지급총액",
+      "netPaid": "실지급액",
+      "totalsHelp": "선택: 공제 확인을 위한 명세서 합계."
     },
     "away": {
       "title": "외출",
@@ -611,6 +615,60 @@
         "greeting": "오늘은 {{name}}",
         "wish": ""
       }
+    },
+    "payIntro": "이 직장의 급여 방식과 공제 항목입니다. 급여명세서를 실수령액까지 확인할 수 있습니다.",
+    "employment": {
+      "label": "고용 형태",
+      "fulltime": "정규직",
+      "parttime": "아르바이트/파트타임",
+      "fulltimeHelp": "월급제: 계약 연봉/월급이 기본급이고, 초과근무 수당이 추가됩니다.",
+      "parttimeHelp": "시급제: 기록한 정규 근무시간마다 시급이 적용되고, 초과근무 수당이 추가됩니다."
+    },
+    "deductions": {
+      "label": "공제",
+      "none": "없음 (총액 = 실수령액)",
+      "tax33": "3.3% 원천징수",
+      "insurance4": "4대보험",
+      "items": {
+        "pension": "국민연금",
+        "health": "건강보험",
+        "longTermCare": "장기요양보험 (건강보험료의 %)",
+        "employment": "고용보험",
+        "incomeTax": "소득세",
+        "localTax": "지방소득세",
+        "businessTax": "원천징수 합계"
+      },
+      "ratesHelp": "비워두면 기본값을 사용합니다. 3.3% = 소득세 3% + 지방소득세 0.3%.",
+      "insuranceHelp": "2026년 근로자 부담률 기준이며, 비워두면 기본값을 사용합니다. 요율은 매년 1월 바뀌니 명세서와 비교해 보세요. 소득세는 간이세액표를 따르므로 명세서 기준 %를 입력하거나 0으로 두어 제외하세요."
+    },
+    "takeHome": {
+      "title": "실수령액",
+      "salary": "기본급",
+      "hourlyPay": "시급 급여",
+      "overtimePay": "초과근무 수당",
+      "grossEstimate": "지급총액 (예상)",
+      "grossPaid": "지급총액 (명세서)",
+      "expectedNet": "예상 실수령액",
+      "netPaid": "실수령액 (명세서)",
+      "estimateNote": "기록한 근무일 기준 예상치입니다. 유급휴가와 주휴수당은 포함되지 않습니다.",
+      "fromPayslipGross": "명세서의 지급총액으로 공제를 계산해, 공제액이 맞는지 확인합니다.",
+      "needSalary": "실수령액을 예상하려면 회사 항목에 계약 급여를 입력하세요."
+    },
+    "jobs": {
+      "title": "직장",
+      "add": "직장 추가",
+      "addFirst": "첫 직장 추가하기",
+      "empty": "아직 직장이 없습니다. 추가하고 근무시간을 기록하세요.",
+      "untitled": "이름 없는 직장",
+      "past": "이전 직장",
+      "thisMonth": "이번 달",
+      "allTime": "전체",
+      "daysLogged": "{{count}}일 기록",
+      "lastLogged": "최근",
+      "delete": "직장 삭제",
+      "back": "직장 목록으로",
+      "loadFailed": "직장 목록을 불러오지 못했습니다.",
+      "confirmDelete": "\"{{name}}\"와(과) 기록된 모든 데이터({{days}}일, 휴가, 급여명세서)를 삭제할까요? 되돌릴 수 없습니다."
     }
   },
   "profile": {

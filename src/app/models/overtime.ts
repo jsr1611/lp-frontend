@@ -58,10 +58,69 @@ export interface OvertimeSettings {
   leave?: LeaveSettings;
   // Minutes after shiftStart still counted as on time. 0 = 09:00 on time, 09:01 late.
   lateGraceMinutes?: number;
+  employmentType?: EmploymentType;
+  deductions?: DeductionSettings;
   // Milestone ids already celebrated. Written only through /milestones/seen.
   seenMilestones?: string[];
   created_at?: string;
   updated_at?: string;
+}
+
+// Full-time is salaried (company.contractSalary is base pay); part-time is paid for
+// every regular hour logged at hourlyRate.
+export type EmploymentType = 'fulltime' | 'parttime';
+// none: gross is what lands. tax33: 사업소득 3.3%. insurance4: 4대보험 (+ optional flat
+// income tax).
+export type DeductionMode = 'none' | 'tax33' | 'insurance4';
+export type DeductionRateKey = 'pension' | 'health' | 'longTermCare' | 'employment' | 'incomeTax' | 'businessTax';
+
+// Percentages. A blank rate uses the backend default (lib/deductions.js).
+export interface DeductionSettings {
+  mode: DeductionMode;
+  rates?: Partial<Record<DeductionRateKey, number | null>>;
+}
+
+export interface DeductionItem {
+  key: DeductionRateKey | 'localTax';
+  rate: number;
+  amount: number;
+}
+
+export interface DeductionBreakdown {
+  mode: DeductionMode;
+  items: DeductionItem[];
+  total: number;
+  net: number;
+}
+
+// The month's estimated pay from /summary. basePay and gross are null for a
+// full-time job with no contract salary on file.
+export interface MonthPay {
+  employmentType: EmploymentType;
+  deductionMode: DeductionMode;
+  regularMinutes: number;
+  basePay: number | null;
+  overtimePay: number;
+  gross: number | null;
+  deductions: DeductionBreakdown | null;
+  net: number | null;
+}
+
+// One row of the jobs list: the job's settings plus headline figures.
+export interface OvertimeJob {
+  _id: string;
+  company?: CompanyInfo;
+  currency?: Currency;
+  hourlyRate: number;
+  employmentType?: EmploymentType;
+  deductions?: { mode: DeductionMode };
+  active: boolean;
+  daysLogged: number;
+  lastLogged: string | null;
+  totalOtMinutes: number;
+  totalEarnings: number;
+  monthOtMinutes: number;
+  monthEarnings: number;
 }
 
 // A Korean public holiday from the 공휴일 lookup.
@@ -160,6 +219,7 @@ export interface OvertimeSummary {
   byDay: OvertimeDay[];
   leaveUsed: number;        // days off in this month, taken or planned
   payslip: Payslip | null;
+  pay?: MonthPay;
 }
 
 // A day of annual leave (연차). amount 0.5 = half day (반차).
@@ -185,6 +245,15 @@ export interface Payslip {
   // left that figure out.
   diffMinutes?: number | null;
   diffAmount?: number | null;
+  // The payslip's totals: 지급총액 and 실지급액.
+  grossPaid?: number | null;
+  netPaid?: number | null;
+  diffGross?: number | null;
+  // What the net should be after this job's deductions — off the payslip's own gross
+  // when given, else off the estimate. diffNet = netPaid minus that.
+  expectedNet?: number | null;
+  expectedDeductions?: DeductionBreakdown | null;
+  diffNet?: number | null;
 }
 
 // A dated grant, as the ledger reports "next" and "expiring" ones.

@@ -385,7 +385,8 @@
       "pay": "To'lov",
       "restDays": "Dam olish kunlari (휴일근로)",
       "workingDay": "Ish kuningiz",
-      "leave": "Dam olish kunlari (연차)"
+      "leave": "Dam olish kunlari (연차)",
+      "deductions": "Pay & deductions"
     },
     "settings": "Sozlamalar",
     "settingsIntro": "O'zgarishlar bundan keyin qayd etadigan kunlarga taalluqli. Allaqachon qayd etilgan kunlar o'zining dastlabki stavkasi va qoidalarini saqlab qoladi.",
@@ -526,7 +527,10 @@
       "payDate": "To'lov sanasi",
       "delete": "O'chirish",
       "deleteConfirm": "{{month}} uchun maosh varaqasini o'chirasizmi?",
-      "needOne": "Soatlarni, summani yoki ikkalasini kiriting."
+      "needOne": "Enter at least one figure from the payslip.",
+      "grossPaid": "Gross pay (지급총액)",
+      "netPaid": "Take-home (실지급액)",
+      "totalsHelp": "Optional: the payslip totals, to check the deductions."
     },
     "away": {
       "title": "Ishdan chiqib turgan vaqt",
@@ -611,6 +615,60 @@
         "greeting": "Bugun bayram: {{name}}",
         "wish": ""
       }
+    },
+    "payIntro": "How this job pays and what it takes off, so payslips can be checked down to the take-home amount.",
+    "employment": {
+      "label": "Employment type",
+      "fulltime": "Full-time",
+      "parttime": "Part-time",
+      "fulltimeHelp": "Salaried: the contract salary is the base pay, overtime comes on top.",
+      "parttimeHelp": "Paid by the hour: every regular hour logged earns the hourly rate, overtime on top."
+    },
+    "deductions": {
+      "label": "Deductions",
+      "none": "None (gross = take-home)",
+      "tax33": "3.3% withholding tax",
+      "insurance4": "4 major insurances (4대보험)",
+      "items": {
+        "pension": "National pension",
+        "health": "Health insurance",
+        "longTermCare": "Long-term care (% of health)",
+        "employment": "Employment insurance",
+        "incomeTax": "Income tax",
+        "localTax": "Local income tax",
+        "businessTax": "Withholding total"
+      },
+      "ratesHelp": "Leave blank to use the default. 3.3% = 3% income tax + 0.3% local tax.",
+      "insuranceHelp": "Employee shares for 2026; blank uses the default. Rates change each January, so check them against a payslip. Income tax follows the official tax table, so enter a flat % from your payslip, or leave it at 0 to skip it."
+    },
+    "takeHome": {
+      "title": "Take-home",
+      "salary": "Salary",
+      "hourlyPay": "Hourly pay",
+      "overtimePay": "Overtime pay",
+      "grossEstimate": "Gross (estimated)",
+      "grossPaid": "Gross (payslip)",
+      "expectedNet": "Expected take-home",
+      "netPaid": "Take-home (payslip)",
+      "estimateNote": "Estimate from the days logged. Paid leave and weekly holiday pay (주휴수당) are not included.",
+      "fromPayslipGross": "Deductions worked out from the payslip's own gross, to check the cut they took.",
+      "needSalary": "Add the contract salary under Company to estimate take-home pay."
+    },
+    "jobs": {
+      "title": "Jobs",
+      "add": "Add job",
+      "addFirst": "Add your first job",
+      "empty": "No jobs yet. Add one to start logging hours.",
+      "untitled": "Untitled job",
+      "past": "Past jobs",
+      "thisMonth": "This month",
+      "allTime": "All time",
+      "daysLogged": "{{count}} days logged",
+      "lastLogged": "last",
+      "delete": "Delete job",
+      "back": "Back to jobs",
+      "loadFailed": "Could not load your jobs.",
+      "confirmDelete": "Delete \"{{name}}\" and everything logged under it ({{days}} days, plus days off and payslips)? This cannot be undone."
     }
   },
   "profile": {

@@ -88,6 +88,86 @@
         </div>
       }
     }
+    <!-- Take-home: the month's gross (estimated, or as printed) less this job's deductions. -->
+    @if (pay && (pay.gross !== null || payslip?.grossPaid != null)) {
+      <hr class="my-2" />
+      <div class="small text-muted text-uppercase mb-1">
+        {{ 'overtime.takeHome.title' | translate }}
+        <span class="badge text-bg-light fw-normal text-lowercase">
+          {{ 'overtime.deductions.' + pay.deductionMode | translate }}
+        </span>
+      </div>
+      <table class="table table-sm mb-1 payslip-table">
+        <tbody>
+          @if (pay.gross !== null) {
+            @if (pay.basePay !== null) {
+              <tr>
+                <td class="text-muted">
+                  {{ (pay.employmentType === 'parttime' ? 'overtime.takeHome.hourlyPay' : 'overtime.takeHome.salary') | translate }}
+                  @if (pay.employmentType === 'parttime') {
+                    <span class="form-text">({{ formatMinutes(pay.regularMinutes) }})</span>
+                  }
+                </td>
+                <td class="text-end">{{ pay.basePay | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
+              </tr>
+            }
+            <tr>
+              <td class="text-muted">{{ 'overtime.takeHome.overtimePay' | translate }}</td>
+              <td class="text-end">{{ pay.overtimePay | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
+            </tr>
+            <tr>
+              <td>{{ 'overtime.takeHome.grossEstimate' | translate }}</td>
+              <td class="text-end">{{ pay.gross | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
+            </tr>
+          }
+          @if (payslip?.grossPaid != null) {
+            <tr>
+              <td>{{ 'overtime.takeHome.grossPaid' | translate }}</td>
+              <td class="text-end">
+                {{ payslip!.grossPaid | currency: currencyCode : 'symbol' : '1.0-0' }}
+                @if (payslip!.diffGross != null && payslip!.diffGross !== 0) {
+                  <span class="small" [class.text-danger]="payslip!.diffGross < 0" [class.text-info]="payslip!.diffGross > 0">
+                    ({{ signed(payslip!.diffGross) }})
+                  </span>
+                }
+              </td>
+            </tr>
+          }
+          @for (item of deductionItems; track item.key) {
+            <tr class="text-muted">
+              <td class="ps-3">− {{ 'overtime.deductions.items.' + item.key | translate }} <span class="form-text">{{ item.rate }}%</span></td>
+              <td class="text-end">{{ item.amount | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
+            </tr>
+          }
+          @if (expectedNet !== null) {
+            <tr class="fw-semibold">
+              <td>{{ 'overtime.takeHome.expectedNet' | translate }}</td>
+              <td class="text-end">{{ expectedNet | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
+            </tr>
+          }
+          @if (payslip?.netPaid != null) {
+            <tr class="fw-semibold">
+              <td>{{ 'overtime.takeHome.netPaid' | translate }}</td>
+              <td class="text-end">
+                {{ payslip!.netPaid | currency: currencyCode : 'symbol' : '1.0-0' }}
+                @if (payslip!.diffNet != null) {
+                  <span class="small" [class.text-danger]="payslip!.diffNet < -10"
+                        [class.text-success]="payslip!.diffNet >= -10 && payslip!.diffNet <= 10"
+                        [class.text-info]="payslip!.diffNet > 10">
+                    ({{ signed(payslip!.diffNet) }})
+                  </span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <div class="form-text">
+        {{ (payslip?.grossPaid != null ? 'overtime.takeHome.fromPayslipGross' : 'overtime.takeHome.estimateNote') | translate }}
+      </div>
+    } @else if (pay && pay.employmentType === 'fulltime' && pay.deductionMode !== 'none') {
+      <div class="form-text mt-2">{{ 'overtime.takeHome.needSalary' | translate }}</div>
+    }
   </div>
 </div>
 
@@ -111,6 +191,21 @@
                    class="form-control" [(ngModel)]="form.amount" />
           </div>
           <div class="col-12 form-text mt-1">{{ 'overtime.payslip.eitherHelp' | translate }}</div>
+          <div class="col-6">
+            <label class="form-label" for="payslipGross">
+              {{ 'overtime.payslip.grossPaid' | translate }} ({{ currencyCode }})
+            </label>
+            <input id="payslipGross" name="payslipGross" type="number" min="0" step="any"
+                   class="form-control" [(ngModel)]="form.gross" />
+          </div>
+          <div class="col-6">
+            <label class="form-label" for="payslipNet">
+              {{ 'overtime.payslip.netPaid' | translate }} ({{ currencyCode }})
+            </label>
+            <input id="payslipNet" name="payslipNet" type="number" min="0" step="any"
+                   class="form-control" [(ngModel)]="form.net" />
+          </div>
+          <div class="col-12 form-text mt-1">{{ 'overtime.payslip.totalsHelp' | translate }}</div>
           <div class="col-6">
             <label class="form-label" for="payslipDate">{{ 'overtime.payslip.payDate' | translate }}</label>
             <input id="payslipDate" name="payslipDate" type="date" class="form-control"
