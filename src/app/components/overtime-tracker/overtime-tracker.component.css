@@ -124,3 +124,22 @@
 @media (prefers-reduced-motion: reduce) {
   .special-banner { animation: none; }
 }
+
+/* Settings form section headings: each topic starts with a clear, ruled title so it is
+   obvious where one section ends and the next begins. */
+.ot-section-title {
+  margin: 2rem -1rem 0.75rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--bs-body-color, #212529);
+  background: #f3f6fb;
+  border-left: 4px solid var(--bs-primary, #0d6efd);
+  border-radius: 0.25rem;
+}
+
+.ot-section-title:first-of-type {
+  margin-top: 1rem;
+}

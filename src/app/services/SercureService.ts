@@ -7,6 +7,7 @@ import { Contact } from "../models/contact";
 import { Loan, LoanFilters, Repayment } from "../models/loan";
 import { Wird, WirdList, WirdListStatus, WirdProgress, WirdStatus } from "../models/wird";
 import { LeaveDay, OvertimeEntry, OvertimeSettings, Payslip } from "../models/overtime";
+import { GigJob, GigPayment, GigShift } from "../models/gig";
 
 @Injectable({
   providedIn: "root",
@@ -360,5 +361,66 @@ export class SecureService extends AuthService {
     return this.http.delete(this.url + `/overtime/payslip/${month}`, {
       headers: this.jobHeaders(),
     });
+  }
+
+  // ---------- Gigs (part-time work for several agencies) ----------
+
+  createGigJob(job: GigJob) {
+    return this.http.post(this.url + `/gigs`, { job }, { headers: this.getHeaders() });
+  }
+
+  // Resolves with { job, minimumWage }.
+  getGigJob(jobId: string) {
+    return this.http.get(this.url + `/gigs/${jobId}`, { headers: this.getHeaders() });
+  }
+
+  saveGigJob(jobId: string, job: GigJob) {
+    return this.http.put(this.url + `/gigs/${jobId}`, { job }, { headers: this.getHeaders() });
+  }
+
+  getGigShifts(jobId: string, month: string) {
+    return this.http.get(this.url + `/gigs/${jobId}/shifts`, {
+      headers: this.getHeaders(),
+      params: new HttpParams().set('month', month),
+    });
+  }
+
+  saveGigShift(jobId: string, shift: GigShift) {
+    return shift._id
+      ? this.http.put(this.url + `/gigs/${jobId}/shifts/${shift._id}`, { shift }, { headers: this.getHeaders() })
+      : this.http.post(this.url + `/gigs/${jobId}/shifts`, { shift }, { headers: this.getHeaders() });
+  }
+
+  // Every unpaid shift for one agency, across months.
+  getUnpaidGigShifts(jobId: string, agencyId: string) {
+    return this.http.get(this.url + `/gigs/${jobId}/shifts`, {
+      headers: this.getHeaders(),
+      params: new HttpParams().set('unpaid', '1').set('agencyId', agencyId),
+    });
+  }
+
+  deleteGigShift(jobId: string, id: string) {
+    return this.http.delete(this.url + `/gigs/${jobId}/shifts/${id}`, { headers: this.getHeaders() });
+  }
+
+  // `today` is the viewer's local "YYYY-MM-DD", so "overdue" flips at their midnight.
+  getGigPending(jobId: string, today: string) {
+    return this.http.get(this.url + `/gigs/${jobId}/pending`, {
+      headers: this.getHeaders(),
+      params: new HttpParams().set('today', today),
+    });
+  }
+
+  getGigPayments(jobId: string) {
+    return this.http.get(this.url + `/gigs/${jobId}/payments`, { headers: this.getHeaders() });
+  }
+
+  recordGigPayment(jobId: string, payment: GigPayment) {
+    return this.http.post(this.url + `/gigs/${jobId}/payments`, { payment }, { headers: this.getHeaders() });
+  }
+
+  // Undo a payment; its shifts become pending again.
+  deleteGigPayment(jobId: string, id: string) {
+    return this.http.delete(this.url + `/gigs/${jobId}/payments/${id}`, { headers: this.getHeaders() });
   }
 }

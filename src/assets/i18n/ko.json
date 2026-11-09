@@ -580,7 +580,7 @@
       "fxBroke": "{{n}}일 연속 기록이 끝났어요. 내일 다시 시작해요!",
       "fxTip": "내일은 조금 일찍 출발해 보세요.",
       "grace": "지각 유예 시간",
-      "graceNone": "없음 — 09:01부터 지각",
+      "graceNone": "없음 — {{time}}부터 지각",
       "graceN": "{{n}}분",
       "graceHelp": "출근 시간 후 이 시간까지는 정시로 봅니다. 더 일찍 와야 한다면 출근 시간을 바꾸세요."
     },
@@ -622,7 +622,7 @@
       "fulltime": "정규직",
       "parttime": "아르바이트/파트타임",
       "fulltimeHelp": "월급제: 계약 연봉/월급이 기본급이고, 초과근무 수당이 추가됩니다.",
-      "parttimeHelp": "시급제: 기록한 정규 근무시간마다 시급이 적용되고, 초과근무 수당이 추가됩니다."
+      "parttimeHelp": "파트타임은 업체와 근무 기록이 있는 별도 페이지에서 관리합니다. 저장하면 해당 페이지로 이동합니다."
     },
     "deductions": {
       "label": "공제",
@@ -668,7 +668,14 @@
       "delete": "직장 삭제",
       "back": "직장 목록으로",
       "loadFailed": "직장 목록을 불러오지 못했습니다.",
-      "confirmDelete": "\"{{name}}\"와(과) 기록된 모든 데이터({{days}}일, 휴가, 급여명세서)를 삭제할까요? 되돌릴 수 없습니다."
+      "confirmDelete": "\"{{name}}\"와(과) 기록된 모든 데이터({{days}}일, 휴가, 급여명세서)를 삭제할까요? 되돌릴 수 없습니다.",
+      "typeFullTime": "정규직",
+      "typeFullTimeHelp": "고정 근무 일정의 한 직장: 초과근무, 연차, 지각, 월 급여명세서.",
+      "typeGig": "파트타임 / 단기 알바",
+      "typeGigHelp": "여러 업체의 근무, 시급 또는 일당: 근무시간, 급여, 받을 돈.",
+      "pending": "받을 돈",
+      "allPaid": "모두 지급됨",
+      "agencies": "업체 {{count}}곳"
     }
   },
   "profile": {
@@ -881,5 +888,118 @@
     },
     "title": "새 단어",
     "update": "수정"
+  },
+  "gig": {
+    "newTitle": "새 파트타임 / 단기 일자리",
+    "agencies": "업체",
+    "logShift": "근무 기록",
+    "editShift": "근무 수정",
+    "shifts": "근무",
+    "setup": {
+      "jobTitle": "일자리",
+      "jobIntro": "파트타임 일 묶음의 이름입니다. 예: \"주말 알바\".",
+      "name": "이름",
+      "namePlaceholder": "주말·공휴일 알바",
+      "agenciesIntro": "일하는 업체입니다. 업체마다 급여, 공제, 지급일이 다르고, 근무 기록 시 자동으로 채워집니다.",
+      "agencyN": "업체 {{n}}",
+      "agencyName": "업체 / 고용주",
+      "addAgency": "업체 추가",
+      "removeAgency": "업체 삭제",
+      "create": "만들기"
+    },
+    "payType": {
+      "label": "지급 방식",
+      "hourly": "시급",
+      "flat": "일당 (고정 금액)"
+    },
+    "hourlyRate": "시급",
+    "flatAmount": "일당",
+    "amountIsNet": "세후 금액 (실수령액)",
+    "netIgnoresDeductions": "세후 금액은 그대로 계산되며, 공제는 세전 금액에만 적용됩니다.",
+    "overMinimum": "{{year}}년 최저임금보다 {{pct}}% 높음",
+    "belowMinimum": "{{pct}}% — {{year}}년 최저임금 미만",
+    "schedule": {
+      "label": "지급일",
+      "perShift": "당일",
+      "nextDay": "다음 날",
+      "weekly": "매주",
+      "semimonthly": "월 2회",
+      "monthly": "매월",
+      "payDay": "다음 달 지급일",
+      "firstPayDay": "1–15일분 지급일",
+      "secondPayDay": "16일–말일분 지급일 (다음 달)",
+      "weekday": "지급 요일"
+    },
+    "weekdays": {
+      "0": "일요일",
+      "1": "월요일",
+      "2": "화요일",
+      "3": "수요일",
+      "4": "목요일",
+      "5": "금요일",
+      "6": "토요일"
+    },
+    "pending": {
+      "title": "받을 돈",
+      "none": "모든 근무가 지급되었습니다.",
+      "overdue": "지급 지연",
+      "shifts": "{{count}}회 근무",
+      "ofGross": "(세전 {{gross}})",
+      "payDay": "지급일",
+      "markPaid": "지급 완료"
+    },
+    "totals": {
+      "shifts": "회 근무",
+      "worked": "근무",
+      "earned": "수입"
+    },
+    "noShifts": "이번 달 근무가 없습니다.",
+    "cols": {
+      "date": "날짜",
+      "agency": "업체",
+      "time": "시간",
+      "hours": "근무시간",
+      "pay": "급여",
+      "status": "상태"
+    },
+    "status": {
+      "paid": "지급됨",
+      "due": "예정"
+    },
+    "flatNet": "일당, 세후",
+    "flatGross": "일당, 세전",
+    "start": "시작",
+    "end": "종료",
+    "breakMinutes": "휴게 (분)",
+    "timesOptional": "일당 근무는 시간 입력이 선택입니다. 근무시간을 기록하려면 입력하세요.",
+    "paidShiftNote": "이미 지급됨: 업체를 바꿀 수 없습니다. 지급을 취소한 후 변경하세요.",
+    "payments": {
+      "title": "받은 급여",
+      "received": "받은 날",
+      "shifts": "근무",
+      "expected": "예상",
+      "amount": "받은 금액",
+      "undo": "지급 취소"
+    },
+    "pay": {
+      "title": "{{agency}} 지급",
+      "intro": "이 금액이 해당하는 근무를 선택하세요. 금액 입력은 선택이지만, 입력하면 확인할 수 있습니다.",
+      "date": "받은 날",
+      "amount": "받은 금액",
+      "expected": "예상 실수령액 {{net}} (공제 전 {{gross}})",
+      "diff": "차이",
+      "matches": "일치",
+      "save": "지급 완료"
+    },
+    "confirmDeleteShift": "이 근무를 삭제할까요?",
+    "confirmDeletePaidShift": "이미 지급된 근무입니다. 그래도 삭제할까요? 지급 기록은 남습니다.",
+    "confirmUndoPayment": "이 지급을 취소할까요? 해당 근무는 다시 미지급이 됩니다.",
+    "errors": {
+      "nameRequired": "이름을 입력하세요.",
+      "agencyRequired": "업체를 하나 이상 추가하세요.",
+      "pickAgency": "업체를 선택하세요.",
+      "pickShift": "근무를 하나 이상 선택하세요.",
+      "generic": "문제가 발생했습니다."
+    }
   }
 }

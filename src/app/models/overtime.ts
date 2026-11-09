@@ -1,3 +1,4 @@
+import { GigJobStats } from "./gig";
 import { Currency } from "./user";
 
 export type ShiftType = 'day' | 'night';
@@ -121,6 +122,8 @@ export interface OvertimeJob {
   totalEarnings: number;
   monthOtMinutes: number;
   monthEarnings: number;
+  // Set for part-time (gig) jobs only.
+  gig?: GigJobStats | null;
 }
 
 // A Korean public holiday from the 공휴일 lookup.

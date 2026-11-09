@@ -50,18 +50,30 @@ export class OvertimeJobsComponent implements OnInit {
     });
   }
 
+  // Shows the "which kind of job?" choice before setup.
+  choosingType = false;
+
   open(job: OvertimeJob): void {
-    this.router.navigate(["/overtime", job._id]);
+    // Part-time jobs are gig work: shifts per agency, not the overtime tracker.
+    this.router.navigate([job.employmentType === "parttime" ? "/gigs" : "/overtime", job._id]);
   }
 
   addJob(): void {
+    this.choosingType = true;
+  }
+
+  addFullTime(): void {
     this.router.navigate(["/overtime", "new"]);
+  }
+
+  addGig(): void {
+    this.router.navigate(["/gigs", "new"]);
   }
 
   remove(job: OvertimeJob, event: Event): void {
     event.stopPropagation();
     const name = job.company?.name || this.translate.instant("overtime.jobs.untitled");
-    const question = this.translate.instant("overtime.jobs.confirmDelete", { name, days: job.daysLogged });
+    const question = this.translate.instant("overtime.jobs.confirmDelete", { name, days: job.gig ? job.gig.shifts : job.daysLogged });
     if (!confirm(question)) return;
     this.deletingId = job._id;
     this.secureService.deleteOvertimeJob(job._id).subscribe({
