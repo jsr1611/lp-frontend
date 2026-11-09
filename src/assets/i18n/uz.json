@@ -386,7 +386,7 @@
       "restDays": "Dam olish kunlari (휴일근로)",
       "workingDay": "Ish kuningiz",
       "leave": "Dam olish kunlari (연차)",
-      "deductions": "Pay & deductions"
+      "deductions": "To‘lov va ushlanmalar"
     },
     "settings": "Sozlamalar",
     "settingsIntro": "O'zgarishlar bundan keyin qayd etadigan kunlarga taalluqli. Allaqachon qayd etilgan kunlar o'zining dastlabki stavkasi va qoidalarini saqlab qoladi.",
@@ -527,10 +527,10 @@
       "payDate": "To'lov sanasi",
       "delete": "O'chirish",
       "deleteConfirm": "{{month}} uchun maosh varaqasini o'chirasizmi?",
-      "needOne": "Enter at least one figure from the payslip.",
-      "grossPaid": "Gross pay (지급총액)",
-      "netPaid": "Take-home (실지급액)",
-      "totalsHelp": "Optional: the payslip totals, to check the deductions."
+      "needOne": "Hisob-varaqdan kamida bitta raqam kiriting.",
+      "grossPaid": "Umumiy summa (지급총액)",
+      "netPaid": "Sof summa (실지급액)",
+      "totalsHelp": "Ixtiyoriy: ushlanmalarni tekshirish uchun hisob-varaq jami."
     },
     "away": {
       "title": "Ishdan chiqib turgan vaqt",
@@ -580,7 +580,7 @@
       "fxBroke": "{{n}} kunlik seriya uzildi. Ertaga yangidan boshlaymiz!",
       "fxTip": "Ertaga biroz ertaroq chiqing — o'z vaqtida kelish odati sizni kutmoqda.",
       "grace": "Kechikishga ruxsat",
-      "graceNone": "Yo'q — 09:01 kechikish hisoblanadi",
+      "graceNone": "Yo'q — {{time}} kechikish hisoblanadi",
       "graceN": "{{n}} daqiqa",
       "graceHelp": "Ish boshlanishidan keyin shuncha daqiqagacha o'z vaqtida hisoblanadi. Ertaroq kelish talab qilinsa, ish boshlanish vaqtini o'zgartiring."
     },
@@ -616,59 +616,66 @@
         "wish": ""
       }
     },
-    "payIntro": "How this job pays and what it takes off, so payslips can be checked down to the take-home amount.",
+    "payIntro": "Bu ish qanday to‘laydi va nimalarni ushlaydi — hisob-varaqni qo‘lga tegadigan summagacha tekshirish uchun.",
     "employment": {
-      "label": "Employment type",
-      "fulltime": "Full-time",
-      "parttime": "Part-time",
-      "fulltimeHelp": "Salaried: the contract salary is the base pay, overtime comes on top.",
-      "parttimeHelp": "Paid by the hour: every regular hour logged earns the hourly rate, overtime on top."
+      "label": "Bandlik turi",
+      "fulltime": "To‘liq stavka",
+      "parttime": "Qisman / vaqtinchalik",
+      "fulltimeHelp": "Oylik maosh: shartnoma bo‘yicha maosh asosiy to‘lov, qo‘shimcha ish ustiga qo‘shiladi.",
+      "parttimeHelp": "Qisman ish agentliklar va smenalar bilan alohida sahifada yuritiladi. Saqlasangiz, o‘sha sahifaga o‘tasiz."
     },
     "deductions": {
-      "label": "Deductions",
-      "none": "None (gross = take-home)",
-      "tax33": "3.3% withholding tax",
-      "insurance4": "4 major insurances (4대보험)",
+      "label": "Ushlanmalar",
+      "none": "Yo‘q (umumiy = qo‘lga tegadigan)",
+      "tax33": "3.3% ushlab qolinadigan soliq",
+      "insurance4": "4 asosiy sug‘urta (4대보험)",
       "items": {
-        "pension": "National pension",
-        "health": "Health insurance",
-        "longTermCare": "Long-term care (% of health)",
-        "employment": "Employment insurance",
-        "incomeTax": "Income tax",
-        "localTax": "Local income tax",
-        "businessTax": "Withholding total"
+        "pension": "Pensiya",
+        "health": "Tibbiy sug‘urta",
+        "longTermCare": "Uzoq muddatli parvarish (tibbiyning %)",
+        "employment": "Bandlik sug‘urtasi",
+        "incomeTax": "Daromad solig‘i",
+        "localTax": "Mahalliy daromad solig‘i",
+        "businessTax": "Jami ushlanma"
       },
-      "ratesHelp": "Leave blank to use the default. 3.3% = 3% income tax + 0.3% local tax.",
-      "insuranceHelp": "Employee shares for 2026; blank uses the default. Rates change each January, so check them against a payslip. Income tax follows the official tax table, so enter a flat % from your payslip, or leave it at 0 to skip it."
+      "ratesHelp": "Bo‘sh qoldirsangiz, standart qiymat olinadi. 3.3% = 3% daromad solig‘i + 0.3% mahalliy soliq.",
+      "insuranceHelp": "2026-yil xodim ulushlari; bo‘sh — standart. Stavkalar har yanvarda o‘zgaradi, hisob-varaq bilan solishtiring. Daromad solig‘i rasmiy jadvalga bog‘liq — hisob-varaqdagi % ni kiriting yoki 0 qoldiring."
     },
     "takeHome": {
-      "title": "Take-home",
-      "salary": "Salary",
-      "hourlyPay": "Hourly pay",
-      "overtimePay": "Overtime pay",
-      "grossEstimate": "Gross (estimated)",
-      "grossPaid": "Gross (payslip)",
-      "expectedNet": "Expected take-home",
-      "netPaid": "Take-home (payslip)",
-      "estimateNote": "Estimate from the days logged. Paid leave and weekly holiday pay (주휴수당) are not included.",
-      "fromPayslipGross": "Deductions worked out from the payslip's own gross, to check the cut they took.",
-      "needSalary": "Add the contract salary under Company to estimate take-home pay."
+      "title": "Qo‘lga tegadigan",
+      "salary": "Maosh",
+      "hourlyPay": "Soatbay to‘lov",
+      "overtimePay": "Qo‘shimcha ish to‘lovi",
+      "grossEstimate": "Umumiy (taxminiy)",
+      "grossPaid": "Umumiy (hisob-varaq)",
+      "expectedNet": "Kutilgan sof summa",
+      "netPaid": "Sof summa (hisob-varaq)",
+      "estimateNote": "Kiritilgan kunlar asosida taxmin. Haq to‘lanadigan ta‘til va 주휴수당 kirmagan.",
+      "fromPayslipGross": "Ushlanmalar hisob-varaqdagi umumiy summadan hisoblandi — to‘g‘ri ushlanganini tekshirish uchun.",
+      "needSalary": "Sof summani hisoblash uchun Kompaniya bo‘limiga shartnoma maoshini kiriting."
     },
     "jobs": {
-      "title": "Jobs",
-      "add": "Add job",
-      "addFirst": "Add your first job",
-      "empty": "No jobs yet. Add one to start logging hours.",
-      "untitled": "Untitled job",
-      "past": "Past jobs",
-      "thisMonth": "This month",
-      "allTime": "All time",
-      "daysLogged": "{{count}} days logged",
-      "lastLogged": "last",
-      "delete": "Delete job",
-      "back": "Back to jobs",
-      "loadFailed": "Could not load your jobs.",
-      "confirmDelete": "Delete \"{{name}}\" and everything logged under it ({{days}} days, plus days off and payslips)? This cannot be undone."
+      "title": "Ishlar",
+      "add": "Ish qo‘shish",
+      "addFirst": "Birinchi ishingizni qo‘shing",
+      "empty": "Hali ish yo‘q. Soatlarni yozish uchun ish qo‘shing.",
+      "untitled": "Nomsiz ish",
+      "past": "Oldingi ishlar",
+      "thisMonth": "Bu oy",
+      "allTime": "Jami",
+      "daysLogged": "{{count}} kun yozilgan",
+      "lastLogged": "oxirgi",
+      "delete": "Ishni o‘chirish",
+      "back": "Ishlar ro‘yxatiga",
+      "loadFailed": "Ishlarni yuklab bo‘lmadi.",
+      "confirmDelete": "\"{{name}}\" va unga yozilgan hamma narsa ({{days}} kun, ta‘tillar va hisob-varaqlar) o‘chirilsinmi? Qaytarib bo‘lmaydi.",
+      "typeFullTime": "To‘liq stavkali ish",
+      "typeFullTimeHelp": "Belgilangan jadvalli bitta ish beruvchi: qo‘shimcha ish, ta‘til, kechikish va oylik hisob-varaq.",
+      "typeGig": "Qisman / vaqtinchalik ish",
+      "typeGigHelp": "Bir yoki bir nechta agentlik uchun smenalar, soatbay yoki belgilangan summa: soatlar, to‘lov va qarzdorlik.",
+      "pending": "Sizga qarz",
+      "allPaid": "hammasi to‘langan",
+      "agencies": "{{count}} ta agentlik"
     }
   },
   "profile": {
@@ -881,5 +888,118 @@
     },
     "title": "Yangi so'zlar",
     "update": "Yangilash"
+  },
+  "gig": {
+    "newTitle": "Yangi qisman / vaqtinchalik ish",
+    "agencies": "Agentliklar",
+    "logShift": "Smena qo‘shish",
+    "editShift": "Smenani tahrirlash",
+    "shifts": "Smenalar",
+    "setup": {
+      "jobTitle": "Ish",
+      "jobIntro": "Bu qisman ishlar guruhining nomi, masalan \"Dam olish kunlari ishlari\".",
+      "name": "Nomi",
+      "namePlaceholder": "Dam olish va bayram kunlari ishlari",
+      "agenciesIntro": "Kimga ishlaysiz. Har birining o‘z to‘lovi, ushlanmalari va to‘lov kuni bor — smena qo‘shganda avtomatik to‘ldiriladi.",
+      "agencyN": "Agentlik {{n}}",
+      "agencyName": "Agentlik / ish beruvchi",
+      "addAgency": "Agentlik qo‘shish",
+      "removeAgency": "Agentlikni o‘chirish",
+      "create": "Yaratish"
+    },
+    "payType": {
+      "label": "To‘lov turi",
+      "hourly": "Soatbay",
+      "flat": "Smenaga belgilangan summa"
+    },
+    "hourlyRate": "Soatlik stavka",
+    "flatAmount": "Smena uchun summa",
+    "amountIsNet": "Soliqdan keyingi summa (qo‘lga tegadigan)",
+    "netIgnoresDeductions": "Soliqdan keyingi summa o‘zgarishsiz olinadi; ushlanmalar faqat soliqdan oldingi to‘lovga qo‘llanadi.",
+    "overMinimum": "{{year}}-yil eng kam ish haqidan {{pct}}% yuqori",
+    "belowMinimum": "{{pct}}% — {{year}}-yil eng kam ish haqidan past",
+    "schedule": {
+      "label": "To‘lov kuni",
+      "perShift": "O‘sha kuni",
+      "nextDay": "Ertasi kuni",
+      "weekly": "Har hafta",
+      "semimonthly": "Oyiga 2 marta",
+      "monthly": "Har oy",
+      "payDay": "Keyingi oyning kuni",
+      "firstPayDay": "1–15-kunlar to‘lanadigan kun",
+      "secondPayDay": "16–oxirgi kunlar to‘lanadigan kun (keyingi oy)",
+      "weekday": "To‘lov kuni"
+    },
+    "weekdays": {
+      "0": "Yakshanba",
+      "1": "Dushanba",
+      "2": "Seshanba",
+      "3": "Chorshanba",
+      "4": "Payshanba",
+      "5": "Juma",
+      "6": "Shanba"
+    },
+    "pending": {
+      "title": "To‘lanishi kutilmoqda",
+      "none": "Hammasi to‘langan.",
+      "overdue": "Kechikkan",
+      "shifts": "{{count}} ta smena",
+      "ofGross": "(ushlanmalardan oldin {{gross}})",
+      "payDay": "To‘lov kuni",
+      "markPaid": "To‘landi deb belgilash"
+    },
+    "totals": {
+      "shifts": "smena",
+      "worked": "ishlandi",
+      "earned": "topildi"
+    },
+    "noShifts": "Bu oyda smena yo‘q.",
+    "cols": {
+      "date": "Sana",
+      "agency": "Agentlik",
+      "time": "Vaqt",
+      "hours": "Soat",
+      "pay": "To‘lov",
+      "status": "Holat"
+    },
+    "status": {
+      "paid": "To‘langan",
+      "due": "Kutilmoqda"
+    },
+    "flatNet": "belgilangan, soliqdan keyin",
+    "flatGross": "belgilangan, soliqdan oldin",
+    "start": "Boshlanish",
+    "end": "Tugash",
+    "breakMinutes": "Tanaffus (daq)",
+    "timesOptional": "Belgilangan summali smenada vaqt ixtiyoriy — soatlarni kuzatish uchun kiriting.",
+    "paidShiftNote": "Allaqachon to‘langan: agentlikni o‘zgartirib bo‘lmaydi. Avval to‘lovni bekor qiling.",
+    "payments": {
+      "title": "Olingan to‘lovlar",
+      "received": "Olingan kun",
+      "shifts": "Smenalar",
+      "expected": "Kutilgan",
+      "amount": "Olingan",
+      "undo": "To‘lovni bekor qilish"
+    },
+    "pay": {
+      "title": "{{agency}} to‘ladi",
+      "intro": "Bu pul qaysi smenalar uchun ekanini belgilang. Summani kiritish ixtiyoriy, lekin tekshirishga yordam beradi.",
+      "date": "Olingan kun",
+      "amount": "Olingan summa",
+      "expected": "Kutilgan sof summa {{net}} (ushlanmalardan oldin {{gross}})",
+      "diff": "farq",
+      "matches": "mos",
+      "save": "To‘landi deb belgilash"
+    },
+    "confirmDeleteShift": "Bu smena o‘chirilsinmi?",
+    "confirmDeletePaidShift": "Bu smena allaqachon to‘langan. Baribir o‘chirilsinmi? To‘lov yozuvi qoladi.",
+    "confirmUndoPayment": "Bu to‘lov bekor qilinsinmi? Smenalar yana to‘lanmagan bo‘ladi.",
+    "errors": {
+      "nameRequired": "Ishga nom bering.",
+      "agencyRequired": "Kamida bitta agentlik qo‘shing.",
+      "pickAgency": "Agentlikni tanlang.",
+      "pickShift": "Kamida bitta smenani belgilang.",
+      "generic": "Xatolik yuz berdi."
+    }
   }
 }

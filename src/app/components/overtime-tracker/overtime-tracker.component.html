@@ -55,7 +55,7 @@
 
         <form (ngSubmit)="saveSettings()" #settingsFormRef="ngForm">
 
-          <h6 class="text-muted text-uppercase small mt-3">
+          <h6 class="ot-section-title">
             {{ 'overtime.sections.pay' | translate }}
           </h6>
           <div class="row g-3">
@@ -89,7 +89,7 @@
             </div>
           </div>
 
-          <h6 class="text-muted text-uppercase small mt-4">
+          <h6 class="ot-section-title">
             {{ 'overtime.sections.workingDay' | translate }}
           </h6>
           <div class="row g-3">
@@ -141,7 +141,7 @@
             </div>
           </div>
 
-          <h6 class="text-muted text-uppercase small mt-4">
+          <h6 class="ot-section-title">
             {{ 'overtime.sections.counting' | translate }}
           </h6>
           <div class="row g-3">
@@ -183,14 +183,14 @@
               <select id="lateGraceMinutes" name="lateGraceMinutes" class="form-select"
                       [(ngModel)]="settingsForm.lateGraceMinutes">
                 @for (g of graceOptions; track g) {
-                  <option [ngValue]="g">{{ g ? ('overtime.late.graceN' | translate: { n: g }) : ('overtime.late.graceNone' | translate) }}</option>
+                  <option [ngValue]="g">{{ g ? ('overtime.late.graceN' | translate: { n: g }) : ('overtime.late.graceNone' | translate: { time: lateExampleTime }) }}</option>
                 }
               </select>
               <div class="form-text">{{ 'overtime.late.graceHelp' | translate }}</div>
             </div>
           </div>
 
-          <h6 class="text-muted text-uppercase small mt-4">
+          <h6 class="ot-section-title">
             {{ 'overtime.sections.restDays' | translate }}
           </h6>
           <p class="text-muted small mb-2">{{ 'overtime.restDaysIntro' | translate }}</p>
@@ -230,7 +230,7 @@
             </div>
           </div>
 
-          <h6 class="text-muted text-uppercase small mt-4">
+          <h6 class="ot-section-title">
             {{ 'overtime.sections.company' | translate }}
             <span class="text-lowercase fw-normal">{{ 'overtime.optional' | translate }}</span>
           </h6>
@@ -295,7 +295,7 @@
             </div>
           }
 
-          <h6 class="text-muted text-uppercase small mt-4">
+          <h6 class="ot-section-title">
             {{ 'overtime.sections.deductions' | translate }}
           </h6>
           <p class="text-muted small mb-2">{{ 'overtime.payIntro' | translate }}</p>
@@ -341,7 +341,7 @@
             </div>
           }
 
-          <h6 class="text-muted text-uppercase small mt-4">
+          <h6 class="ot-section-title">
             {{ 'overtime.sections.leave' | translate }}
           </h6>
           <p class="text-muted small mb-2">{{ 'overtime.leave.settingsIntro' | translate }}</p>

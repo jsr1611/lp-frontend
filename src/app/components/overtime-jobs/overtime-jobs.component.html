@@ -15,6 +15,32 @@
     </div>
   }
 
+  @if (choosingType) {
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <div class="card h-100 shadow-sm job-card type-card" role="button" tabindex="0"
+             (click)="addFullTime()" (keydown.enter)="addFullTime()">
+          <div class="card-body">
+            <h5><i class="bi bi-building me-2 text-primary"></i>{{ 'overtime.jobs.typeFullTime' | translate }}</h5>
+            <p class="small text-muted mb-0">{{ 'overtime.jobs.typeFullTimeHelp' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="card h-100 shadow-sm job-card type-card" role="button" tabindex="0"
+             (click)="addGig()" (keydown.enter)="addGig()">
+          <div class="card-body">
+            <h5><i class="bi bi-calendar-week me-2 text-info"></i>{{ 'overtime.jobs.typeGig' | translate }}</h5>
+            <p class="small text-muted mb-0">{{ 'overtime.jobs.typeGigHelp' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <button class="btn btn-link btn-sm" (click)="choosingType = false">{{ 'common.cancel' | translate }}</button>
+      </div>
+    </div>
+  }
+
   @if (!loaded) {
     <div class="text-center text-muted py-5"><div class="spinner-border" role="status"></div></div>
   } @else if (!jobs.length && !errorMessage) {
@@ -69,25 +95,54 @@
           </div>
         </div>
 
-        <div class="row text-center mt-3 g-2">
-          <div class="col-6">
-            <div class="small text-muted">{{ 'overtime.jobs.thisMonth' | translate }}</div>
-            <div class="fw-semibold">{{ hours(job.monthOtMinutes) }}</div>
-            <div class="small">{{ money(job.monthEarnings, job) }}</div>
+        @if (job.gig; as g) {
+          <!-- Gig work: hours and pay, and what is still owed. -->
+          <div class="row text-center mt-3 g-2">
+            <div class="col-6">
+              <div class="small text-muted">{{ 'overtime.jobs.thisMonth' | translate }}</div>
+              <div class="fw-semibold">{{ hours(g.monthMinutes) }}</div>
+              <div class="small">{{ money(g.monthGross, job) }}</div>
+            </div>
+            <div class="col-6">
+              <div class="small text-muted">{{ 'overtime.jobs.pending' | translate }}</div>
+              <div class="fw-semibold" [class.text-danger]="g.overdue">{{ money(g.pendingNet, job) }}</div>
+              <div class="small">
+                @if (g.nextPayDay) {
+                  {{ 'gig.pending.payDay' | translate }} {{ g.nextPayDay | date: 'd MMM' : 'UTC' }}
+                } @else {
+                  <i class="bi bi-check-circle text-success"></i> {{ 'overtime.jobs.allPaid' | translate }}
+                }
+              </div>
+            </div>
           </div>
-          <div class="col-6">
-            <div class="small text-muted">{{ 'overtime.jobs.allTime' | translate }}</div>
-            <div class="fw-semibold">{{ hours(job.totalOtMinutes) }}</div>
-            <div class="small">{{ money(job.totalEarnings, job) }}</div>
+          <div class="small text-muted mt-3">
+            {{ 'overtime.jobs.agencies' | translate: { count: g.agencies } }} ·
+            {{ 'gig.pending.shifts' | translate: { count: g.shifts } }}
+            @if (g.lastLogged) {
+              · {{ 'overtime.jobs.lastLogged' | translate }} {{ g.lastLogged | date: 'mediumDate' : 'UTC' }}
+            }
           </div>
-        </div>
+        } @else {
+          <div class="row text-center mt-3 g-2">
+            <div class="col-6">
+              <div class="small text-muted">{{ 'overtime.jobs.thisMonth' | translate }}</div>
+              <div class="fw-semibold">{{ hours(job.monthOtMinutes) }}</div>
+              <div class="small">{{ money(job.monthEarnings, job) }}</div>
+            </div>
+            <div class="col-6">
+              <div class="small text-muted">{{ 'overtime.jobs.allTime' | translate }}</div>
+              <div class="fw-semibold">{{ hours(job.totalOtMinutes) }}</div>
+              <div class="small">{{ money(job.totalEarnings, job) }}</div>
+            </div>
+          </div>
 
-        <div class="small text-muted mt-3">
-          {{ 'overtime.jobs.daysLogged' | translate: { count: job.daysLogged } }}
-          @if (job.lastLogged) {
-            · {{ 'overtime.jobs.lastLogged' | translate }} {{ job.lastLogged | date: 'mediumDate' : 'UTC' }}
-          }
-        </div>
+          <div class="small text-muted mt-3">
+            {{ 'overtime.jobs.daysLogged' | translate: { count: job.daysLogged } }}
+            @if (job.lastLogged) {
+              · {{ 'overtime.jobs.lastLogged' | translate }} {{ job.lastLogged | date: 'mediumDate' : 'UTC' }}
+            }
+          </div>
+        }
       </div>
     </div>
   </div>

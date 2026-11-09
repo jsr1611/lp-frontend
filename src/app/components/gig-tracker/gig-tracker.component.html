@@ -1,0 +1,525 @@
+<div class="gig-tracker container py-4">
+
+  <!-- ============ Header ============ -->
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <div class="d-flex align-items-center gap-2 min-w-0">
+      <button class="btn btn-link px-1" (click)="backToJobs()" [attr.aria-label]="'overtime.jobs.back' | translate">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <h2 class="mb-0 text-truncate">
+        <i class="bi bi-calendar-week me-2"></i>{{ job?.company?.name || ('gig.newTitle' | translate) }}
+      </h2>
+      <span class="badge text-bg-info">{{ 'overtime.employment.parttime' | translate }}</span>
+    </div>
+    @if (job && !editing) {
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary" (click)="openEdit()">
+          <i class="bi bi-building me-1"></i>{{ 'gig.agencies' | translate }}
+        </button>
+        <button class="btn btn-primary" (click)="openShift()">
+          <i class="bi bi-plus-lg me-1"></i>{{ 'gig.logShift' | translate }}
+        </button>
+      </div>
+    }
+  </div>
+
+  @if (errorMessage && !editing) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+  }
+
+  @if (!loaded) {
+    <div class="text-center text-muted py-5"><div class="spinner-border" role="status"></div></div>
+  }
+
+  <!-- ============ Setup / agencies ============ -->
+  @if (editing) {
+    <section class="gig-section card shadow-sm mb-4">
+      <div class="card-header bg-transparent">
+        <h5 class="mb-0"><i class="bi bi-briefcase me-2"></i>{{ 'gig.setup.jobTitle' | translate }}</h5>
+        <div class="small text-muted">{{ 'gig.setup.jobIntro' | translate }}</div>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-8">
+            <label class="form-label" for="gigName">{{ 'gig.setup.name' | translate }}</label>
+            <input id="gigName" class="form-control" [(ngModel)]="jobForm.company!.name"
+                   [placeholder]="'gig.setup.namePlaceholder' | translate" />
+          </div>
+          <div class="col-12 col-md-4">
+            <label class="form-label" for="gigCurrency">{{ 'common.currency' | translate }}</label>
+            <select id="gigCurrency" class="form-select" [(ngModel)]="jobForm.currency" [compareWith]="compareCurrency">
+              @for (c of popularCurrencies; track c.code) {
+                <option [ngValue]="c">{{ c.code }} — {{ currencyNameKey(c.code) | translate }}</option>
+              }
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="gig-section card shadow-sm mb-4">
+      <div class="card-header bg-transparent">
+        <h5 class="mb-0"><i class="bi bi-building me-2"></i>{{ 'gig.agencies' | translate }}</h5>
+        <div class="small text-muted">{{ 'gig.setup.agenciesIntro' | translate }}</div>
+      </div>
+      <div class="card-body">
+        @for (a of jobForm.agencies; track $index; let i = $index) {
+          <div class="agency-block mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold">{{ a.name || ('gig.setup.agencyN' | translate: { n: i + 1 }) }}</span>
+              <button class="btn btn-sm btn-link text-danger" (click)="removeAgency(i)"
+                      [attr.aria-label]="'gig.setup.removeAgency' | translate">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label small">{{ 'gig.setup.agencyName' | translate }}</label>
+                <input class="form-control" [(ngModel)]="a.name" />
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label small">{{ 'gig.payType.label' | translate }}</label>
+                <div class="btn-group w-100" role="group">
+                  <button type="button" class="btn btn-sm" [class.btn-primary]="a.payType === 'hourly'"
+                          [class.btn-outline-primary]="a.payType !== 'hourly'" (click)="a.payType = 'hourly'">
+                    {{ 'gig.payType.hourly' | translate }}
+                  </button>
+                  <button type="button" class="btn btn-sm" [class.btn-primary]="a.payType === 'flat'"
+                          [class.btn-outline-primary]="a.payType !== 'flat'" (click)="a.payType = 'flat'">
+                    {{ 'gig.payType.flat' | translate }}
+                  </button>
+                </div>
+              </div>
+
+              @if (a.payType === 'hourly') {
+                <div class="col-12 col-md-6">
+                  <label class="form-label small">{{ 'gig.hourlyRate' | translate }} ({{ jobForm.currency.code }})</label>
+                  <input type="number" min="0" class="form-control" [(ngModel)]="a.hourlyRate" />
+                  @if (rateVsMinimum(a.hourlyRate); as v) {
+                    <div class="form-text" [class.text-danger]="v.below">
+                      {{ (v.below ? 'gig.belowMinimum' : 'gig.overMinimum') | translate: { pct: v.pct, year: minimumWage?.year || 2026 } }}
+                    </div>
+                  }
+                </div>
+              } @else {
+                <div class="col-12 col-md-6">
+                  <label class="form-label small">{{ 'gig.flatAmount' | translate }} ({{ jobForm.currency.code }})</label>
+                  <input type="number" min="0" class="form-control" [(ngModel)]="a.flatAmount" />
+                  <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" [id]="'net' + i" [(ngModel)]="a.amountIsNet" />
+                    <label class="form-check-label small" [for]="'net' + i">{{ 'gig.amountIsNet' | translate }}</label>
+                  </div>
+                </div>
+              }
+
+              <div class="col-12 col-md-6">
+                <label class="form-label small">{{ 'overtime.deductions.label' | translate }}</label>
+                <select class="form-select" [(ngModel)]="a.deductions.mode">
+                  <option value="none">{{ 'overtime.deductions.none' | translate }}</option>
+                  <option value="tax33">{{ 'overtime.deductions.tax33' | translate }}</option>
+                  <option value="insurance4">{{ 'overtime.deductions.insurance4' | translate }}</option>
+                </select>
+                @if (a.payType === 'flat' && a.amountIsNet) {
+                  <div class="form-text">{{ 'gig.netIgnoresDeductions' | translate }}</div>
+                }
+              </div>
+
+              <div class="col-12 col-md-6">
+                <label class="form-label small">{{ 'gig.schedule.label' | translate }}</label>
+                <select class="form-select" [(ngModel)]="a.paySchedule.type">
+                  @for (t of scheduleTypes; track t) {
+                    <option [value]="t">{{ 'gig.schedule.' + t | translate }}</option>
+                  }
+                </select>
+              </div>
+              <div class="col-12 col-md-6">
+                @switch (a.paySchedule.type) {
+                  @case ('monthly') {
+                    <label class="form-label small">{{ 'gig.schedule.payDay' | translate }}</label>
+                    <input type="number" min="1" max="31" class="form-control" [(ngModel)]="a.paySchedule.payDay" />
+                  }
+                  @case ('semimonthly') {
+                    <div class="row g-2">
+                      <div class="col-6">
+                        <label class="form-label small">{{ 'gig.schedule.firstPayDay' | translate }}</label>
+                        <input type="number" min="1" max="31" class="form-control" [(ngModel)]="a.paySchedule.firstPayDay" />
+                      </div>
+                      <div class="col-6">
+                        <label class="form-label small">{{ 'gig.schedule.secondPayDay' | translate }}</label>
+                        <input type="number" min="1" max="31" class="form-control" [(ngModel)]="a.paySchedule.secondPayDay" />
+                      </div>
+                    </div>
+                  }
+                  @case ('weekly') {
+                    <label class="form-label small">{{ 'gig.schedule.weekday' | translate }}</label>
+                    <select class="form-select" [(ngModel)]="a.paySchedule.weekday">
+                      @for (d of weekdays; track d) {
+                        <option [ngValue]="d">{{ 'gig.weekdays.' + d | translate }}</option>
+                      }
+                    </select>
+                  }
+                }
+              </div>
+            </div>
+          </div>
+        }
+        <button class="btn btn-outline-primary btn-sm" (click)="addAgency()">
+          <i class="bi bi-plus-lg me-1"></i>{{ 'gig.setup.addAgency' | translate }}
+        </button>
+
+        @if (errorMessage) {
+          <div class="alert alert-danger mt-3 mb-0" role="alert">{{ errorMessage }}</div>
+        }
+        <div class="d-flex gap-2 mt-4">
+          <button class="btn btn-primary" [disabled]="saving" (click)="saveJob()">
+            {{ (saving ? 'common.saving' : (jobId ? 'common.save' : 'gig.setup.create')) | translate }}
+          </button>
+          <button class="btn btn-outline-secondary" (click)="cancelEdit()">{{ 'common.cancel' | translate }}</button>
+        </div>
+      </div>
+    </section>
+  }
+
+  @if (job && !editing) {
+    <!-- ============ Pending pay ============ -->
+    <section class="mb-4">
+      <h5 class="section-title"><i class="bi bi-hourglass-split me-2"></i>{{ 'gig.pending.title' | translate }}</h5>
+      @if (!pending.length) {
+        <div class="text-muted small"><i class="bi bi-check-circle text-success me-1"></i>{{ 'gig.pending.none' | translate }}</div>
+      } @else {
+        <div class="row g-3">
+          @for (p of pending; track p.agencyId) {
+            <div class="col-12 col-md-6">
+              <div class="card h-100 shadow-sm pending-card" [class.overdue]="p.overdue">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start gap-2">
+                    <div class="fw-semibold">{{ p.agencyName || '—' }}</div>
+                    @if (p.overdue) {
+                      <span class="badge text-bg-danger">{{ 'gig.pending.overdue' | translate }}</span>
+                    }
+                  </div>
+                  <div class="small text-muted">
+                    {{ 'gig.pending.shifts' | translate: { count: p.shifts } }} · {{ hours(p.minutes) }}
+                  </div>
+                  <div class="mt-2">
+                    <span class="fs-5 fw-semibold">{{ p.net | currency: currencyCode : 'symbol' : '1.0-0' }}</span>
+                    @if (p.net !== p.gross) {
+                      <span class="small text-muted ms-1">
+                        {{ 'gig.pending.ofGross' | translate: { gross: (p.gross | currency: currencyCode : 'symbol' : '1.0-0') } }}
+                      </span>
+                    }
+                  </div>
+                  <div class="small mt-1">
+                    <i class="bi bi-calendar-event me-1"></i>{{ 'gig.pending.payDay' | translate }}
+                    <strong>{{ p.nextPayDay | date: 'EEE d MMM' : 'UTC' }}</strong>
+                  </div>
+                  <button class="btn btn-sm btn-success mt-3" (click)="openPay(p)">
+                    <i class="bi bi-cash-coin me-1"></i>{{ 'gig.pending.markPaid' | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- ============ Month ============ -->
+    <section class="mb-4">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+        <h5 class="section-title mb-0"><i class="bi bi-list-check me-2"></i>{{ 'gig.shifts' | translate }}</h5>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-sm btn-outline-secondary" (click)="shiftMonth(-1)" aria-label="previous month">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <strong>{{ month + '-01' | date: 'MMMM y' : 'UTC' }}</strong>
+          <button class="btn btn-sm btn-outline-secondary" (click)="shiftMonth(1)" aria-label="next month">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      @if (monthTotals; as t) {
+        <div class="d-flex flex-wrap gap-3 small mb-2">
+          <span><strong>{{ t.shifts }}</strong> {{ 'gig.totals.shifts' | translate }}</span>
+          <span><strong>{{ hours(t.minutes) }}</strong> {{ 'gig.totals.worked' | translate }}</span>
+          <span><strong>{{ t.gross | currency: currencyCode : 'symbol' : '1.0-0' }}</strong> {{ 'gig.totals.earned' | translate }}</span>
+          @if (t.byAgency.length > 1) {
+            @for (a of t.byAgency; track a.name) {
+              <span class="text-muted">{{ a.name }}: {{ hours(a.minutes) }} · {{ a.gross | currency: currencyCode : 'symbol' : '1.0-0' }}</span>
+            }
+          }
+        </div>
+      }
+
+      @if (!shifts.length) {
+        <div class="card"><div class="card-body text-muted text-center">{{ 'gig.noShifts' | translate }}</div></div>
+      } @else {
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead>
+              <tr>
+                <th>{{ 'gig.cols.date' | translate }}</th>
+                <th>{{ 'gig.cols.agency' | translate }}</th>
+                <th>{{ 'gig.cols.time' | translate }}</th>
+                <th class="text-end">{{ 'gig.cols.hours' | translate }}</th>
+                <th class="text-end">{{ 'gig.cols.pay' | translate }}</th>
+                <th>{{ 'gig.cols.status' | translate }}</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (s of shifts; track s._id) {
+                <tr>
+                  <td class="text-nowrap">{{ s.date | date: 'EEE d MMM' : 'UTC' }}</td>
+                  <td>{{ agencyName(s.agencyId) }}</td>
+                  <td class="text-nowrap">{{ s.startTime ? s.startTime + '–' + s.endTime : '—' }}</td>
+                  <td class="text-end">{{ s.minutes ? hours(s.minutes) : '—' }}</td>
+                  <td class="text-end text-nowrap">
+                    {{ s.gross | currency: currencyCode : 'symbol' : '1.0-0' }}
+                    <div class="small text-muted">
+                      @if (s.payType === 'flat') {
+                        {{ (s.amountIsNet ? 'gig.flatNet' : 'gig.flatGross') | translate }}
+                      } @else {
+                        {{ s.hourlyRate | currency: currencyCode : 'symbol' : '1.0-0' }}/h
+                      }
+                    </div>
+                  </td>
+                  <td>
+                    @if (s.paymentId) {
+                      <span class="badge text-bg-success"><i class="bi bi-check-lg"></i> {{ 'gig.status.paid' | translate }}</span>
+                    } @else {
+                      <span class="badge text-bg-warning">{{ 'gig.status.due' | translate }} {{ s.payDue | date: 'd MMM' : 'UTC' }}</span>
+                    }
+                  </td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-link" (click)="openShift(s)" [attr.aria-label]="'overtime.payslip.edit' | translate">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <!-- ============ Payments ============ -->
+    @if (payments.length) {
+      <section class="mb-4">
+        <h5 class="section-title"><i class="bi bi-cash-stack me-2"></i>{{ 'gig.payments.title' | translate }}</h5>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead>
+              <tr>
+                <th>{{ 'gig.payments.received' | translate }}</th>
+                <th>{{ 'gig.cols.agency' | translate }}</th>
+                <th class="text-end">{{ 'gig.payments.shifts' | translate }}</th>
+                <th class="text-end">{{ 'gig.payments.expected' | translate }}</th>
+                <th class="text-end">{{ 'gig.payments.amount' | translate }}</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of payments; track p._id) {
+                <tr>
+                  <td class="text-nowrap">{{ p.date | date: 'd MMM y' : 'UTC' }}</td>
+                  <td>{{ agencyName(p.agencyId) }}</td>
+                  <td class="text-end">{{ p.shiftIds.length }}</td>
+                  <td class="text-end">{{ p.expectedNet | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
+                  <td class="text-end text-nowrap">
+                    @if (p.amount != null) {
+                      {{ p.amount | currency: currencyCode : 'symbol' : '1.0-0' }}
+                      @if (p.diff != null && (p.diff > 10 || p.diff < -10)) {
+                        <span class="small" [class.text-danger]="p.diff < 0" [class.text-info]="p.diff > 0">
+                          ({{ p.diff > 0 ? '+' : '−' }}{{ (p.diff < 0 ? -p.diff : p.diff) | number: '1.0-0' }})
+                        </span>
+                      } @else if (p.diff != null) {
+                        <i class="bi bi-check-circle text-success ms-1"></i>
+                      }
+                    } @else { — }
+                  </td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-link text-danger" (click)="undoPayment(p)"
+                            [attr.aria-label]="'gig.payments.undo' | translate" [title]="'gig.payments.undo' | translate">
+                      <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+  }
+</div>
+
+<!-- ============ Shift modal ============ -->
+@if (shiftForm) {
+  <div class="ot-modal" (click)="shiftForm = null">
+    <div class="ot-modal-content" (click)="$event.stopPropagation()">
+      <h5 class="mb-3">{{ (shiftForm._id ? 'gig.editShift' : 'gig.logShift') | translate }}</h5>
+      <form (ngSubmit)="saveShift()">
+        <div class="row g-3">
+          <div class="col-6">
+            <label class="form-label" for="shiftDate">{{ 'gig.cols.date' | translate }}</label>
+            <input id="shiftDate" name="shiftDate" type="date" class="form-control" [(ngModel)]="shiftForm.date" required />
+          </div>
+          <div class="col-6">
+            <label class="form-label" for="shiftAgency">{{ 'gig.cols.agency' | translate }}</label>
+            <select id="shiftAgency" name="shiftAgency" class="form-select" [(ngModel)]="shiftForm.agencyId"
+                    (ngModelChange)="onShiftAgency()" [disabled]="!!shiftForm.paymentId">
+              @for (a of activeAgencies; track a._id) {
+                <option [value]="a._id">{{ a.name }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-4">
+            <label class="form-label" for="shiftStart">{{ 'gig.start' | translate }}</label>
+            <input id="shiftStart" name="shiftStart" type="time" class="form-control" [(ngModel)]="shiftForm.startTime" />
+          </div>
+          <div class="col-4">
+            <label class="form-label" for="shiftEnd">{{ 'gig.end' | translate }}</label>
+            <input id="shiftEnd" name="shiftEnd" type="time" class="form-control" [(ngModel)]="shiftForm.endTime" />
+          </div>
+          <div class="col-4">
+            <label class="form-label" for="shiftBreak">{{ 'gig.breakMinutes' | translate }}</label>
+            <input id="shiftBreak" name="shiftBreak" type="number" min="0" step="10" class="form-control"
+                   [(ngModel)]="shiftForm.breakMinutes" />
+          </div>
+          @if (shiftForm.payType === 'flat') {
+            <div class="col-12 form-text mt-1">{{ 'gig.timesOptional' | translate }}</div>
+          }
+
+          <div class="col-12">
+            <div class="btn-group w-100" role="group">
+              <button type="button" class="btn btn-sm" [class.btn-primary]="shiftForm.payType === 'hourly'"
+                      [class.btn-outline-primary]="shiftForm.payType !== 'hourly'" (click)="shiftForm.payType = 'hourly'">
+                {{ 'gig.payType.hourly' | translate }}
+              </button>
+              <button type="button" class="btn btn-sm" [class.btn-primary]="shiftForm.payType === 'flat'"
+                      [class.btn-outline-primary]="shiftForm.payType !== 'flat'" (click)="shiftForm.payType = 'flat'">
+                {{ 'gig.payType.flat' | translate }}
+              </button>
+            </div>
+          </div>
+          @if (shiftForm.payType === 'hourly') {
+            <div class="col-12">
+              <label class="form-label" for="shiftRate">{{ 'gig.hourlyRate' | translate }} ({{ currencyCode }})</label>
+              <input id="shiftRate" name="shiftRate" type="number" min="0" class="form-control" [(ngModel)]="shiftForm.hourlyRate" />
+              @if (rateVsMinimum(shiftForm.hourlyRate); as v) {
+                <div class="form-text" [class.text-danger]="v.below">
+                  {{ (v.below ? 'gig.belowMinimum' : 'gig.overMinimum') | translate: { pct: v.pct, year: minimumWage?.year || 2026 } }}
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="col-12">
+              <label class="form-label" for="shiftFlat">{{ 'gig.flatAmount' | translate }} ({{ currencyCode }})</label>
+              <input id="shiftFlat" name="shiftFlat" type="number" min="0" class="form-control" [(ngModel)]="shiftForm.flatAmount" />
+              <div class="form-check mt-1">
+                <input class="form-check-input" type="checkbox" id="shiftNet" name="shiftNet" [(ngModel)]="shiftForm.amountIsNet" />
+                <label class="form-check-label small" for="shiftNet">{{ 'gig.amountIsNet' | translate }}</label>
+              </div>
+            </div>
+          }
+          <div class="col-12">
+            <label class="form-label" for="shiftNote">{{ 'overtime.note' | translate }}</label>
+            <input id="shiftNote" name="shiftNote" type="text" class="form-control" [(ngModel)]="shiftForm.note" />
+          </div>
+        </div>
+
+        <div class="ot-preview mt-3">
+          @if (shiftPreview.minutes) { {{ hours(shiftPreview.minutes) }} · }
+          <strong>{{ shiftPreview.pay | currency: currencyCode : 'symbol' : '1.0-0' }}</strong>
+          @if (shiftForm.payType === 'flat' && shiftForm.amountIsNet) {
+            <span class="text-muted small">{{ 'gig.flatNet' | translate }}</span>
+          }
+        </div>
+
+        @if (shiftForm.paymentId) {
+          <div class="form-text"><i class="bi bi-lock me-1"></i>{{ 'gig.paidShiftNote' | translate }}</div>
+        }
+        @if (shiftError) {
+          <div class="alert alert-danger mt-3 mb-0" role="alert">{{ shiftError }}</div>
+        }
+        <div class="d-flex gap-2 mt-4">
+          <button type="submit" class="btn btn-primary">{{ 'common.save' | translate }}</button>
+          <button type="button" class="btn btn-outline-secondary" (click)="shiftForm = null">{{ 'common.cancel' | translate }}</button>
+          @if (shiftForm._id) {
+            <button type="button" class="btn btn-outline-danger ms-auto" (click)="deleteShift(shiftForm)">
+              <i class="bi bi-trash"></i>
+            </button>
+          }
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- ============ Mark-as-paid modal ============ -->
+@if (payForm) {
+  <div class="ot-modal" (click)="payForm = null">
+    <div class="ot-modal-content" (click)="$event.stopPropagation()">
+      <h5 class="mb-1">{{ 'gig.pay.title' | translate: { agency: agencyName(payForm.agencyId) } }}</h5>
+      <p class="text-muted small">{{ 'gig.pay.intro' | translate }}</p>
+
+      @if (!payShifts.length) {
+        <div class="text-center py-3"><div class="spinner-border spinner-border-sm"></div></div>
+      }
+      <div class="list-group mb-3">
+        @for (s of payShifts; track s._id) {
+          <label class="list-group-item d-flex align-items-center gap-2">
+            <input class="form-check-input m-0" type="checkbox" [(ngModel)]="payForm.selected[s._id!]" [name]="'pay' + s._id" />
+            <span class="flex-grow-1">{{ s.date | date: 'EEE d MMM' : 'UTC' }}
+              @if (s.minutes) { <span class="text-muted small">· {{ hours(s.minutes) }}</span> }
+            </span>
+            <span>{{ s.gross | currency: currencyCode : 'symbol' : '1.0-0' }}</span>
+          </label>
+        }
+      </div>
+
+      <div class="row g-3">
+        <div class="col-6">
+          <label class="form-label" for="payDate">{{ 'gig.pay.date' | translate }}</label>
+          <input id="payDate" type="date" class="form-control" [(ngModel)]="payForm.date" />
+        </div>
+        <div class="col-6">
+          <label class="form-label" for="payAmount">{{ 'gig.pay.amount' | translate }} ({{ currencyCode }})</label>
+          <input id="payAmount" type="number" min="0" class="form-control" [(ngModel)]="payForm.amount"
+                 [placeholder]="payExpected.net" />
+        </div>
+        <div class="col-12 form-text mt-1">
+          {{ 'gig.pay.expected' | translate: {
+               net: (payExpected.net | currency: currencyCode : 'symbol' : '1.0-0'),
+               gross: (payExpected.gross | currency: currencyCode : 'symbol' : '1.0-0') } }}
+          @if (payForm.amount != null && $any(payForm.amount) !== '') {
+            @if (payForm.amount - payExpected.net; as d) {
+              <span [class.text-danger]="d < -10" [class.text-info]="d > 10">
+                · {{ 'gig.pay.diff' | translate }} {{ d > 0 ? '+' : '' }}{{ d | number: '1.0-0' }}
+              </span>
+            } @else {
+              <span class="text-success">· <i class="bi bi-check-circle"></i> {{ 'gig.pay.matches' | translate }}</span>
+            }
+          }
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="payNote">{{ 'overtime.note' | translate }}</label>
+          <input id="payNote" type="text" class="form-control" [(ngModel)]="payForm.note" />
+        </div>
+      </div>
+
+      @if (payError) {
+        <div class="alert alert-danger mt-3 mb-0" role="alert">{{ payError }}</div>
+      }
+      <div class="d-flex gap-2 mt-4">
+        <button class="btn btn-success" (click)="savePayment()">
+          <i class="bi bi-check-lg me-1"></i>{{ 'gig.pay.save' | translate }}
+        </button>
+        <button class="btn btn-outline-secondary" (click)="payForm = null">{{ 'common.cancel' | translate }}</button>
+      </div>
+    </div>
+  </div>
+}

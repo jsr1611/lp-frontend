@@ -580,7 +580,7 @@
       "fxBroke": "Your {{n}}-day streak ended. Fresh start tomorrow!",
       "fxTip": "Leave a little earlier tomorrow — your on-time habit is waiting.",
       "grace": "Late grace period",
-      "graceNone": "None — 09:01 counts as late",
+      "graceNone": "None — {{time}} counts as late",
       "graceN": "{{n}} minutes",
       "graceHelp": "Arrivals up to this many minutes after the start still count as on time. If you're expected earlier, change the scheduled start instead."
     },
@@ -622,7 +622,7 @@
       "fulltime": "Full-time",
       "parttime": "Part-time",
       "fulltimeHelp": "Salaried: the contract salary is the base pay, overtime comes on top.",
-      "parttimeHelp": "Paid by the hour: every regular hour logged earns the hourly rate, overtime on top."
+      "parttimeHelp": "Part-time work is kept on its own page, with agencies and shifts. Saving takes you there."
     },
     "deductions": {
       "label": "Deductions",
@@ -668,7 +668,14 @@
       "delete": "Delete job",
       "back": "Back to jobs",
       "loadFailed": "Could not load your jobs.",
-      "confirmDelete": "Delete \"{{name}}\" and everything logged under it ({{days}} days, plus days off and payslips)? This cannot be undone."
+      "confirmDelete": "Delete \"{{name}}\" and everything logged under it ({{days}} days, plus days off and payslips)? This cannot be undone.",
+      "typeFullTime": "Full-time job",
+      "typeFullTimeHelp": "One employer with a fixed schedule: overtime, leave, lateness and the monthly payslip.",
+      "typeGig": "Part-time / gig work",
+      "typeGigHelp": "Shifts for one or more agencies, paid by the hour or a fixed amount: hours, pay and what is still owed.",
+      "pending": "Owed to you",
+      "allPaid": "all paid",
+      "agencies": "{{count}} agency(ies)"
     }
   },
   "profile": {
@@ -881,5 +888,118 @@
     },
     "title": "New words",
     "update": "Update"
+  },
+  "gig": {
+    "newTitle": "New part-time / gig job",
+    "agencies": "Agencies",
+    "logShift": "Log shift",
+    "editShift": "Edit shift",
+    "shifts": "Shifts",
+    "setup": {
+      "jobTitle": "Job",
+      "jobIntro": "A name for this group of part-time work, e.g. \"Weekend gigs\".",
+      "name": "Name",
+      "namePlaceholder": "Weekend & holiday gigs",
+      "agenciesIntro": "Who you work for. Each has its own pay, deductions and pay day, and pre-fills the shifts you log for it.",
+      "agencyN": "Agency {{n}}",
+      "agencyName": "Agency / employer",
+      "addAgency": "Add agency",
+      "removeAgency": "Remove agency",
+      "create": "Create"
+    },
+    "payType": {
+      "label": "Paid",
+      "hourly": "By the hour",
+      "flat": "Fixed amount per shift"
+    },
+    "hourlyRate": "Hourly rate",
+    "flatAmount": "Amount per shift",
+    "amountIsNet": "Already after tax (what you receive)",
+    "netIgnoresDeductions": "After-tax amounts are taken as they are; deductions apply only to before-tax pay.",
+    "overMinimum": "{{pct}}% over the {{year}} minimum wage",
+    "belowMinimum": "{{pct}}% — below the {{year}} minimum wage",
+    "schedule": {
+      "label": "Pay day",
+      "perShift": "Same day",
+      "nextDay": "Next day",
+      "weekly": "Weekly",
+      "semimonthly": "Twice a month",
+      "monthly": "Monthly",
+      "payDay": "Day of the next month",
+      "firstPayDay": "1st–15th paid on",
+      "secondPayDay": "16th–end paid on (next month)",
+      "weekday": "Paid on"
+    },
+    "weekdays": {
+      "0": "Sunday",
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday"
+    },
+    "pending": {
+      "title": "Waiting to be paid",
+      "none": "Nothing pending — every shift is paid.",
+      "overdue": "Overdue",
+      "shifts": "{{count}} shift(s)",
+      "ofGross": "of {{gross}}",
+      "payDay": "Pay day",
+      "markPaid": "Mark as paid"
+    },
+    "totals": {
+      "shifts": "shifts",
+      "worked": "worked",
+      "earned": "earned"
+    },
+    "noShifts": "No shifts this month.",
+    "cols": {
+      "date": "Date",
+      "agency": "Agency",
+      "time": "Time",
+      "hours": "Hours",
+      "pay": "Pay",
+      "status": "Status"
+    },
+    "status": {
+      "paid": "Paid",
+      "due": "Due"
+    },
+    "flatNet": "fixed, after tax",
+    "flatGross": "fixed, before tax",
+    "start": "Start",
+    "end": "End",
+    "breakMinutes": "Break (min)",
+    "timesOptional": "Times are optional for a fixed-amount shift — fill them in to track hours.",
+    "paidShiftNote": "Already paid: the agency cannot change. Undo the payment to move it.",
+    "payments": {
+      "title": "Payments received",
+      "received": "Received",
+      "shifts": "Shifts",
+      "expected": "Expected",
+      "amount": "Received",
+      "undo": "Undo payment"
+    },
+    "pay": {
+      "title": "Paid by {{agency}}",
+      "intro": "Tick the shifts this money covers. The amount is optional, but lets the app check it.",
+      "date": "Received on",
+      "amount": "Amount received",
+      "expected": "Expected take-home {{net}} (before deductions {{gross}})",
+      "diff": "difference",
+      "matches": "matches",
+      "save": "Mark as paid"
+    },
+    "confirmDeleteShift": "Delete this shift?",
+    "confirmDeletePaidShift": "This shift is already paid. Delete it anyway? The payment stays, covering one shift fewer.",
+    "confirmUndoPayment": "Undo this payment? Its shifts go back to pending.",
+    "errors": {
+      "nameRequired": "Give the job a name.",
+      "agencyRequired": "Add at least one agency.",
+      "pickAgency": "Pick an agency.",
+      "pickShift": "Tick at least one shift.",
+      "generic": "Something went wrong."
+    }
   }
 }

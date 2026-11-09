@@ -433,6 +433,14 @@ export class OvertimeTrackerComponent implements OnInit {
     pension: 4.75, health: 3.595, longTermCare: 13.14, employment: 0.9, incomeTax: 0, businessTax: 3.3,
   };
 
+  // The first late minute under the start time being edited: 08:00 -> "08:01". Shown
+  // in the "no grace" option so it follows the schedule rather than assuming 09:00.
+  get lateExampleTime(): string {
+    const [h, m] = (this.settingsForm?.shiftStart || "09:00").split(":").map(Number);
+    const t = (h * 60 + m + 1) % (24 * 60);
+    return `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`;
+  }
+
   get deductionRateKeys(): DeductionRateKey[] {
     switch (this.settingsForm.deductions?.mode) {
       case "tax33": return ["businessTax"];
@@ -517,6 +525,11 @@ export class OvertimeTrackerComponent implements OnInit {
     this.secureService.saveOvertimeSettings(this.settingsForm).subscribe({
       next: (data: any) => {
         this.isSavingSettings = false;
+        // Part-time is gig work, tracked on its own page (agencies, shifts, pending pay).
+        if (data.data.employmentType === "parttime") {
+          this.router.navigate(["/gigs", data.data._id], { replaceUrl: true });
+          return;
+        }
         // A new job: move to its own URL, and the route change loads everything.
         if (!this.jobId) {
           this.router.navigate(["/overtime", data.data._id], { replaceUrl: true });
