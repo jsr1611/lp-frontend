@@ -684,7 +684,8 @@
     "changePicture": "Change picture",
     "chart": {
       "monthlyTotal": "Total monthly expenses for {{year}} in {{currency}}",
-      "tooltip": "{{label}}: {{amount}} ({{percent}})"
+      "tooltip": "{{label}}: {{amount}} ({{percent}})",
+      "monthlyIncome": "Total monthly income for {{year}} in {{currency}}"
     },
     "close": "Close",
     "defaultPictureAlt": "Default profile picture",
@@ -696,13 +697,13 @@
       "fileTooLarge": "File is too large. Maximum allowed size is {{size}} MB."
     },
     "expenses": {
-      "forMonth": "Expenses for {{month}}",
+      "forMonth": "Transactions for {{month}}",
       "summaryFor": "Summary for {{month}}",
-      "title": "Monthly Expense Management"
+      "title": "Monthly Income & Expenses"
     },
     "firstname": "First name:",
     "form": {
-      "addExpense": "Add expense",
+      "addExpense": "Save",
       "amount": "Amount:",
       "amountPlaceholder": "Enter amount",
       "category": "Category:",
@@ -730,7 +731,33 @@
     "username": "Username:",
     "yes": "Yes",
     "birthday": "Birthday:",
-    "birthdayHelp": "Optional. The work log celebrates you on the day."
+    "birthdayHelp": "Optional. The work log celebrates you on the day.",
+    "type": {
+      "expense": "Expense",
+      "income": "Income"
+    },
+    "summary": {
+      "income": "Income:",
+      "expense": "Expenses:",
+      "net": "Net:"
+    },
+    "loanEntry": {
+      "category": "Loans",
+      "hint": "Includes loans and confirmed pay (payslips with a pay date and net amount, gig payments with an amount) in {{currency}}.",
+      "borrowed": {
+        "taken": "Loan received from {{name}}",
+        "repayment": "Loan repaid to {{name}}"
+      },
+      "lent": {
+        "taken": "Loan given to {{name}}",
+        "repayment": "Repayment from {{name}}"
+      }
+    },
+    "payEntry": {
+      "salary": "Salary — {{name}}",
+      "gig": "Gig pay — {{name}}"
+    },
+    "open": "Open"
   },
   "shell": {
     "dailyVisits": "Daily visits: {{count}}"

@@ -3,7 +3,7 @@ import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output, 
 import { Currency, User } from "src/app/models/user";
 import { AuthService } from "src/app/services/AuthService";
 import { CurrencyPipe, DatePipe, PercentPipe } from "@angular/common";
-import { Expense } from "src/app/models/expense";
+import { EntryType, Expense } from "src/app/models/expense";
 import { Chart } from "chart.js";
 import { SecureService } from "src/app/services/SercureService";
 import { MatDatepickerInputEvent } from "@angular/material/datepicker";
@@ -68,18 +68,22 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   selectedMonthStr!: string;
   selectedYear: number = new Date().getFullYear();
   today: Date = new Date();
-  monthlyTotal = 0;
+  monthlyTotal = 0;      // money out
+  monthlyIncome = 0;     // money in
+  get monthlyNet(): number { return this.monthlyIncome - this.monthlyTotal; }
   protected readonly ONE: string = 'one';
   protected readonly ALL: string = 'all';
   todaysExpense: Expense = {
     date: new Date().toISOString().split('T')[0],
     category: '',
     amount: 0,
-    description: ''
+    description: '',
+    type: 'expense',
   };
   monthlyExpenses: {
     month: string,
-    total: string,
+    total: number,   // money out
+    income?: number, // money in
   }[] = [];
   currentMonthExpenses: Expense[] = [];
 
@@ -161,6 +165,10 @@ export class UserPageComponent implements OnInit, AfterViewInit {
       dataset.label = this.monthlyChartLabel();
       this.monthlyExpensesChart.update();
     }
+    this.selectedCurrency = currencyCode;
+    // Loans are filtered by currency, so the rows/totals change with it.
+    this.viewExpenses(this.ONE);
+    this.viewExpenses(this.ALL);
     this.popularCurrencies.forEach((currency) => {
       if (currency.code === currencyCode) {
         console.log(`this.userInfo.currency = currency;`, this.userInfo?.currency);
@@ -175,9 +183,50 @@ export class UserPageComponent implements OnInit, AfterViewInit {
 
   calculateMonthlyTotal() {
     this.monthlyTotal = 0;
-    this.currentMonthExpenses.map(item => {
-      this.monthlyTotal += item.amount;
+    this.monthlyIncome = 0;
+    this.currentMonthExpenses.forEach(item => {
+      if (this.isIncome(item)) {
+        this.monthlyIncome += item.amount;
+      } else {
+        this.monthlyTotal += item.amount;
+      }
     });
+  }
+
+  isIncome(item: Expense): boolean {
+    return item.type === 'income';
+  }
+
+  /** Category label; loan rows get a generated one ("Qarz olindi — Ali"). */
+  entryCategory(item: Expense): string {
+    if (item.source === 'salary' || item.source === 'gig') {
+      return this.translate.instant(`profile.payEntry.${item.source}`, { name: item.payerName || '' });
+    }
+    if (item.source !== 'loan') {
+      return item.category;
+    }
+    return this.translate.instant(`profile.loanEntry.${item.direction}.${item.loanEvent}`, {
+      name: item.contactName,
+    });
+  }
+
+  /** Rows built from loans/pay are read-only here; they're edited on their own page. */
+  isLinked(item: Expense): boolean {
+    return !!item.source;
+  }
+
+  openSource(item: Expense): void {
+    if (item.source === 'salary') {
+      this.router.navigate(['/overtime', item.jobId]);
+    } else if (item.source === 'gig') {
+      this.router.navigate(['/gigs', item.jobId]);
+    } else {
+      this.goToLoans();
+    }
+  }
+
+  goToLoans(): void {
+    this.router.navigate(['/loans']);
   }
 
 
@@ -202,8 +251,18 @@ export class UserPageComponent implements OnInit, AfterViewInit {
           {
             label: this.monthlyChartLabel(),
             data: this.monthlyExpenses.map(expense => expense.total),
-            backgroundColor: 'rgba(54, 162, 235, 0.6)',
-            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(220, 53, 69, 0.6)',
+            borderColor: 'rgba(220, 53, 69, 1)',
+            borderWidth: 1
+          },
+          {
+            label: this.translate.instant('profile.chart.monthlyIncome', {
+              year: this.selectedYear,
+              currency: this.selectedCurrency,
+            }),
+            data: this.monthlyExpenses.map(expense => expense.income ?? 0),
+            backgroundColor: 'rgba(25, 135, 84, 0.6)',
+            borderColor: 'rgba(25, 135, 84, 1)',
             borderWidth: 1
           }
         ]
@@ -220,11 +279,13 @@ export class UserPageComponent implements OnInit, AfterViewInit {
 
   createDetailedExpenseChart() {
     const ctx = document.getElementById('detailedExpenseChart') as HTMLCanvasElement;
-    const groupedExpenses = this.currentMonthExpenses.reduce<GroupedExpense>((acc, category) => {
-      if (!acc[category.category]) {
-        acc[category.category] = { amount: 0 };
+    // Pie shows where money went, so income rows are left out.
+    const groupedExpenses = this.currentMonthExpenses.filter(e => !this.isIncome(e)).reduce<GroupedExpense>((acc, item) => {
+      const key = item.source === 'loan' ? this.translate.instant('profile.loanEntry.category') : item.category;
+      if (!acc[key]) {
+        acc[key] = { amount: 0 };
       }
-      acc[category.category].amount += category.amount;
+      acc[key].amount += item.amount;
       return acc;
     }, {});
 
@@ -303,13 +364,13 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   viewExpenses(all: string): void {
     try {
       const monthYearStr = `${this.monthAndYear.getMonth()},${this.monthAndYear.getFullYear()}`;
-      this.secureService.getExpense(monthYearStr, all).subscribe({
+      this.secureService.getExpense(monthYearStr, all, this.selectedCurrency).subscribe({
         next: (data: any) => {
           if (all === 'all') {
             this.monthlyExpenses = data.expenses;
             this.createMonthlyExpensesChart();
           } else {
-            this.currentMonthExpenses = data.expenses;
+            this.currentMonthExpenses = [...data.expenses, ...(data.loanEntries ?? []), ...(data.payEntries ?? [])];
             this.currentMonthExpenses.sort((a, b) => new Date(a.date) < new Date(b.date) ? 1 : (new Date(a.date) == new Date(b.date) ? 0 : -1));
             this.calculateMonthlyTotal();
             this.createDetailedExpenseChart();
@@ -357,19 +418,8 @@ export class UserPageComponent implements OnInit, AfterViewInit {
       next: (response: any) => {
         // Handle success
         console.log(response);
-        let currentMonth = new Date().getMonth();
-        let selectedMonth = new Date(this.todaysExpense.date).getMonth();
-        this.todaysExpense = response.data;
-        console.log(currentMonth + " , ", selectedMonth, ", ", currentMonth === selectedMonth);
-        if (currentMonth == selectedMonth) {
-          this.currentMonthExpenses.push(this.todaysExpense);
-          this.monthlyTotal += this.todaysExpense.amount;
-          this.currentMonthExpenses.sort((a, b) => new Date(a.date) < new Date(b.date) ? 1 : (new Date(a.date) == new Date(b.date) ? 0 : -1));
-        }
         this.closeEditModal(event, "expense");
-        if (currentMonth == selectedMonth && this.detailedExpenseChart) {
-          this.createDetailedExpenseChart();
-        }
+        this.viewExpenses(this.ONE);
         this.viewExpenses(this.ALL);
       },
       error: (error: any) => {
@@ -378,7 +428,12 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     });
   }
   openEditModal(expense: Expense) {
+    if (this.isLinked(expense)) {
+      this.openSource(expense);
+      return;
+    }
     this.todaysExpense = {
+      type: expense.type ?? 'expense',
       _id: expense._id,
       date: expense.date,
       category: expense.category,
@@ -394,6 +449,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
       amount: 0,
       category: '',
       date: new Date().toISOString().split('T')[0],
+      type: 'expense' as EntryType,
     };
   }
   // Close the modal

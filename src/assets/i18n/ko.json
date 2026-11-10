@@ -684,7 +684,8 @@
     "changePicture": "사진 변경",
     "chart": {
       "monthlyTotal": "{{year}}년 월별 총 지출 ({{currency}})",
-      "tooltip": "{{label}}: {{amount}} ({{percent}})"
+      "tooltip": "{{label}}: {{amount}} ({{percent}})",
+      "monthlyIncome": "{{year}}년 월별 총 수입 ({{currency}})"
     },
     "close": "닫기",
     "defaultPictureAlt": "기본 프로필 사진",
@@ -696,13 +697,13 @@
       "fileTooLarge": "파일이 너무 큽니다. 최대 허용 크기는 {{size}}MB입니다."
     },
     "expenses": {
-      "forMonth": "{{month}} 지출 내역",
+      "forMonth": "{{month}} 거래 내역",
       "summaryFor": "{{month}} 요약",
-      "title": "월별 지출 관리"
+      "title": "월별 수입 및 지출"
     },
     "firstname": "이름:",
     "form": {
-      "addExpense": "지출 추가",
+      "addExpense": "저장",
       "amount": "금액:",
       "amountPlaceholder": "금액을 입력하세요",
       "category": "분류:",
@@ -730,7 +731,33 @@
     "username": "사용자 이름:",
     "yes": "예",
     "birthday": "생일:",
-    "birthdayHelp": "선택 사항. 근무 기록에서 생일을 축하해 드려요."
+    "birthdayHelp": "선택 사항. 근무 기록에서 생일을 축하해 드려요.",
+    "type": {
+      "expense": "지출",
+      "income": "수입"
+    },
+    "summary": {
+      "income": "수입:",
+      "expense": "지출:",
+      "net": "잔액:"
+    },
+    "loanEntry": {
+      "category": "대출",
+      "hint": "{{currency}}(으)로 기록된 대출과 확정된 급여(지급일과 실지급액이 입력된 급여명세서, 금액이 입력된 알바 지급)가 포함됩니다.",
+      "borrowed": {
+        "taken": "{{name}}에게서 빌림",
+        "repayment": "{{name}}에게 상환"
+      },
+      "lent": {
+        "taken": "{{name}}에게 빌려줌",
+        "repayment": "{{name}}의 상환"
+      }
+    },
+    "payEntry": {
+      "salary": "급여 — {{name}}",
+      "gig": "알바비 — {{name}}"
+    },
+    "open": "열기"
   },
   "shell": {
     "dailyVisits": "일일 방문 수: {{count}}"

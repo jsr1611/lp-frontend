@@ -684,7 +684,8 @@
     "changePicture": "Изменить фото",
     "chart": {
       "monthlyTotal": "Общие ежемесячные расходы за {{year}} год в {{currency}}",
-      "tooltip": "{{label}}: {{amount}} ({{percent}})"
+      "tooltip": "{{label}}: {{amount}} ({{percent}})",
+      "monthlyIncome": "Общий ежемесячный доход за {{year}} год в {{currency}}"
     },
     "close": "Закрыть",
     "defaultPictureAlt": "Фото профиля по умолчанию",
@@ -696,13 +697,13 @@
       "fileTooLarge": "Файл слишком большой. Максимально допустимый размер — {{size}} МБ."
     },
     "expenses": {
-      "forMonth": "Расходы за {{month}}",
+      "forMonth": "Операции за {{month}}",
       "summaryFor": "Итоги за {{month}}",
-      "title": "Управление ежемесячными расходами"
+      "title": "Ежемесячные доходы и расходы"
     },
     "firstname": "Имя:",
     "form": {
-      "addExpense": "Добавить расход",
+      "addExpense": "Сохранить",
       "amount": "Сумма:",
       "amountPlaceholder": "Введите сумму",
       "category": "Категория:",
@@ -730,7 +731,33 @@
     "username": "Имя пользователя:",
     "yes": "Да",
     "birthday": "День рождения:",
-    "birthdayHelp": "Необязательно. В рабочем журнале поздравим вас в этот день."
+    "birthdayHelp": "Необязательно. В рабочем журнале поздравим вас в этот день.",
+    "type": {
+      "expense": "Расход",
+      "income": "Доход"
+    },
+    "summary": {
+      "income": "Доходы:",
+      "expense": "Расходы:",
+      "net": "Итого:"
+    },
+    "loanEntry": {
+      "category": "Долги",
+      "hint": "Включены долги и подтверждённые выплаты (расчётные листы с датой выплаты и суммой на руки, выплаты за подработку с суммой) в {{currency}}.",
+      "borrowed": {
+        "taken": "Взят долг у {{name}}",
+        "repayment": "Возврат долга {{name}}"
+      },
+      "lent": {
+        "taken": "Дан долг {{name}}",
+        "repayment": "{{name}} вернул(а) долг"
+      }
+    },
+    "payEntry": {
+      "salary": "Зарплата — {{name}}",
+      "gig": "Оплата подработки — {{name}}"
+    },
+    "open": "Открыть"
   },
   "shell": {
     "dailyVisits": "Посещений за день: {{count}}"
