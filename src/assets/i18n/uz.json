@@ -684,7 +684,8 @@
     "changePicture": "Rasmni o'zgartirish",
     "chart": {
       "monthlyTotal": "{{year}} yil uchun oylik jami xarajatlar ({{currency}})",
-      "tooltip": "{{label}}: {{amount}} ({{percent}})"
+      "tooltip": "{{label}}: {{amount}} ({{percent}})",
+      "monthlyIncome": "{{year}} yil uchun oylik jami daromad ({{currency}})"
     },
     "close": "Yopish",
     "defaultPictureAlt": "Standart profil rasmi",
@@ -696,13 +697,13 @@
       "fileTooLarge": "Fayl juda katta. Ruxsat etilgan eng katta hajm — {{size}} MB."
     },
     "expenses": {
-      "forMonth": "{{month}} uchun xarajatlar",
+      "forMonth": "{{month}} uchun tranzaksiyalar",
       "summaryFor": "{{month}} uchun hisobot",
-      "title": "Oylik xarajatlarni boshqarish"
+      "title": "Oylik daromad va xarajatlar"
     },
     "firstname": "Ism:",
     "form": {
-      "addExpense": "Xarajat qo'shish",
+      "addExpense": "Saqlash",
       "amount": "Miqdor:",
       "amountPlaceholder": "Miqdorni kiriting",
       "category": "Toifa:",
@@ -730,7 +731,33 @@
     "username": "Foydalanuvchi nomi:",
     "yes": "Ha",
     "birthday": "Tug'ilgan kun:",
-    "birthdayHelp": "Ixtiyoriy. Ish hisobida shu kuni sizni tabriklaymiz."
+    "birthdayHelp": "Ixtiyoriy. Ish hisobida shu kuni sizni tabriklaymiz.",
+    "type": {
+      "expense": "Xarajat",
+      "income": "Daromad"
+    },
+    "summary": {
+      "income": "Daromad:",
+      "expense": "Xarajat:",
+      "net": "Qoldiq:"
+    },
+    "loanEntry": {
+      "category": "Qarzlar",
+      "hint": "{{currency}} dagi qarzlar va tasdiqlangan ish haqi (to'lov sanasi va qo'lga tegan summa kiritilgan hisob varaqlari, summasi yozilgan gig to'lovlari) ham hisobga olingan.",
+      "borrowed": {
+        "taken": "{{name}}dan qarz olindi",
+        "repayment": "{{name}}ga qarz qaytarildi"
+      },
+      "lent": {
+        "taken": "{{name}}ga qarz berildi",
+        "repayment": "{{name}} qarzni qaytardi"
+      }
+    },
+    "payEntry": {
+      "salary": "Maosh — {{name}}",
+      "gig": "Ish haqi (gig) — {{name}}"
+    },
+    "open": "Ochish"
   },
   "shell": {
     "dailyVisits": "Kunlik tashriflar soni: {{count}}"

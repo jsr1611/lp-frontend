@@ -28,8 +28,11 @@ export class SecureService extends AuthService {
     });
   }
 
-  getExpense(monthYear: string, all: string) {
+  getExpense(monthYear: string, all: string, currency?: string) {
     let params = new HttpParams().set('all', (all === 'all').toString());
+    if (currency) {
+      params = params.set('currency', currency);
+    }
     const monthYearArr = (monthYear != undefined && monthYear.length > 5) ? monthYear?.split(',') : [];
     if (monthYearArr?.length === 2) {
       params = params.set('month', monthYearArr[0].toString());

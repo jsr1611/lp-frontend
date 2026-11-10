@@ -284,3 +284,15 @@ h2 {
 .edit-user-btn{
   cursor: pointer;
 }
+/* Income / expense colouring */
+.amount-income { color: #198754; }
+.amount-expense { color: #dc3545; }
+
+.entry-type-toggle { display: flex; gap: 8px; }
+.entry-type-toggle label {
+  flex: 1; text-align: center; padding: 8px; border: 1px solid #ccc;
+  border-radius: 6px; cursor: pointer; margin: 0;
+}
+.entry-type-toggle input { display: none; }
+.entry-type-toggle .type-expense.active { background: #dc3545; color: #fff; border-color: #dc3545; }
+.entry-type-toggle .type-income.active { background: #198754; color: #fff; border-color: #198754; }

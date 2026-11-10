@@ -115,6 +115,18 @@
         <span class="close" (click)="closeEditModal($event, 'expense')">&times;</span>
         <form (submit)="addExpense()">
           <div class="form-group">
+            <div class="entry-type-toggle" role="radiogroup">
+              <label [class.active]="todaysExpense.type !== 'income'" class="type-expense">
+                <input type="radio" name="type" value="expense" [(ngModel)]="todaysExpense.type" />
+                {{ 'profile.type.expense' | translate }}
+              </label>
+              <label [class.active]="todaysExpense.type === 'income'" class="type-income">
+                <input type="radio" name="type" value="income" [(ngModel)]="todaysExpense.type" />
+                {{ 'profile.type.income' | translate }}
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
             <label for="date">{{ 'profile.form.date' | translate }}</label>
             <input type="date" id="date" name="date" required [(ngModel)]="todaysExpense.date" />
           </div>
@@ -172,10 +184,22 @@
             @for (expense of currentMonthExpenses; track expense) {
               <tr>
                 <td>{{ expense.date | date }}</td>
-                <td>{{ expense.category }}</td>
-                <td>{{ (expense.amount | currency : selectedCurrency : 'symbol' : '1.0-0') }}</td>
+                <td>
+                  @if (expense.source === 'loan') { <i class="bi bi-arrow-left-right me-1"></i> }
+                  @if (expense.source === 'salary' || expense.source === 'gig') { <i class="bi bi-briefcase me-1"></i> }
+                  {{ entryCategory(expense) }}
+                </td>
+                <td [class.amount-income]="isIncome(expense)" [class.amount-expense]="!isIncome(expense)">
+                  {{ isIncome(expense) ? '+' : '−' }}{{ (expense.amount | currency : selectedCurrency : 'symbol' : '1.0-0') }}
+                </td>
                 <td>{{ expense.description }}</td>
-                <td><button class="btn btn-primary" (click)="openEditModal(expense)">{{ 'profile.edit' | translate }}</button></td>
+                <td>
+                  @if (isLinked(expense)) {
+                    <button class="btn btn-outline-primary" (click)="openSource(expense)">{{ 'profile.open' | translate }}</button>
+                  } @else {
+                    <button class="btn btn-primary" (click)="openEditModal(expense)">{{ 'profile.edit' | translate }}</button>
+                  }
+                </td>
               </tr>
             }
           </tbody>
@@ -187,14 +211,18 @@
           <div class="expense-card">
             <div class="expense-card-header">
               <span class="expense-date">{{ expense.date | date }}</span>
-              <span class="expense-amount">{{ expense.amount | currency: selectedCurrency: 'symbol': '1.0-0' }}</span>
+              <span class="expense-amount" [class.amount-income]="isIncome(expense)" [class.amount-expense]="!isIncome(expense)">{{ isIncome(expense) ? '+' : '−' }}{{ expense.amount | currency: selectedCurrency: 'symbol': '1.0-0' }}</span>
             </div>
             <div class="expense-card-body">
-              <p><strong>{{ 'profile.form.category' | translate }}</strong> {{ expense.category }}</p>
+              <p><strong>{{ 'profile.form.category' | translate }}</strong> {{ entryCategory(expense) }}</p>
               <p><strong>{{ 'profile.form.description' | translate }}</strong> {{ expense.description }}</p>
             </div>
             <div class="expense-card-actions">
-              <button class="btn btn-primary" (click)="openEditModal(expense)">{{ 'profile.edit' | translate }}</button>
+              @if (isLinked(expense)) {
+                <button class="btn btn-outline-primary" (click)="openSource(expense)">{{ 'profile.open' | translate }}</button>
+              } @else {
+                <button class="btn btn-primary" (click)="openEditModal(expense)">{{ 'profile.edit' | translate }}</button>
+              }
             </div>
           </div>
         }
@@ -205,8 +233,16 @@
       <div class="expense-summary">
         <h3>{{ 'profile.expenses.summaryFor' | translate: { month: selectedMonthStr } }}</h3>
         <p>
-          {{ 'profile.total' | translate }} <span>{{ (monthlyTotal | currency : selectedCurrency : 'symbol' : '1.0-0') }}</span>
+          {{ 'profile.summary.income' | translate }} <span class="amount-income">{{ (monthlyIncome | currency : selectedCurrency : 'symbol' : '1.0-0') }}</span>
         </p>
+        <p>
+          {{ 'profile.summary.expense' | translate }} <span class="amount-expense">{{ (monthlyTotal | currency : selectedCurrency : 'symbol' : '1.0-0') }}</span>
+        </p>
+        <p>
+          <strong>{{ 'profile.summary.net' | translate }}</strong>
+          <strong [class.amount-income]="monthlyNet >= 0" [class.amount-expense]="monthlyNet < 0">{{ (monthlyNet | currency : selectedCurrency : 'symbol' : '1.0-0') }}</strong>
+        </p>
+        <small class="text-muted">{{ 'profile.loanEntry.hint' | translate: { currency: selectedCurrency } }}</small>
       </div>
     </div>
 

@@ -684,7 +684,8 @@
     "changePicture": "تغيير الصورة",
     "chart": {
       "monthlyTotal": "إجمالي المصروفات الشهرية لعام {{year}} بعملة {{currency}}",
-      "tooltip": "{{label}}: {{amount}} ({{percent}})"
+      "tooltip": "{{label}}: {{amount}} ({{percent}})",
+      "monthlyIncome": "إجمالي الدخل الشهري لعام {{year}} بعملة {{currency}}"
     },
     "close": "إغلاق",
     "defaultPictureAlt": "صورة الملف الشخصي الافتراضية",
@@ -696,13 +697,13 @@
       "fileTooLarge": "حجم الملف كبير جدًا. الحد الأقصى المسموح به هو {{size}} ميجابايت."
     },
     "expenses": {
-      "forMonth": "مصروفات {{month}}",
+      "forMonth": "معاملات {{month}}",
       "summaryFor": "ملخص {{month}}",
-      "title": "إدارة المصروفات الشهرية"
+      "title": "الدخل والمصروفات الشهرية"
     },
     "firstname": "الاسم الأول:",
     "form": {
-      "addExpense": "إضافة مصروف",
+      "addExpense": "حفظ",
       "amount": "المبلغ:",
       "amountPlaceholder": "أدخل المبلغ",
       "category": "الفئة:",
@@ -730,7 +731,33 @@
     "username": "اسم المستخدم:",
     "yes": "نعم",
     "birthday": "تاريخ الميلاد:",
-    "birthdayHelp": "اختياري. سنحتفل بك في سجل العمل في هذا اليوم."
+    "birthdayHelp": "اختياري. سنحتفل بك في سجل العمل في هذا اليوم.",
+    "type": {
+      "expense": "مصروف",
+      "income": "دخل"
+    },
+    "summary": {
+      "income": "الدخل:",
+      "expense": "المصروفات:",
+      "net": "الصافي:"
+    },
+    "loanEntry": {
+      "category": "الديون",
+      "hint": "تشمل الديون والأجور المؤكدة (كشوف رواتب بتاريخ دفع ومبلغ صافٍ، ودفعات العمل الحر بمبلغ) بعملة {{currency}}.",
+      "borrowed": {
+        "taken": "قرض مستلم من {{name}}",
+        "repayment": "سداد قرض إلى {{name}}"
+      },
+      "lent": {
+        "taken": "قرض مُعطى إلى {{name}}",
+        "repayment": "سداد من {{name}}"
+      }
+    },
+    "payEntry": {
+      "salary": "راتب — {{name}}",
+      "gig": "أجر عمل حر — {{name}}"
+    },
+    "open": "فتح"
   },
   "shell": {
     "dailyVisits": "عدد الزيارات اليومية: {{count}}"
