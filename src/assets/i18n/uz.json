@@ -639,7 +639,13 @@
         "businessTax": "Jami ushlanma"
       },
       "ratesHelp": "Bo‘sh qoldirsangiz, standart qiymat olinadi. 3.3% = 3% daromad solig‘i + 0.3% mahalliy soliq.",
-      "insuranceHelp": "2026-yil xodim ulushlari; bo‘sh — standart. Stavkalar har yanvarda o‘zgaradi, hisob-varaq bilan solishtiring. Daromad solig‘i rasmiy jadvalga bog‘liq — hisob-varaqdagi % ni kiriting yoki 0 qoldiring."
+      "insuranceHelp": "2026-yil xodim ulushlari; bo‘sh — standart. Stavkalar har yanvarda o‘zgaradi, hisob-varaq bilan solishtiring. Daromad solig‘i rasmiy jadvalga bog‘liq — hisob-varaqdagi % ni kiriting yoki 0 qoldiring.",
+      "incomeTaxMode": "Daromad solig‘i",
+      "taxTable": "Rasmiy soliq jadvali (간이세액표)",
+      "taxFlat": "Qat’iy %",
+      "dependents": "Qaramog‘idagilar (o‘zingiz bilan)",
+      "insuranceBase": "Sug‘urta bazasi (보수월액)",
+      "insuranceBaseHelp": "4대보험 qo‘shimcha ish haqidan emas, e’lon qilingan maoshdan olinadi. Bo‘sh qoldirsangiz, shartnoma maoshi olinadi. Jadval natijasi rasmiysidan taxminan 1% farq qiladi."
     },
     "takeHome": {
       "title": "Qo‘lga tegadigan",
@@ -676,7 +682,9 @@
       "pending": "Sizga qarz",
       "allPaid": "hammasi to‘langan",
       "agencies": "{{count}} ta agentlik"
-    }
+    },
+    "roundPayUp10": "To‘lovni 10 wongacha yuqoriga yaxlitlash",
+    "roundPayUp10Help": "Oylik qo‘shimcha ish va dam olish kuni to‘lovi keyingi 10 wongacha yaxlitlanadi, ba’zi hisob-varaqlardagidek (375 037,5 → 375 040)."
   },
   "profile": {
     "activated": "Faollashtirilgan:",
