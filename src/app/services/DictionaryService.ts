@@ -29,6 +29,10 @@ export class DictionaryService {
       return this.httpClient.put(this.API_Url_Server + "/" + updatedWord._id, updatedWord, {headers: this.getHeaders()});
   }
   
+  getDailyWord() {
+    return this.httpClient.get<{ date: string; word: Word }>(this.API_Url_Server + '/daily');
+  }
+
   getDictionary() {
     return this.httpClient.get<Word[]>(this.API_Url_Server);
   }

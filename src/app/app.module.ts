@@ -50,11 +50,26 @@ import { MilestoneCelebrationComponent } from './components/overtime-tracker/mil
 import { FxOverlayComponent } from './components/overtime-tracker/fx-overlay/fx-overlay.component';
 import { WorkCalendarComponent } from './components/overtime-tracker/work-calendar/work-calendar.component';
 import { WirdTrackerComponent } from './components/wird-tracker/wird-tracker.component';
+import { BlogListComponent } from './components/blog/blog-list/blog-list.component';
+import { PostViewComponent } from './components/blog/post-view/post-view.component';
+import { PostEditorComponent } from './components/blog/post-editor/post-editor.component';
+import { CvComponent } from './components/cv/cv.component';
+import { CvEditorComponent } from './components/cv-editor/cv-editor.component';
+import { ProjectsManagerComponent } from './components/projects-manager/projects-manager.component';
+import { MarkdownPipe } from './pipes/markdown.pipe';
+import { ownerGuard } from './config/OwnerGuard';
 
 registerAppLocales();
 
 @NgModule({
     declarations: [
+        BlogListComponent,
+        PostViewComponent,
+        PostEditorComponent,
+        CvComponent,
+        CvEditorComponent,
+        ProjectsManagerComponent,
+        MarkdownPipe,
         AppComponent,
         MoneyInputDirective,
         WordsComponent,
@@ -111,6 +126,13 @@ registerAppLocales();
             { path: 'gigs/:jobId', component: GigTrackerComponent, canActivate: [authGuard] },
             { path: 'wirds', component: WirdTrackerComponent, canActivate: [authGuard] },
             { path: 'home', component: HomeComponent },
+            { path: 'blog', component: BlogListComponent },
+            { path: 'blog/new', component: PostEditorComponent, canActivate: [ownerGuard] },
+            { path: 'blog/edit/:id', component: PostEditorComponent, canActivate: [ownerGuard] },
+            { path: 'blog/:slug', component: PostViewComponent },
+            { path: 'cv', component: CvComponent },
+            { path: 'cv/edit', component: CvEditorComponent, canActivate: [ownerGuard] },
+            { path: 'projects/manage', component: ProjectsManagerComponent, canActivate: [ownerGuard] },
             { path: 'add-word', component: AddWordComponent },
             { path: 'words', component: WordsComponent },
             { path: 'words/:searchKey', component: WordComponent },

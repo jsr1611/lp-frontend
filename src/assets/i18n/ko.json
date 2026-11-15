@@ -149,7 +149,19 @@
   },
   "home": {
     "title": "아랍어를 배워봅시다!",
-    "viewWords": "새 단어 보기"
+    "viewWords": "새 단어 보기",
+    "greeting": "안녕하세요, {{name}}입니다 👋",
+    "tagline": "개발자 · 나를 위한 작은 도구를 만들고 매일 코딩 문제를 풉니다.",
+    "wordOfDay": "오늘의 단어",
+    "example": "예문",
+    "seeInDictionary": "사전에서 보기",
+    "testYourself": "테스트하기",
+    "listen": "듣기",
+    "projects": "프로젝트",
+    "dictTitle": "아랍어 사전",
+    "dictDesc": "우즈베크어·영어 뜻이 있는 아랍어 단어와 테스트.",
+    "open": "열기",
+    "wordError": "오늘의 단어를 불러오지 못했습니다."
   },
   "loans": {
     "addLoan": "대여금 추가",
@@ -257,7 +269,11 @@
     "toggle": "메뉴 열기",
     "userIcon": "사용자 아이콘",
     "wirds": "위르드 & 메모",
-    "words": "새 단어"
+    "words": "새 단어",
+    "arabic": "아랍어",
+    "tools": "내 도구",
+    "blog": "블로그",
+    "cv": "이력서"
   },
   "notFound": {
     "redirecting": "홈페이지로 돌아갑니다...",
@@ -1042,5 +1058,9 @@
       "pickShift": "근무를 하나 이상 선택하세요.",
       "generic": "문제가 발생했습니다."
     }
+  },
+  "cv": {
+    "projects": "주요 프로젝트",
+    "allProjects": "전체 프로젝트"
   }
 }

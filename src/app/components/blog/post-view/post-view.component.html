@@ -1,0 +1,38 @@
+<div class="container post">
+  <a routerLink="/blog" class="small text-decoration-none">← {{ 'blog.back' | translate }}</a>
+
+  @if (notFound()) {
+    <p class="mt-4 text-body-secondary">{{ 'blog.notFound' | translate }}</p>
+  } @else if (!post()) {
+    <div class="text-center py-5"><div class="spinner-border"></div></div>
+  } @else {
+    @let p = post()!;
+    <header class="mt-3 mb-4">
+      <h1>{{ p.title }}</h1>
+      <div class="small text-body-secondary d-flex flex-wrap gap-2 align-items-center">
+        <span>{{ p.publishedAt | date: 'longDate' }}</span>
+        @for (tag of p.tags; track tag) {
+          <a class="tag" routerLink="/blog" [queryParams]="{ tag }">#{{ tag }}</a>
+        }
+        @if (auth.isOwner()) {
+          <a class="ms-auto" [routerLink]="['/blog/edit', p._id]"><i class="bi bi-pencil"></i> {{ 'blog.edit' | translate }}</a>
+        }
+      </div>
+    </header>
+
+    @if (p.challenge?.source || p.challenge?.difficulty || p.challenge?.language) {
+      <div class="challenge-box mb-4">
+        <i class="bi bi-trophy"></i>
+        @if (p.challenge?.url) {
+          <a [href]="p.challenge?.url" target="_blank" rel="noopener">{{ p.challenge?.source || ('blog.problem' | translate) }}</a>
+        } @else if (p.challenge?.source) {
+          <span>{{ p.challenge?.source }}</span>
+        }
+        @if (p.challenge?.difficulty) { <span class="badge diff diff-{{ p.challenge?.difficulty }}">{{ p.challenge?.difficulty }}</span> }
+        @if (p.challenge?.language) { <span>· {{ p.challenge?.language }}</span> }
+      </div>
+    }
+
+    <article class="markdown-body" [innerHTML]="p.content | markdown"></article>
+  }
+</div>

@@ -1,0 +1,15 @@
+.post { max-width: 780px; padding-bottom: 3rem; }
+.tag { color: var(--bs-secondary-color); text-decoration: none; }
+.challenge-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.6rem 0.9rem;
+  border-radius: 0.5rem;
+  background: var(--bs-tertiary-bg);
+}
+.diff { text-transform: capitalize; }
+.diff-easy { background: #198754; }
+.diff-medium { background: #fd7e14; }
+.diff-hard { background: #dc3545; }

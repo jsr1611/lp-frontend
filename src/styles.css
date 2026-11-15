@@ -29,3 +29,31 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+/* ---- Blog: rendered Markdown ---- */
+.markdown-body { line-height: 1.7; overflow-wrap: break-word; }
+.markdown-body h1, .markdown-body h2, .markdown-body h3 { margin-top: 1.6rem; margin-bottom: 0.6rem; }
+.markdown-body h2 { font-size: 1.4rem; }
+.markdown-body h3 { font-size: 1.15rem; }
+.markdown-body pre {
+  background: #1e1e2e;
+  color: #e4e4ef;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.markdown-body code { font-size: 0.9em; }
+.markdown-body :not(pre) > code { background: var(--bs-tertiary-bg); padding: 0.1em 0.35em; border-radius: 0.25rem; }
+.markdown-body blockquote { border-left: 4px solid var(--bs-border-color); padding-left: 1rem; color: var(--bs-secondary-color); }
+.markdown-body img { max-width: 100%; }
+.markdown-body table { border-collapse: collapse; margin: 1rem 0; }
+.markdown-body th, .markdown-body td { border: 1px solid var(--bs-border-color); padding: 0.35rem 0.6rem; }
+
+/* ---- CV: print / save as PDF ---- */
+@media print {
+  body:has(app-cv) app-navbar,
+  body:has(app-cv) app-footer { display: none !important; }
+  body:has(app-cv) { background: #fff !important; }
+}

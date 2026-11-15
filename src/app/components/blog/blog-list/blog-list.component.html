@@ -1,0 +1,57 @@
+<div class="container blog">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+    <h1 class="mb-0">{{ 'blog.title' | translate }}</h1>
+    @if (auth.isOwner()) {
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary btn-sm" (click)="toggleManage()">
+          <i class="bi" [class.bi-eye]="manage()" [class.bi-pencil-square]="!manage()"></i>
+          {{ (manage() ? 'blog.publicView' : 'blog.manage') | translate }}
+        </button>
+        <a class="btn btn-primary btn-sm" routerLink="/blog/new"><i class="bi bi-plus-lg"></i> {{ 'blog.newPost' | translate }}</a>
+      </div>
+    }
+  </div>
+
+  <div class="d-flex flex-wrap gap-2 align-items-center mb-4">
+    <button class="btn btn-sm" [class.btn-dark]="!activeTag()" [class.btn-outline-dark]="activeTag()" (click)="setTag('')">
+      {{ 'blog.all' | translate }}
+    </button>
+    @for (t of tags(); track t.tag) {
+      <button class="btn btn-sm" [class.btn-dark]="activeTag() === t.tag" [class.btn-outline-dark]="activeTag() !== t.tag"
+        (click)="setTag(t.tag)">#{{ t.tag }} <span class="opacity-50">{{ t.count }}</span></button>
+    }
+    <input class="form-control form-control-sm ms-auto search" type="search"
+      [placeholder]="'blog.filter' | translate" [value]="query()" (input)="query.set($any($event.target).value)">
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-5"><div class="spinner-border"></div></div>
+  } @else if (error()) {
+    <p class="text-danger">{{ 'blog.loadError' | translate }}</p>
+  } @else if (filtered().length === 0) {
+    <p class="text-body-secondary">{{ 'blog.empty' | translate }}</p>
+  } @else {
+    <ul class="list-unstyled post-list">
+      @for (p of filtered(); track p._id) {
+        <li class="post-row">
+          <div class="date text-body-secondary">{{ (p.publishedAt || p.updatedAt) | date: 'MMM d, y' }}</div>
+          <div class="flex-grow-1">
+            <a class="post-title" [routerLink]="p.published ? ['/blog', p.slug] : ['/blog/edit', p._id]">{{ p.title }}</a>
+            @if (!p.published) { <span class="badge text-bg-warning ms-2">{{ 'blog.draft' | translate }}</span> }
+            @if (p.excerpt) { <p class="mb-1 small text-body-secondary">{{ p.excerpt }}</p> }
+            <div class="small">
+              @for (tag of p.tags; track tag) { <span class="tag">#{{ tag }}</span> }
+              @if (p.challenge?.difficulty) {
+                <span class="badge diff diff-{{ p.challenge?.difficulty }}">{{ p.challenge?.difficulty }}</span>
+              }
+              @if (p.challenge?.language) { <span class="text-body-secondary">· {{ p.challenge?.language }}</span> }
+            </div>
+          </div>
+          @if (manage()) {
+            <a class="btn btn-sm btn-outline-secondary align-self-start" [routerLink]="['/blog/edit', p._id]"><i class="bi bi-pencil"></i></a>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

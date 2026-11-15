@@ -63,6 +63,17 @@ export class AuthService {
     return token && !this.isTokenExpired(token) ? token : null;
   }
 
+  /** UI hint only — the server checks ownership on every write. Requires logging in again after the backend update. */
+  isOwner(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+    try {
+      return !!(jwtDecode(token) as any).is_superuser;
+    } catch {
+      return false;
+    }
+  }
+
   isTokenExpired(token: string): boolean {
     if (!token) {
       console.log("No token was found");

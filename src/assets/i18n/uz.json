@@ -149,7 +149,22 @@
   },
   "home": {
     "title": "Arab tilini o'rganamiz!",
-    "viewWords": "Yangi so'zlarni ko'rish"
+    "viewWords": "Yangi so'zlarni ko'rish",
+    "greeting": "Salom, men {{name}} 👋",
+    "tagline": "Dasturchi · O'zim uchun kichik vositalar yarataman va har kuni kod masalasi yechaman.",
+    "wordOfDay": "Kun so'zi",
+    "example": "Misol",
+    "seeInDictionary": "Lug'atda ko'rish",
+    "testYourself": "O'zingizni sinang",
+    "listen": "Tinglash",
+    "projects": "Loyihalar",
+    "dictTitle": "Arabcha lug'at",
+    "dictDesc": "Arabcha so'zlar o'zbekcha va inglizcha ma'nolari bilan, hamda testlar.",
+    "open": "Ochish",
+    "wordError": "Bugungi so'zni yuklab bo'lmadi.",
+    "latestPosts": "So'nggi postlar",
+    "viewAll": "Barchasi",
+    "streak": "{{days}} kunlik masala seriyasi"
   },
   "loans": {
     "addLoan": "Qarz qo'shish",
@@ -257,7 +272,11 @@
     "toggle": "Menyuni ochish",
     "userIcon": "Foydalanuvchi rasmi",
     "wirds": "Virdlar va eslatmalar",
-    "words": "Yangi so'zlar"
+    "words": "Yangi so'zlar",
+    "arabic": "Arab tili",
+    "tools": "Mening vositalarim",
+    "blog": "Blog",
+    "cv": "Rezyume"
   },
   "notFound": {
     "redirecting": "Bosh sahifaga qaytmoqdamiz...",
@@ -1041,6 +1060,38 @@
       "pickAgency": "Agentlikni tanlang.",
       "pickShift": "Kamida bitta smenani belgilang.",
       "generic": "Xatolik yuz berdi."
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "all": "Barchasi",
+    "filter": "Filtr…",
+    "empty": "Hozircha postlar yo'q.",
+    "loadError": "Postlarni yuklab bo'lmadi.",
+    "back": "Blog",
+    "notFound": "Post topilmadi.",
+    "problem": "Masala"
+  },
+  "cv": {
+    "print": "Chop etish / PDF",
+    "summary": "Qisqacha",
+    "experience": "Ish tajribasi",
+    "education": "Ta'lim",
+    "skills": "Ko'nikmalar",
+    "languages": "Tillar",
+    "present": "Hozirgacha",
+    "projects": "Tanlangan loyihalar",
+    "allProjects": "Barcha loyihalar",
+    "edit": "Tahrirlash",
+    "save": "Saqlash",
+    "showOnCv": "Rezyumeda ko'rsatish"
+  },
+  "projects": {
+    "manage": "Loyihalarni boshqarish",
+    "filter": {
+      "all": "Barchasi",
+      "visible": "Ko'rsatilgan",
+      "hidden": "Yashirin"
     }
   }
 }

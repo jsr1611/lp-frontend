@@ -8,6 +8,7 @@ export interface Word {
     english?: string;
     category: Category,
     remark?: string,
+    example?: { arabic?: string; uzbek?: string; english?: string },
     __v?: number; // Optional property, usually representing the version key in MongoDB
   }  
 
