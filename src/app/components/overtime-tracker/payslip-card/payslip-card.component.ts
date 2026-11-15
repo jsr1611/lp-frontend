@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject
 import { TranslateService } from "@ngx-translate/core";
 import { DeductionItem, MonthPay, OvertimeSummary, Payslip } from "src/app/models/overtime";
 import { SecureService } from "src/app/services/SercureService";
+import { CollapseState } from "../collapse-state";
 
 // Won either side of the expected net still counted as a match.
 const NET_TOLERANCE = 10;
@@ -53,6 +54,31 @@ export class PayslipCardComponent {
   // The breakdown to show: off the payslip's own gross when entered, else the estimate.
   get deductionItems(): DeductionItem[] {
     return (this.payslip?.expectedDeductions ?? this.pay?.deductions)?.items ?? [];
+  }
+
+  get deductionsTotal(): number {
+    return this.deductionItems.reduce((sum, i) => sum + i.amount, 0);
+  }
+
+  // Breakdowns the user expanded, kept per browser. The logged-vs-paid comparison
+  // is the exception: it is not remembered, and opens by itself when they disagree.
+  private readonly sections = new CollapseState<"gross" | "deductions">("payslipCard.sections");
+  private comparisonOpen: boolean | null = null;
+
+  isOpen(section: "gross" | "deductions"): boolean {
+    return this.sections.isOpen(section);
+  }
+
+  toggle(section: "gross" | "deductions"): void {
+    this.sections.toggle(section);
+  }
+
+  get showComparison(): boolean {
+    return this.comparisonOpen ?? this.status !== "match";
+  }
+
+  toggleComparison(): void {
+    this.comparisonOpen = !this.showComparison;
   }
 
   get expectedNet(): number | null {

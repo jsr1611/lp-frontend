@@ -143,3 +143,13 @@
 .ot-section-title:first-of-type {
   margin-top: 1rem;
 }
+
+/* Headers that expand a section (settings form, chart). */
+.collapse-toggle {
+  cursor: pointer;
+  user-select: none;
+}
+
+.collapse-toggle .bi {
+  font-size: 0.75em;
+}

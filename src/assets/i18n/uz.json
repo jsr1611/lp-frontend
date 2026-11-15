@@ -658,7 +658,8 @@
       "netPaid": "Sof summa (hisob-varaq)",
       "estimateNote": "Kiritilgan kunlar asosida taxmin. Haq to‘lanadigan ta‘til va 주휴수당 kirmagan.",
       "fromPayslipGross": "Ushlanmalar hisob-varaqdagi umumiy summadan hisoblandi — to‘g‘ri ushlanganini tekshirish uchun.",
-      "needSalary": "Sof summani hisoblash uchun Kompaniya bo‘limiga shartnoma maoshini kiriting."
+      "needSalary": "Sof summani hisoblash uchun Kompaniya bo‘limiga shartnoma maoshini kiriting.",
+      "deductionsTotal": "Ushlanmalar"
     },
     "jobs": {
       "title": "Ishlar",

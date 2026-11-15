@@ -55,372 +55,407 @@
 
         <form (ngSubmit)="saveSettings()" #settingsFormRef="ngForm">
 
-          <h6 class="ot-section-title">
+          <h6 class="ot-section-title collapse-toggle" role="button" tabindex="0" [attr.aria-expanded]="sectionOpen('pay')"
+              (click)="toggleSection('pay')" (keydown.enter)="toggleSection('pay')">
+            <i class="bi me-1" [class.bi-chevron-right]="!sectionOpen('pay')" [class.bi-chevron-down]="sectionOpen('pay')"></i>
             {{ 'overtime.sections.pay' | translate }}
           </h6>
-          <div class="row g-3">
-            <div class="col-12 col-md-4">
-              <label class="form-label" for="hourlyRate">
-                {{ 'overtime.baseHourlyRate' | translate }}
-              </label>
-              <input id="hourlyRate" name="hourlyRate" type="number" min="0" step="any"
-                     class="form-control" required
-                     [(ngModel)]="settingsForm.hourlyRate" />
-              <div class="form-text">{{ 'overtime.baseHourlyRateHelp' | translate }}</div>
-            </div>
-            <div class="col-12 col-md-4">
-              <label class="form-label" for="currency">{{ 'common.currency' | translate }}</label>
-              <select id="currency" name="currency" class="form-select"
-                      [ngModel]="settingsForm.currency.code"
-                      (ngModelChange)="onCurrencyChange($event)">
-                @for (c of popularCurrencies; track c.code) {
-                  <option [value]="c.code">{{ c.code }} — {{ currencyNameKey(c.code) | translate }}</option>
-                }
-              </select>
-            </div>
-            <div class="col-12 col-md-4">
-              <label class="form-label" for="otMultiplier">{{ 'overtime.otRate' | translate }}</label>
-              <select id="otMultiplier" name="otMultiplier" class="form-select"
-                      [(ngModel)]="settingsForm.otMultiplier">
-                <option [ngValue]="1.5">{{ 'overtime.otRate15' | translate }}</option>
-                <option [ngValue]="2">{{ 'overtime.otRate20' | translate }}</option>
-              </select>
-              <div class="form-text">{{ 'overtime.otRateHelp' | translate }}</div>
-            </div>
-            <div class="col-12">
-              <div class="form-check">
-                <input id="roundPayUp10" name="roundPayUp10" type="checkbox" class="form-check-input"
-                       [(ngModel)]="settingsForm.roundPayUp10" />
-                <label class="form-check-label" for="roundPayUp10">{{ 'overtime.roundPayUp10' | translate }}</label>
+          <!-- [hidden], not @if: collapsed fields stay in the form and keep validating. -->
+          <div [hidden]="!sectionOpen('pay')">
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="hourlyRate">
+                  {{ 'overtime.baseHourlyRate' | translate }}
+                </label>
+                <input id="hourlyRate" name="hourlyRate" type="number" min="0" step="any"
+                       class="form-control" required
+                       [(ngModel)]="settingsForm.hourlyRate" />
+                <div class="form-text">{{ 'overtime.baseHourlyRateHelp' | translate }}</div>
               </div>
-              <div class="form-text">{{ 'overtime.roundPayUp10Help' | translate }}</div>
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="currency">{{ 'common.currency' | translate }}</label>
+                <select id="currency" name="currency" class="form-select"
+                        [ngModel]="settingsForm.currency.code"
+                        (ngModelChange)="onCurrencyChange($event)">
+                  @for (c of popularCurrencies; track c.code) {
+                    <option [value]="c.code">{{ c.code }} — {{ currencyNameKey(c.code) | translate }}</option>
+                  }
+                </select>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="otMultiplier">{{ 'overtime.otRate' | translate }}</label>
+                <select id="otMultiplier" name="otMultiplier" class="form-select"
+                        [(ngModel)]="settingsForm.otMultiplier">
+                  <option [ngValue]="1.5">{{ 'overtime.otRate15' | translate }}</option>
+                  <option [ngValue]="2">{{ 'overtime.otRate20' | translate }}</option>
+                </select>
+                <div class="form-text">{{ 'overtime.otRateHelp' | translate }}</div>
+              </div>
+              <div class="col-12">
+                <div class="form-check">
+                  <input id="roundPayUp10" name="roundPayUp10" type="checkbox" class="form-check-input"
+                         [(ngModel)]="settingsForm.roundPayUp10" />
+                  <label class="form-check-label" for="roundPayUp10">{{ 'overtime.roundPayUp10' | translate }}</label>
+                </div>
+                <div class="form-text">{{ 'overtime.roundPayUp10Help' | translate }}</div>
+              </div>
             </div>
           </div>
 
-          <h6 class="ot-section-title">
+          <h6 class="ot-section-title collapse-toggle" role="button" tabindex="0" [attr.aria-expanded]="sectionOpen('workingDay')"
+              (click)="toggleSection('workingDay')" (keydown.enter)="toggleSection('workingDay')">
+            <i class="bi me-1" [class.bi-chevron-right]="!sectionOpen('workingDay')" [class.bi-chevron-down]="sectionOpen('workingDay')"></i>
             {{ 'overtime.sections.workingDay' | translate }}
           </h6>
-          <div class="row g-3">
-            <div class="col-12 col-md-4">
-              <label class="form-label" for="shiftType">{{ 'overtime.shift' | translate }}</label>
-              <select id="shiftType" name="shiftType" class="form-select"
-                      [(ngModel)]="settingsForm.shiftType"
-                      (ngModelChange)="onShiftTypeChange()">
-                <option value="day">{{ 'overtime.shiftDay' | translate }}</option>
-                <option value="night">{{ 'overtime.shiftNight' | translate }}</option>
-              </select>
-            </div>
-            <div class="col-12 col-md-4">
-              <label class="form-label" for="shiftStart">
-                {{ 'overtime.scheduledStart' | translate }}
-              </label>
-              <select id="shiftStart" name="shiftStart" class="form-select"
-                      [(ngModel)]="settingsForm.shiftStart">
-                @for (t of shiftStartOptions; track t) {
-                  <option [value]="t">{{ t }}</option>
-                }
-              </select>
-            </div>
-            <div class="col-6 col-md-2">
-              <label class="form-label" for="workHours">{{ 'overtime.workHours' | translate }}</label>
-              <input id="workHours" name="workHours" type="number" min="0" max="24" step="0.5"
-                     class="form-control" [(ngModel)]="settingsForm.workHours" />
-            </div>
-            <div class="col-6 col-md-2">
-              <label class="form-label" for="lunchBreakMinutes">
-                {{ 'overtime.lunchMinutes' | translate }}
-              </label>
-              <input id="lunchBreakMinutes" name="lunchBreakMinutes" type="number" min="0" step="5"
-                     class="form-control" [(ngModel)]="settingsForm.lunchBreakMinutes" />
-            </div>
-            <div class="col-12">
-              <label class="form-label d-block">{{ 'overtime.contractedDays' | translate }}</label>
-              <div class="btn-group flex-wrap" role="group"
-                   [attr.aria-label]="'overtime.contractedDaysAria' | translate">
-                @for (d of weekDayOptions; track d.value) {
-                  <input type="checkbox" class="btn-check" [id]="'workDay' + d.value"
-                         [checked]="isWorkDay(d.value)" (change)="toggleWorkDay(d.value)" />
-                  <label class="btn btn-outline-primary btn-sm" [for]="'workDay' + d.value">
-                    {{ d.labelKey | translate }}
-                  </label>
-                }
+          <!-- [hidden], not @if: collapsed fields stay in the form and keep validating. -->
+          <div [hidden]="!sectionOpen('workingDay')">
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="shiftType">{{ 'overtime.shift' | translate }}</label>
+                <select id="shiftType" name="shiftType" class="form-select"
+                        [(ngModel)]="settingsForm.shiftType"
+                        (ngModelChange)="onShiftTypeChange()">
+                  <option value="day">{{ 'overtime.shiftDay' | translate }}</option>
+                  <option value="night">{{ 'overtime.shiftNight' | translate }}</option>
+                </select>
               </div>
-              <div class="form-text">{{ 'overtime.contractedDaysHelp' | translate }}</div>
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="shiftStart">
+                  {{ 'overtime.scheduledStart' | translate }}
+                </label>
+                <select id="shiftStart" name="shiftStart" class="form-select"
+                        [(ngModel)]="settingsForm.shiftStart">
+                  @for (t of shiftStartOptions; track t) {
+                    <option [value]="t">{{ t }}</option>
+                  }
+                </select>
+              </div>
+              <div class="col-6 col-md-2">
+                <label class="form-label" for="workHours">{{ 'overtime.workHours' | translate }}</label>
+                <input id="workHours" name="workHours" type="number" min="0" max="24" step="0.5"
+                       class="form-control" [(ngModel)]="settingsForm.workHours" />
+              </div>
+              <div class="col-6 col-md-2">
+                <label class="form-label" for="lunchBreakMinutes">
+                  {{ 'overtime.lunchMinutes' | translate }}
+                </label>
+                <input id="lunchBreakMinutes" name="lunchBreakMinutes" type="number" min="0" step="5"
+                       class="form-control" [(ngModel)]="settingsForm.lunchBreakMinutes" />
+              </div>
+              <div class="col-12">
+                <label class="form-label d-block">{{ 'overtime.contractedDays' | translate }}</label>
+                <div class="btn-group flex-wrap" role="group"
+                     [attr.aria-label]="'overtime.contractedDaysAria' | translate">
+                  @for (d of weekDayOptions; track d.value) {
+                    <input type="checkbox" class="btn-check" [id]="'workDay' + d.value"
+                           [checked]="isWorkDay(d.value)" (change)="toggleWorkDay(d.value)" />
+                    <label class="btn btn-outline-primary btn-sm" [for]="'workDay' + d.value">
+                      {{ d.labelKey | translate }}
+                    </label>
+                  }
+                </div>
+                <div class="form-text">{{ 'overtime.contractedDaysHelp' | translate }}</div>
+              </div>
             </div>
           </div>
 
-          <h6 class="ot-section-title">
+          <h6 class="ot-section-title collapse-toggle" role="button" tabindex="0" [attr.aria-expanded]="sectionOpen('counting')"
+              (click)="toggleSection('counting')" (keydown.enter)="toggleSection('counting')">
+            <i class="bi me-1" [class.bi-chevron-right]="!sectionOpen('counting')" [class.bi-chevron-down]="sectionOpen('counting')"></i>
             {{ 'overtime.sections.counting' | translate }}
           </h6>
-          <div class="row g-3">
-            <div class="col-12 col-md-6">
-              <label class="form-label" for="minimumOtMinutes">
-                {{ 'overtime.minimumToQualify' | translate }}
-              </label>
-              <select id="minimumOtMinutes" name="minimumOtMinutes" class="form-select"
-                      [(ngModel)]="settingsForm.minimumOtMinutes">
-                @for (opt of minimumOptions; track opt.minutes) {
-                  <option [ngValue]="opt.minutes">{{ opt.labelKey | translate }}</option>
-                }
-              </select>
-              <div class="form-text">{{ 'overtime.minimumHelp' | translate }}</div>
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label" for="rounding">{{ 'overtime.rounding' | translate }}</label>
-              <select id="rounding" name="rounding" class="form-select"
-                      [(ngModel)]="settingsForm.rounding">
-                <option value="down60">{{ 'overtime.roundingDown60' | translate }}</option>
-                <option value="down30">{{ 'overtime.roundingDown30' | translate }}</option>
-                <option value="exact">{{ 'overtime.roundingExact' | translate }}</option>
-              </select>
-            </div>
-            <div class="col-12">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="countEarlyArrival"
-                       name="countEarlyArrival" [(ngModel)]="settingsForm.countEarlyArrival" />
-                <label class="form-check-label" for="countEarlyArrival">
-                  {{ 'overtime.countEarlyArrival' | translate }}
-                  <span class="text-muted small d-block">
-                    {{ 'overtime.countEarlyArrivalHelp' | translate }}
-                  </span>
+          <!-- [hidden], not @if: collapsed fields stay in the form and keep validating. -->
+          <div [hidden]="!sectionOpen('counting')">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label" for="minimumOtMinutes">
+                  {{ 'overtime.minimumToQualify' | translate }}
                 </label>
+                <select id="minimumOtMinutes" name="minimumOtMinutes" class="form-select"
+                        [(ngModel)]="settingsForm.minimumOtMinutes">
+                  @for (opt of minimumOptions; track opt.minutes) {
+                    <option [ngValue]="opt.minutes">{{ opt.labelKey | translate }}</option>
+                  }
+                </select>
+                <div class="form-text">{{ 'overtime.minimumHelp' | translate }}</div>
               </div>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label" for="lateGraceMinutes">{{ 'overtime.late.grace' | translate }}</label>
-              <select id="lateGraceMinutes" name="lateGraceMinutes" class="form-select"
-                      [(ngModel)]="settingsForm.lateGraceMinutes">
-                @for (g of graceOptions; track g) {
-                  <option [ngValue]="g">{{ g ? ('overtime.late.graceN' | translate: { n: g }) : ('overtime.late.graceNone' | translate: { time: lateExampleTime }) }}</option>
-                }
-              </select>
-              <div class="form-text">{{ 'overtime.late.graceHelp' | translate }}</div>
+              <div class="col-12 col-md-6">
+                <label class="form-label" for="rounding">{{ 'overtime.rounding' | translate }}</label>
+                <select id="rounding" name="rounding" class="form-select"
+                        [(ngModel)]="settingsForm.rounding">
+                  <option value="down60">{{ 'overtime.roundingDown60' | translate }}</option>
+                  <option value="down30">{{ 'overtime.roundingDown30' | translate }}</option>
+                  <option value="exact">{{ 'overtime.roundingExact' | translate }}</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="countEarlyArrival"
+                         name="countEarlyArrival" [(ngModel)]="settingsForm.countEarlyArrival" />
+                  <label class="form-check-label" for="countEarlyArrival">
+                    {{ 'overtime.countEarlyArrival' | translate }}
+                    <span class="text-muted small d-block">
+                      {{ 'overtime.countEarlyArrivalHelp' | translate }}
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="lateGraceMinutes">{{ 'overtime.late.grace' | translate }}</label>
+                <select id="lateGraceMinutes" name="lateGraceMinutes" class="form-select"
+                        [(ngModel)]="settingsForm.lateGraceMinutes">
+                  @for (g of graceOptions; track g) {
+                    <option [ngValue]="g">{{ g ? ('overtime.late.graceN' | translate: { n: g }) : ('overtime.late.graceNone' | translate: { time: lateExampleTime }) }}</option>
+                  }
+                </select>
+                <div class="form-text">{{ 'overtime.late.graceHelp' | translate }}</div>
+              </div>
             </div>
           </div>
 
-          <h6 class="ot-section-title">
+          <h6 class="ot-section-title collapse-toggle" role="button" tabindex="0" [attr.aria-expanded]="sectionOpen('restDays')"
+              (click)="toggleSection('restDays')" (keydown.enter)="toggleSection('restDays')">
+            <i class="bi me-1" [class.bi-chevron-right]="!sectionOpen('restDays')" [class.bi-chevron-down]="sectionOpen('restDays')"></i>
             {{ 'overtime.sections.restDays' | translate }}
           </h6>
-          <p class="text-muted small mb-2">{{ 'overtime.restDaysIntro' | translate }}</p>
-          <div class="row g-3">
-            <div class="col-12 col-md-4">
-              <label class="form-label" for="restDayFirst8Multiplier">
-                {{ 'overtime.restDayFirst8' | translate }}
-              </label>
-              <select id="restDayFirst8Multiplier" name="restDayFirst8Multiplier"
-                      class="form-select" [(ngModel)]="settingsForm.restDayFirst8Multiplier">
-                <option [ngValue]="1.5">{{ 'overtime.multiplier15Statutory' | translate }}</option>
-                <option [ngValue]="2">{{ 'overtime.multiplier20' | translate }}</option>
-              </select>
-            </div>
-            <div class="col-12 col-md-4">
-              <label class="form-label" for="restDayBeyondMultiplier">
-                {{ 'overtime.restDayBeyond' | translate }}
-              </label>
-              <select id="restDayBeyondMultiplier" name="restDayBeyondMultiplier"
-                      class="form-select" [(ngModel)]="settingsForm.restDayBeyondMultiplier">
-                <option [ngValue]="1.5">{{ 'overtime.multiplier15Flat' | translate }}</option>
-                <option [ngValue]="2">{{ 'overtime.multiplier20Statutory' | translate }}</option>
-              </select>
-              <div class="form-text">{{ 'overtime.restDayBeyondHelp' | translate }}</div>
-            </div>
-            <div class="col-12 col-md-4 d-flex align-items-center">
-              <div class="form-check mt-3">
-                <input class="form-check-input" type="checkbox" id="minimumOnRestDays"
-                       name="minimumOnRestDays" [(ngModel)]="settingsForm.minimumOnRestDays" />
-                <label class="form-check-label" for="minimumOnRestDays">
-                  {{ 'overtime.minimumOnRestDays' | translate }}
-                  <span class="text-muted small d-block">
-                    {{ 'overtime.minimumOnRestDaysHelp' | translate }}
-                  </span>
+          <!-- [hidden], not @if: collapsed fields stay in the form and keep validating. -->
+          <div [hidden]="!sectionOpen('restDays')">
+            <p class="text-muted small mb-2">{{ 'overtime.restDaysIntro' | translate }}</p>
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="restDayFirst8Multiplier">
+                  {{ 'overtime.restDayFirst8' | translate }}
                 </label>
+                <select id="restDayFirst8Multiplier" name="restDayFirst8Multiplier"
+                        class="form-select" [(ngModel)]="settingsForm.restDayFirst8Multiplier">
+                  <option [ngValue]="1.5">{{ 'overtime.multiplier15Statutory' | translate }}</option>
+                  <option [ngValue]="2">{{ 'overtime.multiplier20' | translate }}</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="restDayBeyondMultiplier">
+                  {{ 'overtime.restDayBeyond' | translate }}
+                </label>
+                <select id="restDayBeyondMultiplier" name="restDayBeyondMultiplier"
+                        class="form-select" [(ngModel)]="settingsForm.restDayBeyondMultiplier">
+                  <option [ngValue]="1.5">{{ 'overtime.multiplier15Flat' | translate }}</option>
+                  <option [ngValue]="2">{{ 'overtime.multiplier20Statutory' | translate }}</option>
+                </select>
+                <div class="form-text">{{ 'overtime.restDayBeyondHelp' | translate }}</div>
+              </div>
+              <div class="col-12 col-md-4 d-flex align-items-center">
+                <div class="form-check mt-3">
+                  <input class="form-check-input" type="checkbox" id="minimumOnRestDays"
+                         name="minimumOnRestDays" [(ngModel)]="settingsForm.minimumOnRestDays" />
+                  <label class="form-check-label" for="minimumOnRestDays">
+                    {{ 'overtime.minimumOnRestDays' | translate }}
+                    <span class="text-muted small d-block">
+                      {{ 'overtime.minimumOnRestDaysHelp' | translate }}
+                    </span>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
 
-          <h6 class="ot-section-title">
+          <h6 class="ot-section-title collapse-toggle" role="button" tabindex="0" [attr.aria-expanded]="sectionOpen('company')"
+              (click)="toggleSection('company')" (keydown.enter)="toggleSection('company')">
+            <i class="bi me-1" [class.bi-chevron-right]="!sectionOpen('company')" [class.bi-chevron-down]="sectionOpen('company')"></i>
             {{ 'overtime.sections.company' | translate }}
             <span class="text-lowercase fw-normal">{{ 'overtime.optional' | translate }}</span>
           </h6>
-          <p class="text-muted small mb-2">{{ 'overtime.companyIntro' | translate }}</p>
-          @if (settingsForm.company) {
-            <div class="row g-3">
-              <div class="col-12 col-md-6">
-                <label class="form-label" for="companyName">
-                  {{ 'overtime.companyName' | translate }}
-                </label>
-                <input id="companyName" name="companyName" type="text" class="form-control"
-                       [(ngModel)]="settingsForm.company.name" />
-              </div>
-              <div class="col-12 col-md-6">
-                <label class="form-label" for="position">{{ 'overtime.position' | translate }}</label>
-                <input id="position" name="position" type="text" class="form-control"
-                       [(ngModel)]="settingsForm.company.position" />
-              </div>
-              <div class="col-12 col-md-3">
-                <label class="form-label" for="contractStart">
-                  {{ 'overtime.contractStart' | translate }}
-                </label>
-                <input id="contractStart" name="contractStart" type="date" class="form-control"
-                       [(ngModel)]="settingsForm.company.contractStart" />
-              </div>
-              <div class="col-12 col-md-3">
-                <label class="form-label" for="contractEnd">
-                  {{ 'overtime.contractEnd' | translate }}
-                </label>
-                <input id="contractEnd" name="contractEnd" type="date" class="form-control"
-                       [(ngModel)]="settingsForm.company.contractEnd" />
-              </div>
-              <div class="col-12 col-md-3">
-                <label class="form-label" for="contractSalary">
-                  {{ 'overtime.contractSalary' | translate }}
-                </label>
-                <input id="contractSalary" name="contractSalary" type="number" min="0" step="any"
-                       class="form-control" [(ngModel)]="settingsForm.company.contractSalary" />
-              </div>
-              <div class="col-12 col-md-3">
-                <label class="form-label" for="salaryPeriod">
-                  {{ 'overtime.salaryPeriod' | translate }}
-                </label>
-                <select id="salaryPeriod" name="salaryPeriod" class="form-select"
-                        [(ngModel)]="settingsForm.company.salaryPeriod">
-                  <option value="monthly">{{ 'overtime.salaryMonthly' | translate }}</option>
-                  <option value="annual">{{ 'overtime.salaryAnnual' | translate }}</option>
-                </select>
-              </div>
-              @if (canEstimateHourly) {
-                <div class="col-12">
-                  <button type="button" class="btn btn-sm btn-outline-secondary"
-                          (click)="estimateHourlyFromSalary()">
-                    <i class="bi bi-calculator me-1"></i>{{ 'overtime.estimateHourly' | translate }}
-                  </button>
-                  <span class="form-text ms-2">
-                    {{ 'overtime.estimateHourlyHelp' | translate: {
-                         hours: monthlyPaidHours, workHours: settingsForm.workHours } }}
-                  </span>
-                </div>
-              }
-            </div>
-          }
-
-          <h6 class="ot-section-title">
-            {{ 'overtime.sections.deductions' | translate }}
-          </h6>
-          <p class="text-muted small mb-2">{{ 'overtime.payIntro' | translate }}</p>
-          @if (settingsForm.deductions) {
-            <div class="row g-3">
-              <div class="col-12 col-md-6">
-                <label class="form-label" for="employmentType">{{ 'overtime.employment.label' | translate }}</label>
-                <select id="employmentType" name="employmentType" class="form-select"
-                        [(ngModel)]="settingsForm.employmentType" (ngModelChange)="onEmploymentTypeChange()">
-                  <option value="fulltime">{{ 'overtime.employment.fulltime' | translate }}</option>
-                  <option value="parttime">{{ 'overtime.employment.parttime' | translate }}</option>
-                </select>
-                <div class="form-text">
-                  {{ (settingsForm.employmentType === 'parttime'
-                        ? 'overtime.employment.parttimeHelp' : 'overtime.employment.fulltimeHelp') | translate }}
-                </div>
-              </div>
-              <div class="col-12 col-md-6">
-                <label class="form-label" for="deductionMode">{{ 'overtime.deductions.label' | translate }}</label>
-                <select id="deductionMode" name="deductionMode" class="form-select"
-                        [(ngModel)]="settingsForm.deductions.mode">
-                  <option value="none">{{ 'overtime.deductions.none' | translate }}</option>
-                  <option value="tax33">{{ 'overtime.deductions.tax33' | translate }}</option>
-                  <option value="insurance4">{{ 'overtime.deductions.insurance4' | translate }}</option>
-                </select>
-              </div>
-              @for (key of deductionRateKeys; track key) {
-                <div class="col-6 col-md-4 col-lg">
-                  <label class="form-label small" [for]="'rate-' + key">
-                    {{ 'overtime.deductions.items.' + key | translate }} (%)
+          <!-- [hidden], not @if: collapsed fields stay in the form and keep validating. -->
+          <div [hidden]="!sectionOpen('company')">
+            <p class="text-muted small mb-2">{{ 'overtime.companyIntro' | translate }}</p>
+            @if (settingsForm.company) {
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="companyName">
+                    {{ 'overtime.companyName' | translate }}
                   </label>
-                  <input [id]="'rate-' + key" [name]="'rate-' + key" type="number" min="0" max="100" step="any"
-                         class="form-control form-control-sm" [placeholder]="deductionDefaults[key]"
-                         [(ngModel)]="settingsForm.deductions.rates![key]" />
+                  <input id="companyName" name="companyName" type="text" class="form-control"
+                         [(ngModel)]="settingsForm.company.name" />
                 </div>
-              }
-              @if (settingsForm.deductions.mode === 'insurance4') {
-                <div class="col-12 col-md-4">
-                  <label class="form-label small" for="incomeTaxMode">{{ 'overtime.deductions.incomeTaxMode' | translate }}</label>
-                  <select id="incomeTaxMode" name="incomeTaxMode" class="form-select form-select-sm"
-                          [(ngModel)]="settingsForm.deductions.incomeTaxMode">
-                    <option value="table">{{ 'overtime.deductions.taxTable' | translate }}</option>
-                    <option value="flat">{{ 'overtime.deductions.taxFlat' | translate }}</option>
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="position">{{ 'overtime.position' | translate }}</label>
+                  <input id="position" name="position" type="text" class="form-control"
+                         [(ngModel)]="settingsForm.company.position" />
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label" for="contractStart">
+                    {{ 'overtime.contractStart' | translate }}
+                  </label>
+                  <input id="contractStart" name="contractStart" type="date" class="form-control"
+                         [(ngModel)]="settingsForm.company.contractStart" />
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label" for="contractEnd">
+                    {{ 'overtime.contractEnd' | translate }}
+                  </label>
+                  <input id="contractEnd" name="contractEnd" type="date" class="form-control"
+                         [(ngModel)]="settingsForm.company.contractEnd" />
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label" for="contractSalary">
+                    {{ 'overtime.contractSalary' | translate }}
+                  </label>
+                  <input id="contractSalary" name="contractSalary" type="number" min="0" step="any"
+                         class="form-control" [(ngModel)]="settingsForm.company.contractSalary" />
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label" for="salaryPeriod">
+                    {{ 'overtime.salaryPeriod' | translate }}
+                  </label>
+                  <select id="salaryPeriod" name="salaryPeriod" class="form-select"
+                          [(ngModel)]="settingsForm.company.salaryPeriod">
+                    <option value="monthly">{{ 'overtime.salaryMonthly' | translate }}</option>
+                    <option value="annual">{{ 'overtime.salaryAnnual' | translate }}</option>
                   </select>
                 </div>
-                @if (settingsForm.deductions.incomeTaxMode === 'table') {
-                  <div class="col-6 col-md-4">
-                    <label class="form-label small" for="dependents">{{ 'overtime.deductions.dependents' | translate }}</label>
-                    <input id="dependents" name="dependents" type="number" min="1" max="20" step="1"
-                           class="form-control form-control-sm" [(ngModel)]="settingsForm.deductions.dependents" />
+                @if (canEstimateHourly) {
+                  <div class="col-12">
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                            (click)="estimateHourlyFromSalary()">
+                      <i class="bi bi-calculator me-1"></i>{{ 'overtime.estimateHourly' | translate }}
+                    </button>
+                    <span class="form-text ms-2">
+                      {{ 'overtime.estimateHourlyHelp' | translate: {
+                           hours: monthlyPaidHours, workHours: settingsForm.workHours } }}
+                    </span>
                   </div>
                 }
-                <div class="col-6 col-md-4">
-                  <label class="form-label small" for="insuranceBase">{{ 'overtime.deductions.insuranceBase' | translate }}</label>
-                  <input id="insuranceBase" name="insuranceBase" type="number" min="0" step="1"
-                         class="form-control form-control-sm"
-                         [placeholder]="settingsForm.company?.contractSalary ?? ''"
-                         [(ngModel)]="settingsForm.deductions.insuranceBase" />
-                </div>
-                <div class="col-12 form-text mt-1">{{ 'overtime.deductions.insuranceBaseHelp' | translate }}</div>
-              }
-              @if (deductionRateKeys.length) {
-                <div class="col-12 form-text mt-1">
-                  {{ (settingsForm.deductions.mode === 'insurance4'
-                        ? 'overtime.deductions.insuranceHelp' : 'overtime.deductions.ratesHelp') | translate }}
-                </div>
-              }
-            </div>
-          }
+              </div>
+            }
+          </div>
 
-          <h6 class="ot-section-title">
+          <h6 class="ot-section-title collapse-toggle" role="button" tabindex="0" [attr.aria-expanded]="sectionOpen('deductions')"
+              (click)="toggleSection('deductions')" (keydown.enter)="toggleSection('deductions')">
+            <i class="bi me-1" [class.bi-chevron-right]="!sectionOpen('deductions')" [class.bi-chevron-down]="sectionOpen('deductions')"></i>
+            {{ 'overtime.sections.deductions' | translate }}
+          </h6>
+          <!-- [hidden], not @if: collapsed fields stay in the form and keep validating. -->
+          <div [hidden]="!sectionOpen('deductions')">
+            <p class="text-muted small mb-2">{{ 'overtime.payIntro' | translate }}</p>
+            @if (settingsForm.deductions) {
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="employmentType">{{ 'overtime.employment.label' | translate }}</label>
+                  <select id="employmentType" name="employmentType" class="form-select"
+                          [(ngModel)]="settingsForm.employmentType" (ngModelChange)="onEmploymentTypeChange()">
+                    <option value="fulltime">{{ 'overtime.employment.fulltime' | translate }}</option>
+                    <option value="parttime">{{ 'overtime.employment.parttime' | translate }}</option>
+                  </select>
+                  <div class="form-text">
+                    {{ (settingsForm.employmentType === 'parttime'
+                          ? 'overtime.employment.parttimeHelp' : 'overtime.employment.fulltimeHelp') | translate }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="deductionMode">{{ 'overtime.deductions.label' | translate }}</label>
+                  <select id="deductionMode" name="deductionMode" class="form-select"
+                          [(ngModel)]="settingsForm.deductions.mode">
+                    <option value="none">{{ 'overtime.deductions.none' | translate }}</option>
+                    <option value="tax33">{{ 'overtime.deductions.tax33' | translate }}</option>
+                    <option value="insurance4">{{ 'overtime.deductions.insurance4' | translate }}</option>
+                  </select>
+                </div>
+                @for (key of deductionRateKeys; track key) {
+                  <div class="col-6 col-md-4 col-lg">
+                    <label class="form-label small" [for]="'rate-' + key">
+                      {{ 'overtime.deductions.items.' + key | translate }} (%)
+                    </label>
+                    <input [id]="'rate-' + key" [name]="'rate-' + key" type="number" min="0" max="100" step="any"
+                           class="form-control form-control-sm" [placeholder]="deductionDefaults[key]"
+                           [(ngModel)]="settingsForm.deductions.rates![key]" />
+                  </div>
+                }
+                @if (settingsForm.deductions.mode === 'insurance4') {
+                  <div class="col-12 col-md-4">
+                    <label class="form-label small" for="incomeTaxMode">{{ 'overtime.deductions.incomeTaxMode' | translate }}</label>
+                    <select id="incomeTaxMode" name="incomeTaxMode" class="form-select form-select-sm"
+                            [(ngModel)]="settingsForm.deductions.incomeTaxMode">
+                      <option value="table">{{ 'overtime.deductions.taxTable' | translate }}</option>
+                      <option value="flat">{{ 'overtime.deductions.taxFlat' | translate }}</option>
+                    </select>
+                  </div>
+                  @if (settingsForm.deductions.incomeTaxMode === 'table') {
+                    <div class="col-6 col-md-4">
+                      <label class="form-label small" for="dependents">{{ 'overtime.deductions.dependents' | translate }}</label>
+                      <input id="dependents" name="dependents" type="number" min="1" max="20" step="1"
+                             class="form-control form-control-sm" [(ngModel)]="settingsForm.deductions.dependents" />
+                    </div>
+                  }
+                  <div class="col-6 col-md-4">
+                    <label class="form-label small" for="insuranceBase">{{ 'overtime.deductions.insuranceBase' | translate }}</label>
+                    <input id="insuranceBase" name="insuranceBase" type="number" min="0" step="1"
+                           class="form-control form-control-sm"
+                           [placeholder]="settingsForm.company?.contractSalary ?? ''"
+                           [(ngModel)]="settingsForm.deductions.insuranceBase" />
+                  </div>
+                  <div class="col-12 form-text mt-1">{{ 'overtime.deductions.insuranceBaseHelp' | translate }}</div>
+                }
+                @if (deductionRateKeys.length) {
+                  <div class="col-12 form-text mt-1">
+                    {{ (settingsForm.deductions.mode === 'insurance4'
+                          ? 'overtime.deductions.insuranceHelp' : 'overtime.deductions.ratesHelp') | translate }}
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <h6 class="ot-section-title collapse-toggle" role="button" tabindex="0" [attr.aria-expanded]="sectionOpen('leave')"
+              (click)="toggleSection('leave')" (keydown.enter)="toggleSection('leave')">
+            <i class="bi me-1" [class.bi-chevron-right]="!sectionOpen('leave')" [class.bi-chevron-down]="sectionOpen('leave')"></i>
             {{ 'overtime.sections.leave' | translate }}
           </h6>
-          <p class="text-muted small mb-2">{{ 'overtime.leave.settingsIntro' | translate }}</p>
-          @if (settingsForm.leave; as leave) {
-            <div class="row g-3">
-              <div class="col-12 col-md-6">
-                <label class="form-label" for="leaveMode">{{ 'overtime.leave.mode' | translate }}</label>
-                <select id="leaveMode" name="leaveMode" class="form-select" [(ngModel)]="leave.mode">
-                  <option value="statutory">{{ 'overtime.leave.modeStatutoryOption' | translate }}</option>
-                  <option value="flat">{{ 'overtime.leave.modeFlatOption' | translate }}</option>
-                </select>
-                <div class="form-text">
-                  {{ (leave.mode === 'flat' ? 'overtime.leave.modeFlatHelp'
-                                            : 'overtime.leave.modeStatutoryHelp') | translate }}
+          <!-- [hidden], not @if: collapsed fields stay in the form and keep validating. -->
+          <div [hidden]="!sectionOpen('leave')">
+            <p class="text-muted small mb-2">{{ 'overtime.leave.settingsIntro' | translate }}</p>
+            @if (settingsForm.leave; as leave) {
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="leaveMode">{{ 'overtime.leave.mode' | translate }}</label>
+                  <select id="leaveMode" name="leaveMode" class="form-select" [(ngModel)]="leave.mode">
+                    <option value="statutory">{{ 'overtime.leave.modeStatutoryOption' | translate }}</option>
+                    <option value="flat">{{ 'overtime.leave.modeFlatOption' | translate }}</option>
+                  </select>
+                  <div class="form-text">
+                    {{ (leave.mode === 'flat' ? 'overtime.leave.modeFlatHelp'
+                                              : 'overtime.leave.modeStatutoryHelp') | translate }}
+                  </div>
                 </div>
-              </div>
-              <div class="col-12 col-md-3">
-                <label class="form-label" for="accrualStart">{{ 'overtime.leave.accrualStart' | translate }}</label>
-                <input id="accrualStart" name="accrualStart" type="date" class="form-control"
-                       [(ngModel)]="leave.accrualStart" />
-                <div class="form-text">{{ 'overtime.leave.accrualStartHelp' | translate }}</div>
-              </div>
-              @if (leave.mode === 'flat') {
                 <div class="col-12 col-md-3">
-                  <label class="form-label" for="perMonth">{{ 'overtime.leave.perMonth' | translate }}</label>
-                  <input id="perMonth" name="perMonth" type="number" min="0" step="0.5" class="form-control"
-                         [(ngModel)]="leave.perMonth" />
+                  <label class="form-label" for="accrualStart">{{ 'overtime.leave.accrualStart' | translate }}</label>
+                  <input id="accrualStart" name="accrualStart" type="date" class="form-control"
+                         [(ngModel)]="leave.accrualStart" />
+                  <div class="form-text">{{ 'overtime.leave.accrualStartHelp' | translate }}</div>
                 </div>
-              }
-              @if (leave.balanceAsOf; as cal) {
-                <div class="col-6 col-md-3">
-                  <label class="form-label" for="balanceDays">{{ 'overtime.leave.balanceDays' | translate }}</label>
-                  <input id="balanceDays" name="balanceDays" type="number" step="0.5" class="form-control"
-                         [(ngModel)]="cal.days" />
-                </div>
-                <div class="col-6 col-md-3">
-                  <label class="form-label" for="balanceDate">{{ 'overtime.leave.balanceDate' | translate }}</label>
-                  <input id="balanceDate" name="balanceDate" type="date" class="form-control"
-                         [(ngModel)]="cal.date" />
-                </div>
-                <div class="col-12 col-md-6 form-text align-self-end">
-                  {{ 'overtime.leave.balanceHelp' | translate }}
-                </div>
-              }
-            </div>
-          }
+                @if (leave.mode === 'flat') {
+                  <div class="col-12 col-md-3">
+                    <label class="form-label" for="perMonth">{{ 'overtime.leave.perMonth' | translate }}</label>
+                    <input id="perMonth" name="perMonth" type="number" min="0" step="0.5" class="form-control"
+                           [(ngModel)]="leave.perMonth" />
+                  </div>
+                }
+                @if (leave.balanceAsOf; as cal) {
+                  <div class="col-6 col-md-3">
+                    <label class="form-label" for="balanceDays">{{ 'overtime.leave.balanceDays' | translate }}</label>
+                    <input id="balanceDays" name="balanceDays" type="number" step="0.5" class="form-control"
+                           [(ngModel)]="cal.days" />
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <label class="form-label" for="balanceDate">{{ 'overtime.leave.balanceDate' | translate }}</label>
+                    <input id="balanceDate" name="balanceDate" type="date" class="form-control"
+                           [(ngModel)]="cal.date" />
+                  </div>
+                  <div class="col-12 col-md-6 form-text align-self-end">
+                    {{ 'overtime.leave.balanceHelp' | translate }}
+                  </div>
+                }
+              </div>
+            }
+          </div>
 
           @if (errorMessage) {
             <div class="alert alert-danger mt-3 mb-0" role="alert">{{ errorMessage }}</div>
@@ -589,8 +624,12 @@
       @if (summary.byDay.length) {
         <div class="card shadow-sm mb-3">
           <div class="card-body">
-            <h6 class="card-title text-muted">{{ 'overtime.chart.title' | translate }}</h6>
-            <div class="chart-box">
+            <h6 class="card-title text-muted mb-0 collapse-toggle" role="button" tabindex="0"
+                [attr.aria-expanded]="chartOpen" (click)="toggleChart()" (keydown.enter)="toggleChart()">
+              <i class="bi me-1" [class.bi-chevron-right]="!chartOpen" [class.bi-chevron-down]="chartOpen"></i>{{ 'overtime.chart.title' | translate }}
+            </h6>
+            <!-- [hidden] keeps the canvas, so the chart is not rebuilt on every toggle. -->
+            <div class="chart-box mt-2" [hidden]="!chartOpen">
               <canvas id="overtimeByDayChart"></canvas>
             </div>
           </div>

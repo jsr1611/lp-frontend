@@ -658,7 +658,8 @@
       "netPaid": "Take-home (payslip)",
       "estimateNote": "Estimate from the days logged. Paid leave and weekly holiday pay (주휴수당) are not included.",
       "fromPayslipGross": "Deductions worked out from the payslip's own gross, to check the cut they took.",
-      "needSalary": "Add the contract salary under Company to estimate take-home pay."
+      "needSalary": "Add the contract salary under Company to estimate take-home pay.",
+      "deductionsTotal": "Deductions"
     },
     "jobs": {
       "title": "Jobs",

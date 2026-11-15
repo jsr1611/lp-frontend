@@ -18,63 +18,71 @@
         <i class="bi bi-plus-lg me-1"></i>{{ 'overtime.payslip.enter' | translate }}
       </button>
     } @else if (summary) {
-      <table class="table table-sm mb-1 mt-1 payslip-table">
-        <thead>
-          <tr>
-            <th></th>
-            <th class="text-end">{{ 'overtime.payslip.hours' | translate }}</th>
-            <th class="text-end">{{ 'overtime.payslip.amount' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="text-muted">{{ 'overtime.payslip.logged' | translate }}</td>
-            <td class="text-end">{{ formatMinutes(summary.totalPaidMinutes) }}</td>
-            <td class="text-end">{{ summary.totalEarnings | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
-          </tr>
-          <tr>
-            <td class="text-muted">{{ 'overtime.payslip.paid' | translate }}</td>
-            <td class="text-end">
-              {{ payslip.paidOtMinutes !== null && payslip.paidOtMinutes !== undefined
-                   ? formatMinutes(payslip.paidOtMinutes) : '—' }}
-            </td>
-            <td class="text-end">
-              {{ payslip.paidOtAmount !== null && payslip.paidOtAmount !== undefined
-                   ? (payslip.paidOtAmount | currency: currencyCode : 'symbol' : '1.0-0') : '—' }}
-            </td>
-          </tr>
-          <tr class="fw-semibold">
-            <td>{{ 'overtime.payslip.difference' | translate }}</td>
-            <td class="text-end" [class.text-danger]="(payslip.diffMinutes ?? 0) < 0"
-                [class.text-success]="payslip.diffMinutes === 0">
-              {{ payslip.diffMinutes !== null && payslip.diffMinutes !== undefined
-                   ? signedMinutes(payslip.diffMinutes) : '—' }}
-            </td>
-            <td class="text-end" [class.text-danger]="(payslip.diffAmount ?? 0) < 0"
-                [class.text-success]="payslip.diffAmount === 0">
-              @if (payslip.diffAmount !== null && payslip.diffAmount !== undefined) {
-                {{ payslip.diffAmount > 0 ? '+' : payslip.diffAmount < 0 ? '−' : '' }}{{
-                   (payslip.diffAmount < 0 ? -payslip.diffAmount : payslip.diffAmount)
-                     | currency: currencyCode : 'symbol' : '1.0-0' }}
-              } @else { — }
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      @if (showComparison) {
+        <table class="table table-sm mb-1 mt-1 payslip-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th class="text-end">{{ 'overtime.payslip.hours' | translate }}</th>
+              <th class="text-end">{{ 'overtime.payslip.amount' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-muted">{{ 'overtime.payslip.logged' | translate }}</td>
+              <td class="text-end">{{ formatMinutes(summary.totalPaidMinutes) }}</td>
+              <td class="text-end">{{ summary.totalEarnings | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
+            </tr>
+            <tr>
+              <td class="text-muted">{{ 'overtime.payslip.paid' | translate }}</td>
+              <td class="text-end">
+                {{ payslip.paidOtMinutes !== null && payslip.paidOtMinutes !== undefined
+                     ? formatMinutes(payslip.paidOtMinutes) : '—' }}
+              </td>
+              <td class="text-end">
+                {{ payslip.paidOtAmount !== null && payslip.paidOtAmount !== undefined
+                     ? (payslip.paidOtAmount | currency: currencyCode : 'symbol' : '1.0-0') : '—' }}
+              </td>
+            </tr>
+            <tr class="fw-semibold">
+              <td>{{ 'overtime.payslip.difference' | translate }}</td>
+              <td class="text-end" [class.text-danger]="(payslip.diffMinutes ?? 0) < 0"
+                  [class.text-success]="payslip.diffMinutes === 0">
+                {{ payslip.diffMinutes !== null && payslip.diffMinutes !== undefined
+                     ? signedMinutes(payslip.diffMinutes) : '—' }}
+              </td>
+              <td class="text-end" [class.text-danger]="(payslip.diffAmount ?? 0) < 0"
+                  [class.text-success]="payslip.diffAmount === 0">
+                @if (payslip.diffAmount !== null && payslip.diffAmount !== undefined) {
+                  {{ payslip.diffAmount > 0 ? '+' : payslip.diffAmount < 0 ? '−' : '' }}{{
+                     (payslip.diffAmount < 0 ? -payslip.diffAmount : payslip.diffAmount)
+                       | currency: currencyCode : 'symbol' : '1.0-0' }}
+                } @else { — }
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        }
       @switch (status) {
         @case ('under') {
-          <div class="alert alert-danger py-1 px-2 small mb-0">
+          <div class="alert alert-danger py-1 px-2 small mb-0 collapse-toggle d-flex align-items-center" role="button" tabindex="0"
+               [attr.aria-expanded]="showComparison" (click)="toggleComparison()" (keydown.enter)="toggleComparison()">
             <i class="bi bi-exclamation-octagon me-1"></i>{{ 'overtime.payslip.under' | translate }}
+            <i class="bi ms-auto" [class.bi-chevron-down]="!showComparison" [class.bi-chevron-up]="showComparison"></i>
           </div>
         }
         @case ('over') {
-          <div class="alert alert-info py-1 px-2 small mb-0">
+          <div class="alert alert-info py-1 px-2 small mb-0 collapse-toggle d-flex align-items-center" role="button" tabindex="0"
+               [attr.aria-expanded]="showComparison" (click)="toggleComparison()" (keydown.enter)="toggleComparison()">
             <i class="bi bi-info-circle me-1"></i>{{ 'overtime.payslip.over' | translate }}
+            <i class="bi ms-auto" [class.bi-chevron-down]="!showComparison" [class.bi-chevron-up]="showComparison"></i>
           </div>
         }
         @case ('match') {
-          <div class="alert alert-success py-1 px-2 small mb-0">
+          <div class="alert alert-success py-1 px-2 small mb-0 collapse-toggle d-flex align-items-center" role="button" tabindex="0"
+               [attr.aria-expanded]="showComparison" (click)="toggleComparison()" (keydown.enter)="toggleComparison()">
             <i class="bi bi-check-circle me-1"></i>{{ 'overtime.payslip.match' | translate }}
+            <i class="bi ms-auto" [class.bi-chevron-down]="!showComparison" [class.bi-chevron-up]="showComparison"></i>
           </div>
         }
       }
@@ -100,9 +108,14 @@
       <table class="table table-sm mb-1 payslip-table">
         <tbody>
           @if (pay.gross !== null) {
-            @if (pay.basePay !== null) {
+            <tr class="collapse-toggle" role="button" tabindex="0" [attr.aria-expanded]="isOpen('gross')"
+                (click)="toggle('gross')" (keydown.enter)="toggle('gross')">
+              <td><i class="bi me-1" [class.bi-chevron-right]="!isOpen('gross')" [class.bi-chevron-down]="isOpen('gross')"></i>{{ 'overtime.takeHome.grossEstimate' | translate }}</td>
+              <td class="text-end">{{ pay.gross | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
+            </tr>
+            @if (isOpen('gross') && pay.basePay !== null) {
               <tr>
-                <td class="text-muted">
+                <td class="text-muted ps-4">
                   {{ (pay.employmentType === 'parttime' ? 'overtime.takeHome.hourlyPay' : 'overtime.takeHome.salary') | translate }}
                   @if (pay.employmentType === 'parttime') {
                     <span class="form-text">({{ formatMinutes(pay.regularMinutes) }})</span>
@@ -111,14 +124,12 @@
                 <td class="text-end">{{ pay.basePay | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
               </tr>
             }
-            <tr>
-              <td class="text-muted">{{ 'overtime.takeHome.overtimePay' | translate }}</td>
-              <td class="text-end">{{ pay.overtimePay | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
-            </tr>
-            <tr>
-              <td>{{ 'overtime.takeHome.grossEstimate' | translate }}</td>
-              <td class="text-end">{{ pay.gross | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
-            </tr>
+            @if (isOpen('gross')) {
+              <tr>
+                <td class="text-muted ps-4">{{ 'overtime.takeHome.overtimePay' | translate }}</td>
+                <td class="text-end text-muted">{{ pay.overtimePay | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
+              </tr>
+            }
           }
           @if (payslip?.grossPaid != null) {
             <tr>
@@ -133,9 +144,16 @@
               </td>
             </tr>
           }
-          @for (item of deductionItems; track item.key) {
+          @if (deductionItems.length) {
+            <tr class="collapse-toggle" role="button" tabindex="0" [attr.aria-expanded]="isOpen('deductions')"
+                (click)="toggle('deductions')" (keydown.enter)="toggle('deductions')">
+              <td><i class="bi me-1" [class.bi-chevron-right]="!isOpen('deductions')" [class.bi-chevron-down]="isOpen('deductions')"></i>{{ 'overtime.takeHome.deductionsTotal' | translate }}</td>
+              <td class="text-end">−{{ deductionsTotal | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
+            </tr>
+          }
+          @for (item of (isOpen('deductions') ? deductionItems : []); track item.key) {
             <tr class="text-muted">
-              <td class="ps-3">− {{ 'overtime.deductions.items.' + item.key | translate }} <span class="form-text">{{ item.rate }}%</span></td>
+              <td class="ps-4">− {{ 'overtime.deductions.items.' + item.key | translate }} <span class="form-text">{{ item.rate }}%</span></td>
               <td class="text-end">{{ item.amount | currency: currencyCode : 'symbol' : '1.0-0' }}</td>
             </tr>
           }
