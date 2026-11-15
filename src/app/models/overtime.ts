@@ -38,6 +38,8 @@ export interface OvertimeSettings {
   // 1.5x is the statutory Korean overtime rate (근로기준법 §56); night work between
   // 22:00-06:00 earns a further 0.5x, which is why 2.0x is offered for night shifts.
   otMultiplier: number;
+  // Round each month's pay line up to 10 won, as some payroll does.
+  roundPayUp10?: boolean;
   shiftType: ShiftType;
   shiftStart: string;        // scheduled clock-in, "HH:MM"
   workHours: number;         // contracted hours, excluding the lunch break
@@ -79,6 +81,11 @@ export type DeductionRateKey = 'pension' | 'health' | 'longTermCare' | 'employme
 export interface DeductionSettings {
   mode: DeductionMode;
   rates?: Partial<Record<DeductionRateKey, number | null>>;
+  // 4대보험 base (보수월액). Blank = the contract monthly salary.
+  insuranceBase?: number | null;
+  // table: 간이세액표; flat: rates.incomeTax.
+  incomeTaxMode?: 'flat' | 'table';
+  dependents?: number;
 }
 
 export interface DeductionItem {

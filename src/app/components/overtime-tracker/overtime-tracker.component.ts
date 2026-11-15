@@ -444,7 +444,9 @@ export class OvertimeTrackerComponent implements OnInit {
   get deductionRateKeys(): DeductionRateKey[] {
     switch (this.settingsForm.deductions?.mode) {
       case "tax33": return ["businessTax"];
-      case "insurance4": return ["pension", "health", "longTermCare", "employment", "incomeTax"];
+      case "insurance4": return this.settingsForm.deductions?.incomeTaxMode === "table"
+        ? ["pension", "health", "longTermCare", "employment"]
+        : ["pension", "health", "longTermCare", "employment", "incomeTax"];
       default: return [];
     }
   }
@@ -471,6 +473,9 @@ export class OvertimeTrackerComponent implements OnInit {
     this.settingsForm.deductions = {
       mode: this.settingsForm.deductions?.mode || "none",
       rates: { ...(this.settingsForm.deductions?.rates || {}) },
+      insuranceBase: this.settingsForm.deductions?.insuranceBase ?? null,
+      incomeTaxMode: this.settingsForm.deductions?.incomeTaxMode || "flat",
+      dependents: this.settingsForm.deductions?.dependents ?? 1,
     };
     const leave = this.settingsForm.leave;
     this.settingsForm.leave = {
