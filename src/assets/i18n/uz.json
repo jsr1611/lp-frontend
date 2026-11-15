@@ -645,7 +645,9 @@
       "taxFlat": "Qat’iy %",
       "dependents": "Qaramog‘idagilar (o‘zingiz bilan)",
       "insuranceBase": "Sug‘urta bazasi (보수월액)",
-      "insuranceBaseHelp": "4대보험 qo‘shimcha ish haqidan emas, e’lon qilingan maoshdan olinadi. Bo‘sh qoldirsangiz, shartnoma maoshi olinadi. Jadval natijasi rasmiysidan taxminan 1% farq qiladi."
+      "insuranceBaseHelp": "4대보험 qo‘shimcha ish haqidan emas, e’lon qilingan maoshdan olinadi. Bo‘sh qoldirsangiz, shartnoma maoshi olinadi. Jadval natijasi rasmiysidan taxminan 1% farq qiladi.",
+      "children": "8–20 yoshli bolalar",
+      "dependentsHelp": "Qaramog‘idagilar — ish beruvchida siz uchun qayd etilgan hamma, o‘zingiz bilan. Hisob-varaqdagi soliqqa mos keladiganini kiriting: oila arizasi topshirilmagan bo‘lsa, odatda 1."
     },
     "takeHome": {
       "title": "Qo‘lga tegadigan",

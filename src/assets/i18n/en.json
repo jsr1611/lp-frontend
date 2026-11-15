@@ -645,7 +645,9 @@
       "taxFlat": "Flat %",
       "dependents": "Dependents (incl. you)",
       "insuranceBase": "Insurance base (보수월액)",
-      "insuranceBaseHelp": "4대보험 is charged on your declared salary, not on overtime. Leave blank to use the contract salary. The tax table result is within about 1% of the official one."
+      "insuranceBaseHelp": "4대보험 is charged on your declared salary, not on overtime. Leave blank to use the contract salary. The tax table result is within about 1% of the official one.",
+      "children": "Children aged 8–20",
+      "dependentsHelp": "Dependents is everyone the employer has on file for you, you included. Use what your payslip's tax matches: often 1 if no family declaration was submitted."
     },
     "takeHome": {
       "title": "Take-home",

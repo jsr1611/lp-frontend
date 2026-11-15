@@ -205,7 +205,7 @@
             <label class="form-label" for="payslipAmount">
               {{ 'overtime.payslip.amountPaid' | translate }} ({{ currencyCode }})
             </label>
-            <input id="payslipAmount" name="payslipAmount" type="number" min="0" step="any"
+            <input appMoney id="payslipAmount" name="payslipAmount"
                    class="form-control" [(ngModel)]="form.amount" />
           </div>
           <div class="col-12 form-text mt-1">{{ 'overtime.payslip.eitherHelp' | translate }}</div>
@@ -213,14 +213,14 @@
             <label class="form-label" for="payslipGross">
               {{ 'overtime.payslip.grossPaid' | translate }} ({{ currencyCode }})
             </label>
-            <input id="payslipGross" name="payslipGross" type="number" min="0" step="any"
+            <input appMoney id="payslipGross" name="payslipGross"
                    class="form-control" [(ngModel)]="form.gross" />
           </div>
           <div class="col-6">
             <label class="form-label" for="payslipNet">
               {{ 'overtime.payslip.netPaid' | translate }} ({{ currencyCode }})
             </label>
-            <input id="payslipNet" name="payslipNet" type="number" min="0" step="any"
+            <input appMoney id="payslipNet" name="payslipNet"
                    class="form-control" [(ngModel)]="form.net" />
           </div>
           <div class="col-12 form-text mt-1">{{ 'overtime.payslip.totalsHelp' | translate }}</div>

@@ -94,7 +94,7 @@
               @if (a.payType === 'hourly') {
                 <div class="col-12 col-md-6">
                   <label class="form-label small">{{ 'gig.hourlyRate' | translate }} ({{ jobForm.currency.code }})</label>
-                  <input type="number" min="0" class="form-control" [(ngModel)]="a.hourlyRate" />
+                  <input appMoney [decimals]="2" class="form-control" [(ngModel)]="a.hourlyRate" />
                   @if (rateVsMinimum(a.hourlyRate); as v) {
                     <div class="form-text" [class.text-danger]="v.below">
                       {{ (v.below ? 'gig.belowMinimum' : 'gig.overMinimum') | translate: { pct: v.pct, year: minimumWage?.year || 2026 } }}
@@ -104,7 +104,7 @@
               } @else {
                 <div class="col-12 col-md-6">
                   <label class="form-label small">{{ 'gig.flatAmount' | translate }} ({{ jobForm.currency.code }})</label>
-                  <input type="number" min="0" class="form-control" [(ngModel)]="a.flatAmount" />
+                  <input appMoney class="form-control" [(ngModel)]="a.flatAmount" />
                   <div class="form-check mt-1">
                     <input class="form-check-input" type="checkbox" [id]="'net' + i" [(ngModel)]="a.amountIsNet" />
                     <label class="form-check-label small" [for]="'net' + i">{{ 'gig.amountIsNet' | translate }}</label>
@@ -408,7 +408,7 @@
           @if (shiftForm.payType === 'hourly') {
             <div class="col-12">
               <label class="form-label" for="shiftRate">{{ 'gig.hourlyRate' | translate }} ({{ currencyCode }})</label>
-              <input id="shiftRate" name="shiftRate" type="number" min="0" class="form-control" [(ngModel)]="shiftForm.hourlyRate" />
+              <input appMoney [decimals]="2" id="shiftRate" name="shiftRate" class="form-control" [(ngModel)]="shiftForm.hourlyRate" />
               @if (rateVsMinimum(shiftForm.hourlyRate); as v) {
                 <div class="form-text" [class.text-danger]="v.below">
                   {{ (v.below ? 'gig.belowMinimum' : 'gig.overMinimum') | translate: { pct: v.pct, year: minimumWage?.year || 2026 } }}
@@ -418,7 +418,7 @@
           } @else {
             <div class="col-12">
               <label class="form-label" for="shiftFlat">{{ 'gig.flatAmount' | translate }} ({{ currencyCode }})</label>
-              <input id="shiftFlat" name="shiftFlat" type="number" min="0" class="form-control" [(ngModel)]="shiftForm.flatAmount" />
+              <input appMoney id="shiftFlat" name="shiftFlat" class="form-control" [(ngModel)]="shiftForm.flatAmount" />
               <div class="form-check mt-1">
                 <input class="form-check-input" type="checkbox" id="shiftNet" name="shiftNet" [(ngModel)]="shiftForm.amountIsNet" />
                 <label class="form-check-label small" for="shiftNet">{{ 'gig.amountIsNet' | translate }}</label>
@@ -488,7 +488,7 @@
         </div>
         <div class="col-6">
           <label class="form-label" for="payAmount">{{ 'gig.pay.amount' | translate }} ({{ currencyCode }})</label>
-          <input id="payAmount" type="number" min="0" class="form-control" [(ngModel)]="payForm.amount"
+          <input appMoney id="payAmount" class="form-control" [(ngModel)]="payForm.amount"
                  [placeholder]="payExpected.net" />
         </div>
         <div class="col-12 form-text mt-1">
