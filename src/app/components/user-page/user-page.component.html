@@ -138,10 +138,9 @@
             </div>
             <div class="form-group">
               <label for="amount">{{ 'profile.form.amount' | translate }}</label>
-              <input type="text" id="amount" name="amount"
+              <input id="amount" name="amount"
                 [attr.placeholder]="'profile.form.amountPlaceholder' | translate" required
-                [value]="todaysExpense.amount !== 0 ? (todaysExpense.amount | currency : selectedCurrency : 'symbol' : '1.0-0') : '' "
-                (input)="onAmountChange($event)" />
+                appMoney [ngModel]="todaysExpense.amount || null" (ngModelChange)="todaysExpense.amount = $event ?? 0" />
               </div>
               <div class="form-group">
                 <label for="description">{{ 'profile.form.description' | translate }}</label>

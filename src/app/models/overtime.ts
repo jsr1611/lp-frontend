@@ -86,6 +86,8 @@ export interface DeductionSettings {
   // table: 간이세액표; flat: rates.incomeTax.
   incomeTaxMode?: 'flat' | 'table';
   dependents?: number;
+  // Of the dependents, children aged 8–20.
+  children?: number;
 }
 
 export interface DeductionItem {

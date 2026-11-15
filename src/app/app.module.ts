@@ -1,3 +1,4 @@
+import { MoneyInputDirective } from "./directives/money-input.directive";
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule, inject, provideAppInitializer } from '@angular/core';
 import { TranslateDirective, TranslatePipe, provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -55,6 +56,7 @@ registerAppLocales();
 @NgModule({
     declarations: [
         AppComponent,
+        MoneyInputDirective,
         WordsComponent,
         NotFoundComponent,
         TestsComponent,

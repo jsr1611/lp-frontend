@@ -152,12 +152,6 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onAmountChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = input.value.replace(/[^0-9.-]+/g, '');
-    this.todaysExpense.amount = value ? parseFloat(value) : 0;
-  }
-
   onCurrencyChange(currencyCode: string) {
     localStorage.setItem('currency', currencyCode);
     if (this.monthlyExpensesChart && this.monthlyExpensesChart.data && this.monthlyExpensesChart.data.datasets) {

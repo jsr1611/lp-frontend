@@ -67,7 +67,7 @@
                 <label class="form-label" for="hourlyRate">
                   {{ 'overtime.baseHourlyRate' | translate }}
                 </label>
-                <input id="hourlyRate" name="hourlyRate" type="number" min="0" step="any"
+                <input appMoney [decimals]="2" id="hourlyRate" name="hourlyRate"
                        class="form-control" required
                        [(ngModel)]="settingsForm.hourlyRate" />
                 <div class="form-text">{{ 'overtime.baseHourlyRateHelp' | translate }}</div>
@@ -299,7 +299,7 @@
                   <label class="form-label" for="contractSalary">
                     {{ 'overtime.contractSalary' | translate }}
                   </label>
-                  <input id="contractSalary" name="contractSalary" type="number" min="0" step="any"
+                  <input appMoney id="contractSalary" name="contractSalary"
                          class="form-control" [(ngModel)]="settingsForm.company.contractSalary" />
                 </div>
                 <div class="col-12 col-md-3">
@@ -359,43 +359,62 @@
                     <option value="insurance4">{{ 'overtime.deductions.insurance4' | translate }}</option>
                   </select>
                 </div>
-                @for (key of deductionRateKeys; track key) {
-                  <div class="col-6 col-md-4 col-lg">
-                    <label class="form-label small" [for]="'rate-' + key">
-                      {{ 'overtime.deductions.items.' + key | translate }} (%)
-                    </label>
-                    <input [id]="'rate-' + key" [name]="'rate-' + key" type="number" min="0" max="100" step="any"
-                           class="form-control form-control-sm" [placeholder]="deductionDefaults[key]"
-                           [(ngModel)]="settingsForm.deductions.rates![key]" />
+                <!-- Rates in their own row, bottom-aligned: labels wrap to different heights. -->
+                @if (deductionRateKeys.length) {
+                  <div class="col-12">
+                    <div class="row g-2 align-items-end">
+                      @for (key of deductionRateKeys; track key) {
+                        <div class="col-6 col-md">
+                          <label class="form-label small mb-1" [for]="'rate-' + key">
+                            {{ 'overtime.deductions.items.' + key | translate }} (%)
+                          </label>
+                          <input [id]="'rate-' + key" [name]="'rate-' + key" type="number" min="0" max="100" step="any"
+                                 class="form-control form-control-sm" [placeholder]="deductionDefaults[key]"
+                                 [(ngModel)]="settingsForm.deductions.rates![key]" />
+                        </div>
+                      }
+                    </div>
                   </div>
                 }
                 @if (settingsForm.deductions.mode === 'insurance4') {
-                  <div class="col-12 col-md-4">
-                    <label class="form-label small" for="incomeTaxMode">{{ 'overtime.deductions.incomeTaxMode' | translate }}</label>
-                    <select id="incomeTaxMode" name="incomeTaxMode" class="form-select form-select-sm"
-                            [(ngModel)]="settingsForm.deductions.incomeTaxMode">
-                      <option value="table">{{ 'overtime.deductions.taxTable' | translate }}</option>
-                      <option value="flat">{{ 'overtime.deductions.taxFlat' | translate }}</option>
-                    </select>
-                  </div>
-                  @if (settingsForm.deductions.incomeTaxMode === 'table') {
-                    <div class="col-6 col-md-4">
-                      <label class="form-label small" for="dependents">{{ 'overtime.deductions.dependents' | translate }}</label>
-                      <input id="dependents" name="dependents" type="number" min="1" max="20" step="1"
-                             class="form-control form-control-sm" [(ngModel)]="settingsForm.deductions.dependents" />
+                  <div class="col-12">
+                    <div class="row g-2 align-items-end">
+                      <div class="col-12 col-md-4">
+                        <label class="form-label small mb-1" for="incomeTaxMode">{{ 'overtime.deductions.incomeTaxMode' | translate }}</label>
+                        <select id="incomeTaxMode" name="incomeTaxMode" class="form-select form-select-sm"
+                                [(ngModel)]="settingsForm.deductions.incomeTaxMode">
+                          <option value="table">{{ 'overtime.deductions.taxTable' | translate }}</option>
+                          <option value="flat">{{ 'overtime.deductions.taxFlat' | translate }}</option>
+                        </select>
+                      </div>
+                      @if (settingsForm.deductions.incomeTaxMode === 'table') {
+                        <div class="col-6 col-md-2">
+                          <label class="form-label small mb-1" for="dependents">{{ 'overtime.deductions.dependents' | translate }}</label>
+                          <input id="dependents" name="dependents" type="number" min="1" max="20" step="1"
+                                 class="form-control form-control-sm" [(ngModel)]="settingsForm.deductions.dependents" />
+                        </div>
+                        <div class="col-6 col-md-2">
+                          <label class="form-label small mb-1" for="children">{{ 'overtime.deductions.children' | translate }}</label>
+                          <input id="children" name="children" type="number" min="0" max="20" step="1"
+                                 class="form-control form-control-sm" [(ngModel)]="settingsForm.deductions.children" />
+                        </div>
+                      }
+                      <div class="col-12 col-md-4">
+                        <label class="form-label small mb-1" for="insuranceBase">{{ 'overtime.deductions.insuranceBase' | translate }}</label>
+                        <input appMoney id="insuranceBase" name="insuranceBase"
+                               class="form-control form-control-sm"
+                               [placeholder]="monthlySalaryPlaceholder"
+                               [(ngModel)]="settingsForm.deductions.insuranceBase" />
+                      </div>
                     </div>
-                  }
-                  <div class="col-6 col-md-4">
-                    <label class="form-label small" for="insuranceBase">{{ 'overtime.deductions.insuranceBase' | translate }}</label>
-                    <input id="insuranceBase" name="insuranceBase" type="number" min="0" step="1"
-                           class="form-control form-control-sm"
-                           [placeholder]="settingsForm.company?.contractSalary ?? ''"
-                           [(ngModel)]="settingsForm.deductions.insuranceBase" />
+                    @if (settingsForm.deductions.incomeTaxMode === 'table') {
+                      <div class="form-text">{{ 'overtime.deductions.dependentsHelp' | translate }}</div>
+                    }
+                    <div class="form-text">{{ 'overtime.deductions.insuranceBaseHelp' | translate }}</div>
                   </div>
-                  <div class="col-12 form-text mt-1">{{ 'overtime.deductions.insuranceBaseHelp' | translate }}</div>
                 }
                 @if (deductionRateKeys.length) {
-                  <div class="col-12 form-text mt-1">
+                  <div class="col-12 form-text mt-0">
                     {{ (settingsForm.deductions.mode === 'insurance4'
                           ? 'overtime.deductions.insuranceHelp' : 'overtime.deductions.ratesHelp') | translate }}
                   </div>

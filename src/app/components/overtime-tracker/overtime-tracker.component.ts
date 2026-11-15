@@ -428,6 +428,15 @@ export class OvertimeTrackerComponent implements OnInit {
 
   // ---------- Settings ----------
 
+  // The insurance base defaults to the contract salary as a month — an annual (연봉)
+  // contract is divided by 12, or the hint would read twelve times too high.
+  get monthlySalaryPlaceholder(): string {
+    const company = this.settingsForm?.company;
+    if (!company?.contractSalary) return "";
+    const monthly = company.salaryPeriod === "annual" ? company.contractSalary / 12 : company.contractSalary;
+    return Math.round(monthly).toLocaleString("en-US");
+  }
+
   // Settings sections and the chart start collapsed; what the user opens is kept per
   // browser. First-time setup shows every section, as all of it needs filling in.
   private readonly collapsed = new CollapseState<string>("overtimeTracker.sections");
@@ -497,6 +506,7 @@ export class OvertimeTrackerComponent implements OnInit {
       insuranceBase: this.settingsForm.deductions?.insuranceBase ?? null,
       incomeTaxMode: this.settingsForm.deductions?.incomeTaxMode || "flat",
       dependents: this.settingsForm.deductions?.dependents ?? 1,
+      children: this.settingsForm.deductions?.children ?? 0,
     };
     const leave = this.settingsForm.leave;
     this.settingsForm.leave = {
