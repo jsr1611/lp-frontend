@@ -1,0 +1,75 @@
+.home {
+  max-width: 900px;
+  padding-bottom: 3rem;
+}
+
+.intro {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin: 1rem 0 2rem;
+}
+
+.intro-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.word-card {
+  margin-bottom: 2rem;
+}
+
+.arabic {
+  font-size: 2.75rem;
+  line-height: 1.4;
+}
+
+.arabic-sm {
+  font-size: 1.4rem;
+}
+
+.meanings {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+.meanings strong {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  margin-right: 0.25rem;
+}
+
+.example {
+  border-left: 3px solid var(--bs-primary);
+  padding-left: 0.75rem;
+}
+
+.section-title {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 576px) {
+  .intro {
+    flex-direction: column;
+    text-align: center;
+  }
+  .intro .d-flex {
+    justify-content: center;
+  }
+  .intro-photo {
+    width: 96px;
+    height: 96px;
+  }
+  .arabic {
+    font-size: 2.25rem;
+  }
+}
+
+.post-card { color: inherit; transition: transform .15s, box-shadow .15s; }
+.post-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,.08); }

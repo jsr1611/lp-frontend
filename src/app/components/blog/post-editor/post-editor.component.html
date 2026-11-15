@@ -1,0 +1,83 @@
+<div class="container-fluid editor">
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <a routerLink="/blog" class="small text-decoration-none">← {{ 'blog.back' | translate }}</a>
+    <h1 class="h4 mb-0 ms-2">{{ (id ? 'blog.editPost' : 'blog.newPost') | translate }}</h1>
+    @if (post.published) {
+      <span class="badge text-bg-success">{{ 'blog.published' | translate }}</span>
+    } @else {
+      <span class="badge text-bg-warning">{{ 'blog.draft' | translate }}</span>
+    }
+    <div class="ms-auto d-flex flex-wrap gap-2">
+      <button class="btn btn-outline-secondary btn-sm" (click)="useChallengeTemplate()">
+        <i class="bi bi-trophy"></i> {{ 'blog.challengeTemplate' | translate }}
+      </button>
+      <button class="btn btn-outline-primary btn-sm" [disabled]="saving()" (click)="save()">{{ 'blog.saveDraft' | translate }}</button>
+      @if (post.published) {
+        <button class="btn btn-outline-warning btn-sm" [disabled]="saving()" (click)="save(false)">{{ 'blog.unpublish' | translate }}</button>
+        <a class="btn btn-outline-secondary btn-sm" [routerLink]="['/blog', post.slug]">{{ 'blog.view' | translate }}</a>
+      } @else {
+        <button class="btn btn-primary btn-sm" [disabled]="saving()" (click)="save(true)">{{ 'blog.publish' | translate }}</button>
+      }
+      @if (id) {
+        <button class="btn btn-outline-danger btn-sm" (click)="remove()"><i class="bi bi-trash"></i></button>
+      }
+    </div>
+  </div>
+
+  @if (message(); as m) {
+    <div class="alert alert-{{ m.type }} py-2 small">{{ m.text }}</div>
+  }
+
+  @if (loading()) {
+    <div class="text-center py-5"><div class="spinner-border"></div></div>
+  } @else {
+    <div class="row g-2 mb-2">
+      <div class="col-md-8">
+        <input class="form-control form-control-lg" [(ngModel)]="post.title" [placeholder]="'blog.titlePh' | translate">
+      </div>
+      <div class="col-md-4">
+        <input class="form-control form-control-lg" [(ngModel)]="post.slug" [placeholder]="'blog.slugPh' | translate">
+      </div>
+      <div class="col-md-4">
+        <input class="form-control" [(ngModel)]="tagsText" [placeholder]="'blog.tagsPh' | translate">
+      </div>
+      <div class="col-md-8">
+        <input class="form-control" [(ngModel)]="post.excerpt" [placeholder]="'blog.excerptPh' | translate" maxlength="240">
+      </div>
+    </div>
+
+    @if (isChallenge && post.challenge) {
+      <div class="row g-2 mb-2 challenge-fields">
+        <div class="col-6 col-md-3">
+          <input class="form-control form-control-sm" [(ngModel)]="post.challenge.source" placeholder="LeetCode">
+        </div>
+        <div class="col-6 col-md-4">
+          <input class="form-control form-control-sm" [(ngModel)]="post.challenge.url" placeholder="https://…">
+        </div>
+        <div class="col-6 col-md-2">
+          <select class="form-select form-select-sm" [(ngModel)]="post.challenge.difficulty">
+            <option value="">{{ 'blog.difficulty' | translate }}</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <div class="col-6 col-md-3">
+          <input class="form-control form-control-sm" [(ngModel)]="post.challenge.language" placeholder="JavaScript">
+        </div>
+      </div>
+    }
+
+    <div class="d-md-none btn-group btn-group-sm mb-2 w-100">
+      <button class="btn" [class.btn-dark]="tab() === 'write'" [class.btn-outline-dark]="tab() !== 'write'" (click)="tab.set('write')">{{ 'blog.write' | translate }}</button>
+      <button class="btn" [class.btn-dark]="tab() === 'preview'" [class.btn-outline-dark]="tab() !== 'preview'" (click)="tab.set('preview')">{{ 'blog.preview' | translate }}</button>
+    </div>
+
+    <div class="panes">
+      <textarea class="form-control pane write" [class.d-none]="tab() !== 'write'" [(ngModel)]="post.content"
+        [placeholder]="'blog.contentPh' | translate" spellcheck="true"></textarea>
+      <div class="pane preview markdown-body" [class.d-none]="tab() !== 'preview'" [innerHTML]="post.content | markdown"></div>
+    </div>
+    <p class="small text-body-secondary mt-2">{{ 'blog.hint' | translate }}</p>
+  }
+</div>

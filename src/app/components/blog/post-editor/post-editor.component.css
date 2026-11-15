@@ -1,0 +1,23 @@
+.editor { max-width: 1400px; padding-bottom: 2rem; }
+.btn { margin: 0; }
+.challenge-fields { padding: 0.5rem; border-radius: 0.5rem; background: var(--bs-tertiary-bg); }
+.panes { display: grid; gap: 1rem; }
+.pane { min-height: 60vh; }
+.write {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9rem;
+  resize: vertical;
+}
+.preview {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.375rem;
+  padding: 1rem;
+  overflow: auto;
+}
+
+/* Desktop: write and preview side by side */
+@media (min-width: 768px) {
+  .panes { grid-template-columns: 1fr 1fr; }
+  .pane.d-none { display: block !important; }
+  .preview { max-height: 75vh; }
+}

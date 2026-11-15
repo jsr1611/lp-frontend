@@ -1,0 +1,15 @@
+.manager { max-width: 960px; padding-bottom: 3rem; }
+.btn { margin: 0; }
+.row-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+.row-item.hidden { opacity: 0.55; }
+.min-w-0 { min-width: 0; }
+
+@media (max-width: 576px) {
+  .row-item { flex-wrap: wrap; }
+}

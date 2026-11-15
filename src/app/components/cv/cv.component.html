@@ -1,0 +1,71 @@
+<div class="container cv">
+  <div class="d-flex justify-content-end gap-2 no-print mb-2">
+    @if (auth.isOwner()) {
+      <a class="btn btn-outline-primary btn-sm" routerLink="/cv/edit"><i class="bi bi-pencil"></i> {{ 'cv.edit' | translate }}</a>
+    }
+    <button class="btn btn-outline-secondary btn-sm" (click)="print()">
+      <i class="bi bi-printer"></i> {{ 'cv.print' | translate }}
+    </button>
+  </div>
+
+  <header class="cv-header">
+    <h1>{{ cv.name }}</h1>
+    <p class="headline">{{ cv.headline }}</p>
+    <p class="contact">
+      @if (cv.location) { <span><i class="bi bi-geo-alt"></i> {{ cv.location }}</span> }
+      @if (cv.email) { <a [href]="'mailto:' + cv.email"><i class="bi bi-envelope"></i> {{ cv.email }}</a> }
+      @for (l of cv.links; track l.url) {
+        <a [href]="l.url" target="_blank" rel="noopener"><i class="bi {{ l.icon }}"></i> {{ l.url.replace('https://', '').replace('www.', '') }}</a>
+      }
+    </p>
+  </header>
+
+  <section>
+    <h2>{{ 'cv.experience' | translate }}</h2>
+    @for (e of cv.experience; track $index) {
+      <div class="item">
+        <div class="item-head">
+          <div><strong>{{ e.title }}</strong> · {{ e.org }}@if (e.location) {, {{ e.location }}}</div>
+          <div class="when">{{ e.start }} – {{ e.end || ('cv.present' | translate) }}</div>
+        </div>
+        @if (e.points.length) {
+          <ul>@for (pt of e.points; track $index) { <li>{{ pt }}</li> }</ul>
+        }
+      </div>
+    }
+  </section>
+
+  <section>
+    <h2>{{ 'cv.education' | translate }}</h2>
+    @for (e of cv.education; track $index) {
+      <div class="item">
+        <div class="item-head">
+          <div><strong>{{ e.title }}</strong> · {{ e.org }}</div>
+          <div class="when">{{ e.start }} – {{ e.end || ('cv.present' | translate) }}</div>
+        </div>
+        @if (e.points.length) {
+          <ul>@for (pt of e.points; track $index) { <li>{{ pt }}</li> }</ul>
+        }
+      </div>
+    }
+  </section>
+
+  <section>
+    <h2>{{ 'cv.projects' | translate }}</h2>
+    @for (pr of projects; track pr.name) {
+      <div class="item">
+        <div class="item-head">
+          <div><strong>{{ pr.name }}</strong>@if (pr.role) { · {{ pr.role }}}
+            @if (pr.url) { · <a [href]="pr.url" target="_blank" rel="noopener">{{ pr.url.replace('https://', '') }}</a> }
+          </div>
+          <div class="when">{{ pr.when }}</div>
+        </div>
+        <div>{{ pr.description }}</div>
+        @if (pr.tech?.length) { <div class="small text-body-secondary">{{ pr.tech!.join(' · ') }}</div> }
+      </div>
+    }
+    @if (cv.allProjectsUrl) {
+    <p class="small mt-2 no-print"><a [href]="cv.allProjectsUrl" target="_blank" rel="noopener">{{ 'cv.allProjects' | translate }} →</a></p>
+    }
+  </section>
+</div>

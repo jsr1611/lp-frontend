@@ -1,0 +1,104 @@
+<div class="container manager">
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <h1 class="h3 mb-0">{{ 'projects.manage' | translate }}</h1>
+    <span class="text-body-secondary small">{{ 'projects.shownCount' | translate: { n: visible().length } }}</span>
+    <div class="ms-auto d-flex gap-2">
+      <button class="btn btn-outline-dark btn-sm" [disabled]="importing()" (click)="importGithub()">
+        @if (importing()) { <span class="spinner-border spinner-border-sm"></span> } @else { <i class="bi bi-github"></i> }
+        {{ 'projects.importGithub' | translate }}
+      </button>
+      <button class="btn btn-primary btn-sm" (click)="startAdd()"><i class="bi bi-plus-lg"></i> {{ 'projects.add' | translate }}</button>
+    </div>
+  </div>
+
+  @if (message(); as m) {
+    <div class="alert alert-{{ m.type }} py-2 small d-flex">
+      <span class="flex-grow-1">{{ m.text }}</span>
+      <button type="button" class="btn-close btn-sm" (click)="message.set(null)"></button>
+    </div>
+  }
+
+  @if (editing; as e) {
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row g-2">
+          <div class="col-md-6"><input class="form-control" [(ngModel)]="e.title" [placeholder]="'projects.titlePh' | translate"></div>
+          <div class="col-md-3">
+            <select class="form-select" [(ngModel)]="e.source" [disabled]="e.source === 'github'">
+              <option value="linkedin">LinkedIn</option>
+              <option value="manual">{{ 'projects.other' | translate }}</option>
+              @if (e.source === 'github') { <option value="github">GitHub</option> }
+            </select>
+          </div>
+          <div class="col-md-3 d-flex align-items-center">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="editVisible" [(ngModel)]="e.visible">
+              <label class="form-check-label" for="editVisible">{{ 'projects.showOnHome' | translate }}</label>
+            </div>
+          </div>
+          <div class="col-12"><textarea class="form-control" rows="2" [(ngModel)]="e.description" [placeholder]="'projects.descPh' | translate"></textarea></div>
+          <div class="col-md-4"><input class="form-control" [(ngModel)]="e.url" [placeholder]="'projects.urlPh' | translate"></div>
+          <div class="col-md-4"><input class="form-control" [(ngModel)]="e.demoUrl" [placeholder]="'projects.demoPh' | translate"></div>
+          <div class="col-md-4"><input class="form-control" [(ngModel)]="e.period" [placeholder]="'cv.f.period' | translate"></div>
+          <div class="col-md-4"><input class="form-control" [(ngModel)]="e.role" [placeholder]="'cv.f.role' | translate"></div>
+          <div class="col-md-4 d-flex align-items-center">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="editCv" [(ngModel)]="e.showOnCv">
+              <label class="form-check-label" for="editCv">{{ 'cv.showOnCv' | translate }}</label>
+            </div>
+          </div>
+          <div class="col-md-4"><input class="form-control" [(ngModel)]="techText" [placeholder]="'projects.techPh' | translate"></div>
+        </div>
+        <div class="d-flex gap-2 mt-3">
+          <button class="btn btn-primary btn-sm" (click)="saveEdit()">{{ 'projects.save' | translate }}</button>
+          <button class="btn btn-outline-secondary btn-sm" (click)="editing = null">{{ 'projects.cancel' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="btn-group btn-group-sm mb-3">
+    @for (f of ['all', 'visible', 'hidden']; track f) {
+      <button class="btn" [class.btn-dark]="filter() === f" [class.btn-outline-dark]="filter() !== f" (click)="filter.set($any(f))">
+        {{ 'projects.filter.' + f | translate }}
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-5"><div class="spinner-border"></div></div>
+  } @else if (shown().length === 0) {
+    <p class="text-body-secondary">{{ 'projects.empty' | translate }}</p>
+  } @else {
+    <ul class="list-unstyled">
+      @for (p of shown(); track p._id) {
+        <li class="row-item" [class.hidden]="!p.visible">
+          <div class="form-check form-switch m-0">
+            <input class="form-check-input" type="checkbox" [checked]="p.visible" (change)="toggle(p)"
+              [attr.aria-label]="'projects.showOnHome' | translate">
+          </div>
+          <div class="flex-grow-1 min-w-0">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <i class="bi" [class.bi-github]="p.source === 'github'" [class.bi-linkedin]="p.source === 'linkedin'" [class.bi-folder]="p.source === 'manual'"></i>
+              <strong class="text-truncate">{{ p.title }}</strong>
+              @if (p.stars) { <span class="small text-body-secondary">★ {{ p.stars }}</span> }
+              @for (t of p.tech.slice(0, 4); track t) { <span class="badge text-bg-light border">{{ t }}</span> }
+            </div>
+            @if (p.description) { <div class="small text-body-secondary text-truncate">{{ p.description }}</div> }
+          </div>
+          @if (p.visible) {
+            @let idx = sortedVisibleIndex(p);
+            <div class="btn-group btn-group-sm">
+              <button class="btn btn-outline-secondary" [disabled]="idx === 0" (click)="move(p, -1)" aria-label="Move up"><i class="bi bi-arrow-up"></i></button>
+              <button class="btn btn-outline-secondary" [disabled]="idx === visible().length - 1" (click)="move(p, 1)" aria-label="Move down"><i class="bi bi-arrow-down"></i></button>
+            </div>
+          }
+          <button class="btn btn-sm" [class.btn-primary]="p.showOnCv" [class.btn-outline-secondary]="!p.showOnCv" (click)="toggleCv(p)"
+            [title]="'cv.showOnCv' | translate" [attr.aria-pressed]="!!p.showOnCv">CV</button>
+          <button class="btn btn-sm btn-outline-secondary" (click)="startEdit(p)" aria-label="Edit"><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-sm btn-outline-danger" (click)="remove(p)" aria-label="Delete"><i class="bi bi-trash"></i></button>
+        </li>
+      }
+    </ul>
+  }
+</div>

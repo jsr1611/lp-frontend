@@ -1,4 +1,143 @@
-<h1>{{ 'home.title' | translate }}</h1>
-<hr>
-<a href="/tests" class="btn btn-primary"><h2>{{ 'nav.tests' | translate }}</h2></a>
-<a href="/words" class="btn btn-primary"><h2>{{ 'home.viewWords' | translate }}</h2></a>
+<div class="container home">
+
+  <!-- Intro -->
+  <section class="intro">
+    <div>
+      <h1>{{ 'home.greeting' | translate: { name: ownerName } }}</h1>
+      <p class="lead mb-3">{{ 'home.tagline' | translate }}</p>
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary btn-sm" href="https://github.com/jsr1611" target="_blank" rel="noopener"><i class="bi bi-github"></i> GitHub</a>
+        <a class="btn btn-outline-secondary btn-sm" href="https://www.linkedin.com/in/jsr1611" target="_blank" rel="noopener"><i class="bi bi-linkedin"></i> LinkedIn</a>
+        <a class="btn btn-outline-secondary btn-sm" routerLink="/cv"><i class="bi bi-file-earmark-person"></i> {{ 'nav.cv' | translate }}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Word of the day -->
+  <section class="card word-card">
+    <div class="card-header d-flex justify-content-between">
+      <span><i class="bi bi-book"></i> {{ 'home.wordOfDay' | translate }}</span>
+      <span class="text-body-secondary small">{{ dailyDate() }}</span>
+    </div>
+    <div class="card-body">
+      @if (loading()) {
+        <div class="text-center py-3"><div class="spinner-border spinner-border-sm"></div></div>
+      } @else if (error() || !dailyWord()) {
+        <p class="text-body-secondary mb-0">{{ 'home.wordError' | translate }}</p>
+      } @else {
+        @let w = dailyWord()!;
+        <div class="text-center">
+          <div class="arabic" lang="ar" dir="rtl">
+            {{ w.arabic }}
+            @if (canSpeak) {
+              <button class="btn btn-link btn-sm align-middle" (click)="speak(w.arabic)" [attr.aria-label]="'home.listen' | translate">
+                <i class="bi bi-volume-up"></i>
+              </button>
+            }
+          </div>
+          <div class="text-body-secondary">{{ w.pronunciation }} · {{ w.category }}</div>
+        </div>
+
+        <div class="meanings">
+          @if (uzbekFirst) {
+            <span><strong>UZ</strong> {{ w.uzbek }}</span>
+            @if (w.english) { <span><strong>EN</strong> {{ w.english }}</span> }
+          } @else {
+            @if (w.english) { <span><strong>EN</strong> {{ w.english }}</span> }
+            <span><strong>UZ</strong> {{ w.uzbek }}</span>
+          }
+        </div>
+
+        @if (w.example?.arabic) {
+          <div class="example">
+            <div class="small text-body-secondary">{{ 'home.example' | translate }}</div>
+            <div class="arabic-sm" lang="ar" dir="rtl">{{ w.example?.arabic }}</div>
+            @if (uzbekFirst ? w.example?.uzbek : (w.example?.english || w.example?.uzbek); as tr) {
+              <div class="fst-italic">{{ tr }}</div>
+            }
+          </div>
+        }
+
+        @if (w.remark) {
+          <p class="small mb-0 mt-2"><i class="bi bi-lightbulb"></i> {{ w.remark }}</p>
+        }
+
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <a class="btn btn-primary btn-sm" [routerLink]="['/words', w.uzbek]">{{ 'home.seeInDictionary' | translate }} →</a>
+          <a class="btn btn-outline-primary btn-sm" routerLink="/tests">{{ 'home.testYourself' | translate }} →</a>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Latest posts -->
+  @if (latestPosts().length) {
+    <section class="mb-4">
+      <div class="d-flex justify-content-between align-items-baseline">
+        <h2 class="h5 section-title">{{ 'home.latestPosts' | translate }}</h2>
+        <a routerLink="/blog" class="small">{{ 'home.viewAll' | translate }} →</a>
+      </div>
+      <div class="row g-3">
+        @for (p of latestPosts(); track p._id) {
+          <div class="col-md-4">
+            <a class="card h-100 post-card text-decoration-none" [routerLink]="['/blog', p.slug]">
+              <div class="card-body">
+                <div class="small text-body-secondary mb-1">
+                  @for (t of p.tags.slice(0, 2); track t) { <span class="me-1">#{{ t }}</span> }
+                </div>
+                <h3 class="h6 mb-1">{{ p.title }}</h3>
+                <div class="small text-body-secondary">{{ p.publishedAt | date: 'MMM d' }}
+                  @if (p.challenge?.language) { · {{ p.challenge?.language }} }</div>
+              </div>
+            </a>
+          </div>
+        }
+      </div>
+      @if (streak() > 0) {
+        <p class="mt-3 mb-0">🔥 {{ 'home.streak' | translate: { days: streak() } }}</p>
+      }
+    </section>
+  }
+
+  <!-- Projects -->
+  <section>
+    <div class="d-flex justify-content-between align-items-baseline">
+      <h2 class="h5 section-title">{{ 'home.projects' | translate }}</h2>
+      @if (auth.isOwner()) { <a routerLink="/projects/manage" class="small"><i class="bi bi-gear"></i> {{ 'projects.manage' | translate }}</a> }
+    </div>
+    <div class="row g-3">
+      @for (p of projects(); track p._id) {
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-body d-flex flex-column">
+              <h3 class="h6 d-flex align-items-center gap-2">
+                <i class="bi" [class.bi-github]="p.source === 'github'" [class.bi-linkedin]="p.source === 'linkedin'" [class.bi-folder]="p.source === 'manual'"></i>
+                {{ p.title }}
+                @if (p.stars) { <span class="small text-body-secondary fw-normal ms-auto">★ {{ p.stars }}</span> }
+              </h3>
+              @if (p.description) { <p class="small text-body-secondary">{{ p.description }}</p> }
+              @if (p.tech.length) {
+                <div class="mb-2">@for (t of p.tech.slice(0, 5); track t) { <span class="badge text-bg-light border me-1">{{ t }}</span> }</div>
+              }
+              <div class="mt-auto d-flex gap-2">
+                @if (p.url) { <a [href]="p.url" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary">{{ 'home.open' | translate }} →</a> }
+                @if (p.demoUrl) { <a [href]="p.demoUrl" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">Demo</a> }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+      <!-- The dictionary on this site is always shown -->
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="h6"><i class="bi bi-translate"></i> {{ 'home.dictTitle' | translate }}</h3>
+            <p class="small text-body-secondary">{{ 'home.dictDesc' | translate }}</p>
+            <a routerLink="/words" class="btn btn-sm btn-outline-primary">{{ 'home.open' | translate }} →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>

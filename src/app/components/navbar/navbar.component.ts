@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/services/AuthService';
 import { LanguageService } from 'src/app/services/LanguageService';
 import { LangCode } from 'src/app/mappings/languages';
 import { Router } from '@angular/router';
+import { OWNER_NAME } from 'src/app/mappings/owner';
 
 @Component({
     selector: 'app-navbar',
@@ -14,6 +15,7 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnChanges{
   readonly languageService = inject(LanguageService);
+  readonly ownerName = OWNER_NAME;
 
   constructor(
     private navbarService: NavBarService,
