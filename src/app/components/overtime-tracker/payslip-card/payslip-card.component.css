@@ -31,3 +31,16 @@
   max-width: 520px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
 }
+
+/* Rows that expand a breakdown. */
+.collapse-toggle {
+  cursor: pointer;
+}
+
+.collapse-toggle:hover td {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.collapse-toggle .bi {
+  font-size: 0.75em;
+}

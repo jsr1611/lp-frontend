@@ -1,4 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
+import { CollapseState } from "./collapse-state";
 import {
   Component,
   Inject,
@@ -426,6 +427,26 @@ export class OvertimeTrackerComponent implements OnInit {
   }
 
   // ---------- Settings ----------
+
+  // Settings sections and the chart start collapsed; what the user opens is kept per
+  // browser. First-time setup shows every section, as all of it needs filling in.
+  private readonly collapsed = new CollapseState<string>("overtimeTracker.sections");
+
+  sectionOpen(section: string): boolean {
+    return !this.settings || this.collapsed.isOpen(section);
+  }
+
+  toggleSection(section: string): void {
+    if (this.settings) this.collapsed.toggle(section);
+  }
+
+  get chartOpen(): boolean {
+    return this.collapsed.isOpen("chart");
+  }
+
+  toggleChart(): void {
+    this.collapsed.toggle("chart");
+  }
 
   // The rates the chosen deduction scheme uses, with the backend's defaults as
   // placeholders (lib/deductions.js — keep in step). A blank field means "default".
