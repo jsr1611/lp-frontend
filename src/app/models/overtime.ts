@@ -88,6 +88,8 @@ export interface DeductionSettings {
   dependents?: number;
   // Of the dependents, children aged 8–20.
   children?: number;
+  // 원천징수 비율: 80, 100 or 120% of the table.
+  withholdingRate?: 80 | 100 | 120;
 }
 
 export interface DeductionItem {
@@ -101,6 +103,8 @@ export interface DeductionBreakdown {
   items: DeductionItem[];
   total: number;
   net: number;
+  // Effective date of the 간이세액표 used, or null when income tax is not from it.
+  taxTable?: string | null;
 }
 
 // The month's estimated pay from /summary. basePay and gross are null for a

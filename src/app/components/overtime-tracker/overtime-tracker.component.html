@@ -379,7 +379,7 @@
                 @if (settingsForm.deductions.mode === 'insurance4') {
                   <div class="col-12">
                     <div class="row g-2 align-items-end">
-                      <div class="col-12 col-md-4">
+                      <div class="col-12 col-md-3">
                         <label class="form-label small mb-1" for="incomeTaxMode">{{ 'overtime.deductions.incomeTaxMode' | translate }}</label>
                         <select id="incomeTaxMode" name="incomeTaxMode" class="form-select form-select-sm"
                                 [(ngModel)]="settingsForm.deductions.incomeTaxMode">
@@ -398,8 +398,17 @@
                           <input id="children" name="children" type="number" min="0" max="20" step="1"
                                  class="form-control form-control-sm" [(ngModel)]="settingsForm.deductions.children" />
                         </div>
+                        <div class="col-6 col-md-2">
+                          <label class="form-label small mb-1" for="withholdingRate">{{ 'overtime.deductions.withholdingRate' | translate }}</label>
+                          <select id="withholdingRate" name="withholdingRate" class="form-select form-select-sm"
+                                  [(ngModel)]="settingsForm.deductions.withholdingRate">
+                            <option [ngValue]="80">80%</option>
+                            <option [ngValue]="100">100%</option>
+                            <option [ngValue]="120">120%</option>
+                          </select>
+                        </div>
                       }
-                      <div class="col-12 col-md-4">
+                      <div class="col-12 col-md-3">
                         <label class="form-label small mb-1" for="insuranceBase">{{ 'overtime.deductions.insuranceBase' | translate }}</label>
                         <input appMoney id="insuranceBase" name="insuranceBase"
                                class="form-control form-control-sm"
