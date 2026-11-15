@@ -645,9 +645,10 @@
       "taxFlat": "Flat %",
       "dependents": "Dependents (incl. you)",
       "insuranceBase": "Insurance base (보수월액)",
-      "insuranceBaseHelp": "4대보험 is charged on your declared salary, not on overtime. Leave blank to use the contract salary. The tax table result is within about 1% of the official one.",
+      "insuranceBaseHelp": "4대보험 is charged on your declared salary, not on overtime. Leave blank to use the contract salary.",
       "children": "Children aged 8–20",
-      "dependentsHelp": "Dependents is everyone the employer has on file for you, you included. Use what your payslip's tax matches: often 1 if no family declaration was submitted."
+      "dependentsHelp": "Dependents is everyone the employer has on file for you, you included. Use what your payslip's tax matches: often 1 if no family declaration was submitted.",
+      "withholdingRate": "Withholding"
     },
     "takeHome": {
       "title": "Take-home",
@@ -661,7 +662,9 @@
       "estimateNote": "Estimate from the days logged. Paid leave and weekly holiday pay (주휴수당) are not included.",
       "fromPayslipGross": "Deductions worked out from the payslip's own gross, to check the cut they took.",
       "needSalary": "Add the contract salary under Company to estimate take-home pay.",
-      "deductionsTotal": "Deductions"
+      "deductionsTotal": "Deductions",
+      "taxTable": "Income tax from the official 간이세액표 in force from {{date}}.",
+      "taxTableStale": "Income tax uses the 간이세액표 from {{date}}, over a year old. Check hometax.go.kr for a newer one."
     },
     "jobs": {
       "title": "Jobs",

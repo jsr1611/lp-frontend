@@ -645,9 +645,10 @@
       "taxFlat": "Qat’iy %",
       "dependents": "Qaramog‘idagilar (o‘zingiz bilan)",
       "insuranceBase": "Sug‘urta bazasi (보수월액)",
-      "insuranceBaseHelp": "4대보험 qo‘shimcha ish haqidan emas, e’lon qilingan maoshdan olinadi. Bo‘sh qoldirsangiz, shartnoma maoshi olinadi. Jadval natijasi rasmiysidan taxminan 1% farq qiladi.",
+      "insuranceBaseHelp": "4대보험 qo‘shimcha ish haqidan emas, e’lon qilingan maoshdan olinadi. Bo‘sh qoldirsangiz, shartnoma maoshi olinadi.",
       "children": "8–20 yoshli bolalar",
-      "dependentsHelp": "Qaramog‘idagilar — ish beruvchida siz uchun qayd etilgan hamma, o‘zingiz bilan. Hisob-varaqdagi soliqqa mos keladiganini kiriting: oila arizasi topshirilmagan bo‘lsa, odatda 1."
+      "dependentsHelp": "Qaramog‘idagilar — ish beruvchida siz uchun qayd etilgan hamma, o‘zingiz bilan. Hisob-varaqdagi soliqqa mos keladiganini kiriting: oila arizasi topshirilmagan bo‘lsa, odatda 1.",
+      "withholdingRate": "Ushlash darajasi"
     },
     "takeHome": {
       "title": "Qo‘lga tegadigan",
@@ -661,7 +662,9 @@
       "estimateNote": "Kiritilgan kunlar asosida taxmin. Haq to‘lanadigan ta‘til va 주휴수당 kirmagan.",
       "fromPayslipGross": "Ushlanmalar hisob-varaqdagi umumiy summadan hisoblandi — to‘g‘ri ushlanganini tekshirish uchun.",
       "needSalary": "Sof summani hisoblash uchun Kompaniya bo‘limiga shartnoma maoshini kiriting.",
-      "deductionsTotal": "Ushlanmalar"
+      "deductionsTotal": "Ushlanmalar",
+      "taxTable": "Daromad solig‘i {{date}} dan amaldagi rasmiy 간이세액표 bo‘yicha.",
+      "taxTableStale": "Daromad solig‘i {{date}} dagi 간이세액표 bo‘yicha — bir yildan eski. hometax.go.kr da yangisini tekshiring."
     },
     "jobs": {
       "title": "Ishlar",

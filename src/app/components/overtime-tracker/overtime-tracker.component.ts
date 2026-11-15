@@ -507,6 +507,7 @@ export class OvertimeTrackerComponent implements OnInit {
       incomeTaxMode: this.settingsForm.deductions?.incomeTaxMode || "flat",
       dependents: this.settingsForm.deductions?.dependents ?? 1,
       children: this.settingsForm.deductions?.children ?? 0,
+      withholdingRate: this.settingsForm.deductions?.withholdingRate ?? 100,
     };
     const leave = this.settingsForm.leave;
     this.settingsForm.leave = {

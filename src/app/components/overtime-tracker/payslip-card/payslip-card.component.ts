@@ -81,6 +81,17 @@ export class PayslipCardComponent {
     this.comparisonOpen = !this.showComparison;
   }
 
+  // The 간이세액표 behind the income tax line, when it came from one.
+  get taxTable(): string | null {
+    return (this.payslip?.expectedDeductions ?? this.pay?.deductions)?.taxTable ?? null;
+  }
+
+  // A year on, a newer table has probably been published (they change with the law).
+  get taxTableStale(): boolean {
+    const t = this.taxTable;
+    return !!t && Date.now() - new Date(t).getTime() > 365 * 24 * 60 * 60 * 1000;
+  }
+
   get expectedNet(): number | null {
     return this.payslip?.expectedNet ?? this.pay?.net ?? null;
   }

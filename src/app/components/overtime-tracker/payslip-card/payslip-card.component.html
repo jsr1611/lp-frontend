@@ -183,6 +183,12 @@
       <div class="form-text">
         {{ (payslip?.grossPaid != null ? 'overtime.takeHome.fromPayslipGross' : 'overtime.takeHome.estimateNote') | translate }}
       </div>
+      @if (taxTable) {
+        <div class="form-text" [class.text-warning]="taxTableStale">
+          @if (taxTableStale) { <i class="bi bi-exclamation-triangle me-1"></i> }
+          {{ (taxTableStale ? 'overtime.takeHome.taxTableStale' : 'overtime.takeHome.taxTable') | translate: { date: taxTable } }}
+        </div>
+      }
     } @else if (pay && pay.employmentType === 'fulltime' && pay.deductionMode !== 'none') {
       <div class="form-text mt-2">{{ 'overtime.takeHome.needSalary' | translate }}</div>
     }
