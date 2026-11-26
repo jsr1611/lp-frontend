@@ -831,7 +831,22 @@
         <form (ngSubmit)="saveEntry()">
           <!-- A new record chooses its kind; a worked day being edited can take leave on
                top, or be turned into a day off. A saved day off stays one. -->
-          @if (!isEditingEntry || editingOriginal) {
+          @if (entryLeave && !isDayOff) {
+            <!-- The day already has leave on it: show it rather than a switch reading "off". -->
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge rounded-pill text-bg-success" [title]="entryLeave.note || ''">
+                <i class="bi bi-sun me-1"></i>{{ leaveLabelKey(entryLeave) | translate }}
+              </span>
+              <button type="button" class="btn btn-sm btn-outline-secondary ms-auto" (click)="editEntryLeave()"
+                      [attr.aria-label]="'overtime.leave.edit' | translate" [title]="'overtime.leave.edit' | translate">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteLeaveDay(entryLeave)"
+                      [attr.aria-label]="'overtime.leave.delete' | translate" [title]="'overtime.leave.delete' | translate">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          } @else if (!isEditingEntry || editingOriginal) {
             <div class="form-check form-switch mb-3">
               <input class="form-check-input" type="checkbox" role="switch" id="isDayOff" name="isDayOff"
                      [(ngModel)]="isDayOff" (ngModelChange)="onDayOffToggle()" />
