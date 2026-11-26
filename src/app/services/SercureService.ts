@@ -341,10 +341,12 @@ export class SecureService extends AuthService {
     });
   }
 
-  saveLeaveDay(leave: LeaveDay) {
+  // replaceEntry: a full day off takes the place of the work logged on that date.
+  saveLeaveDay(leave: LeaveDay, replaceEntry = false) {
+    const body = { leave, replaceEntry };
     return leave._id
-      ? this.http.put(this.url + `/overtime/leave/${leave._id}`, { leave }, { headers: this.jobHeaders() })
-      : this.http.post(this.url + `/overtime/leave`, { leave }, { headers: this.jobHeaders() });
+      ? this.http.put(this.url + `/overtime/leave/${leave._id}`, body, { headers: this.jobHeaders() })
+      : this.http.post(this.url + `/overtime/leave`, body, { headers: this.jobHeaders() });
   }
 
   deleteLeaveDay(id: string) {

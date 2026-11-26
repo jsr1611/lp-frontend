@@ -16,7 +16,9 @@ import {
   DeductionRateKey,
   Holiday,
   HolidayLookup,
+  LEAVE_AMOUNTS,
   LeaveDay,
+  LeaveType,
   OvertimeEntry,
   OvertimeOverview,
   OvertimePreview,
@@ -160,7 +162,8 @@ export class OvertimeTrackerComponent implements OnInit {
   isEditingEntry = false;
   isSaving = false; // in-flight guard: disables Save and blocks re-entrant submits
   entryForm: OvertimeEntry = this.blankEntry();
-  private editingOriginal: OvertimeEntry | null = null;
+  // The worked day being edited; null for a new record or a day off. Read by the template.
+  editingOriginal: OvertimeEntry | null = null;
   // Live result of the entry form, recomputed on each edit rather than bound as a
   // method call — Eager change detection would re-run a bound method every cycle.
   preview: OvertimePreview | null = null;
@@ -169,9 +172,10 @@ export class OvertimeTrackerComponent implements OnInit {
   awayError: string | null = null;
   // Set when editing a day that was logged under settings that have since changed.
   resnapshot = false;
-  // The same modal logs a day off: no clock times, just the date and full or half.
+  // The same modal logs a day off: no clock times, just the date and the kind of leave.
   isDayOff = false;
-  leaveForm: LeaveDay = { date: "", amount: 1, note: "" };
+  leaveForm: LeaveDay = { date: "", type: "annual", amount: 1, note: "" };
+  readonly leaveTypes = Object.keys(LEAVE_AMOUNTS) as LeaveType[];
 
   // Public holidays, keyed by "YYYY-MM". Cached per month so re-opening the modal or
   // nudging the date does not re-hit the API.
@@ -634,20 +638,53 @@ export class OvertimeTrackerComponent implements OnInit {
     this.errorMessage = null;
     this.isDayOff = true;
     this.isEditingEntry = !!leave;
+    this.editingOriginal = null;
     this.leaveForm = leave
-      ? { ...leave, date: this.isoDay(leave.date) }
-      : { date: this.todayIso(), amount: 1, note: "" };
+      ? this.leaveFormOf(leave)
+      : { date: this.todayIso(), type: "annual", amount: 1, note: "" };
     this.showEntryModal = true;
   }
 
-  // The day-off switch on a new record: carry the date across so it is not lost.
+  // A saved day off as the form edits it. One logged before types existed gets the
+  // nearest type for its length.
+  private leaveFormOf(leave: LeaveDay): LeaveDay {
+    const type = leave.type || (leave.amount === 0.5 ? "halfPm" : leave.amount === 0.25 ? "quarter" : "annual");
+    return { ...leave, type, date: this.isoDay(leave.date) };
+  }
+
+  // The day-off switch. On a new record it carries the date across so it is not lost.
+  // On a worked day being edited it adds leave to that date — or opens the leave already
+  // there — and the worked hours stay unless the leave is a full day.
   onDayOffToggle(): void {
     if (this.isDayOff) {
-      this.leaveForm = { date: this.entryForm.date, amount: 1, note: this.entryForm.note || "" };
-    } else {
+      const date = this.entryForm.date;
+      const existing = this.editingOriginal && this.leaveDays.find((l) => this.isoDay(l.date) === date);
+      this.leaveForm = existing
+        ? this.leaveFormOf(existing)
+        : this.editingOriginal
+          ? { date, type: "halfPm", amount: 0.5, note: "" }
+          : { date, type: "annual", amount: 1, note: this.entryForm.note || "" };
+    } else if (!this.editingOriginal) {
       this.entryForm.date = this.leaveForm.date;
       this.detectRestDay();
     }
+  }
+
+  // Part of a day (반차, 반반차): the hours worked that day are logged alongside it.
+  get leaveIsPartial(): boolean {
+    return LEAVE_AMOUNTS[this.leaveForm.type || "annual"] < 1;
+  }
+
+  // A full day off saved over the worked day being edited takes its place.
+  get leaveReplacesWork(): boolean {
+    return !!this.editingOriginal && !this.leaveIsPartial
+      && this.leaveForm.date === this.isoDay(this.editingOriginal.date);
+  }
+
+  // Label for a day off in the table. Older records have no type, only a length.
+  leaveLabelKey(leave: LeaveDay): string {
+    if (leave.type) return `overtime.leave.types.${leave.type}`;
+    return leave.amount === 0.5 ? "overtime.leave.halfDay" : "overtime.leave.types.annual";
   }
 
   openEntryModal(entry?: OvertimeEntry): void {
@@ -896,7 +933,8 @@ export class OvertimeTrackerComponent implements OnInit {
     }
     this.isSaving = true;
     this.errorMessage = null;
-    this.secureService.saveLeaveDay(this.leaveForm).subscribe({
+    this.leaveForm.amount = LEAVE_AMOUNTS[this.leaveForm.type || "annual"];
+    this.secureService.saveLeaveDay(this.leaveForm, this.leaveReplacesWork).subscribe({
       next: () => {
         this.isSaving = false;
         this.showEntryModal = false;

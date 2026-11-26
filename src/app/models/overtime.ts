@@ -238,11 +238,25 @@ export interface OvertimeSummary {
   pay?: MonthPay;
 }
 
-// A day of annual leave (연차). amount 0.5 = half day (반차).
+// The kinds of leave on a Korean leave form, and the days each takes from the balance.
+// Mirrors LEAVE_AMOUNTS in arabic_backend/models/LeaveDay.js.
+export const LEAVE_AMOUNTS = {
+  annual: 1,     // 연차
+  halfAm: 0.5,   // 오전반차
+  halfPm: 0.5,   // 오후반차
+  quarter: 0.25, // 반반차
+  summer: 1,     // 여름휴가
+  winter: 1,     // 겨울휴가
+  other: 1,      // 기타
+} as const;
+export type LeaveType = keyof typeof LEAVE_AMOUNTS;
+
+// A day of leave. `type` is absent on records logged before types existed.
 export interface LeaveDay {
   _id?: string;
   date: string;  // ISO date
-  amount: 0.5 | 1;
+  type?: LeaveType;
+  amount: 0.25 | 0.5 | 1;
   note?: string;
   created_at?: string;
   updated_at?: string;
