@@ -165,6 +165,8 @@ export class OvertimeTrackerComponent implements OnInit {
   entryForm: OvertimeEntry = this.blankEntry();
   // The worked day being edited; null for a new record or a day off. Read by the template.
   editingOriginal: OvertimeEntry | null = null;
+  // Part-day leave already logged on the worked day being edited, shown in its form.
+  entryLeave: LeaveDay | null = null;
   // Live result of the entry form, recomputed on each edit rather than bound as a
   // method call — Eager change detection would re-run a bound method every cycle.
   preview: OvertimePreview | null = null;
@@ -645,6 +647,7 @@ export class OvertimeTrackerComponent implements OnInit {
     this.isDayOff = true;
     this.isEditingEntry = !!leave;
     this.editingOriginal = null;
+    this.entryLeave = null;
     this.leaveForm = leave
       ? this.leaveFormOf(leave)
       : { date: this.todayIso(), type: "annual", amount: 1, note: "" };
@@ -676,6 +679,12 @@ export class OvertimeTrackerComponent implements OnInit {
     }
   }
 
+  // From the worked day's form: open the leave already logged on it.
+  editEntryLeave(): void {
+    this.isDayOff = true;
+    this.onDayOffToggle();
+  }
+
   // Part of a day (반차, 반반차): the hours worked that day are logged alongside it.
   get leaveIsPartial(): boolean {
     return LEAVE_AMOUNTS[this.leaveForm.type || "annual"] < 1;
@@ -699,6 +708,8 @@ export class OvertimeTrackerComponent implements OnInit {
     this.resnapshot = false;
     this.restDayNote = null;
     this.editingOriginal = entry || null;
+    const day = entry ? this.isoDay(entry.date) : null;
+    this.entryLeave = this.leaveDays.find((l) => this.isoDay(l.date) === day) || null;
     if (entry) {
       this.isEditingEntry = true;
       this.entryForm = {
