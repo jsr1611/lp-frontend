@@ -700,7 +700,7 @@
                         {{ row.leave.date | date: ('overtime.table.dateFormat' | translate) : 'UTC' }}
                         <span class="badge rounded-pill text-bg-success ms-1">
                           <i class="bi bi-sun me-1"></i>
-                          {{ (row.leave.amount === 0.5 ? 'overtime.leave.halfDay' : 'overtime.leave.dayOff') | translate }}
+                          {{ leaveLabelKey(row.leave) | translate }}
                         </span>
                       </td>
                       <td colspan="5" class="text-muted small">{{ row.leave.note }}</td>
@@ -822,9 +822,9 @@
         </h5>
 
         <form (ngSubmit)="saveEntry()">
-          <!-- Switching kind mid-edit would mean deleting one record and creating another;
-               only a new record can choose. -->
-          @if (!isEditingEntry) {
+          <!-- A new record chooses its kind; a worked day being edited can take leave on
+               top, or be turned into a day off. A saved day off stays one. -->
+          @if (!isEditingEntry || editingOriginal) {
             <div class="form-check form-switch mb-3">
               <input class="form-check-input" type="checkbox" role="switch" id="isDayOff" name="isDayOff"
                      [(ngModel)]="isDayOff" (ngModelChange)="onDayOffToggle()" />
@@ -842,15 +842,19 @@
                        [(ngModel)]="leaveForm.date" />
               </div>
               <div class="col-12">
-                <div class="btn-group w-100" role="group" [attr.aria-label]="'overtime.leave.length' | translate">
-                  <input type="radio" class="btn-check" name="leaveAmount" id="leaveFull"
-                         [value]="1" [(ngModel)]="leaveForm.amount" />
-                  <label class="btn btn-outline-primary" for="leaveFull">{{ 'overtime.leave.fullDay' | translate }}</label>
-                  <input type="radio" class="btn-check" name="leaveAmount" id="leaveHalf"
-                         [value]="0.5" [(ngModel)]="leaveForm.amount" />
-                  <label class="btn btn-outline-primary" for="leaveHalf">{{ 'overtime.leave.halfDay' | translate }}</label>
-                </div>
-                <div class="form-text">{{ 'overtime.leave.halfDayHelp' | translate }}</div>
+                <label class="form-label" for="leaveType">{{ 'overtime.leave.type' | translate }}</label>
+                <select id="leaveType" name="leaveType" class="form-select" [(ngModel)]="leaveForm.type">
+                  @for (t of leaveTypes; track t) {
+                    <option [value]="t">{{ 'overtime.leave.types.' + t | translate }}</option>
+                  }
+                </select>
+                @if (leaveIsPartial) {
+                  <div class="form-text">{{ 'overtime.leave.halfDayHelp' | translate }}</div>
+                } @else if (leaveReplacesWork) {
+                  <div class="form-text text-danger">
+                    <i class="bi bi-exclamation-triangle me-1"></i>{{ 'overtime.leave.replaceWarning' | translate }}
+                  </div>
+                }
               </div>
               <div class="col-12">
                 <label class="form-label" for="leaveNote">{{ 'overtime.note' | translate }}</label>
