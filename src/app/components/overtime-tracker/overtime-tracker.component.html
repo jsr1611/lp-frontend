@@ -734,6 +734,13 @@
                           {{ entry.restDayReason || ('overtime.restDay' | translate) }}
                         </span>
                       }
+                      @if (row.leave; as leave) {
+                        <button type="button" class="badge rounded-pill text-bg-success border-0 ms-1"
+                                [title]="leave.note || ('overtime.leave.edit' | translate)"
+                                (click)="openDayOffModal(leave)">
+                          <i class="bi bi-sun me-1"></i>{{ leaveLabelKey(leave) | translate }}
+                        </button>
+                      }
                     </td>
                     <td>
                       {{ entry.startTime }}
@@ -1022,6 +1029,13 @@
             <button type="button" class="btn btn-outline-secondary" (click)="closeEntryModal()">
               {{ 'common.cancel' | translate }}
             </button>
+            <!-- Leave shown as a badge on a worked day has no row of its own to delete from. -->
+            @if (isDayOff && leaveForm._id) {
+              <button type="button" class="btn btn-outline-danger ms-auto" [disabled]="isSaving"
+                      (click)="deleteLeaveDay(leaveForm)">
+                <i class="bi bi-trash me-1"></i>{{ 'overtime.leave.delete' | translate }}
+              </button>
+            }
           </div>
         </form>
       </div>

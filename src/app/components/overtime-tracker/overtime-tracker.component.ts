@@ -108,9 +108,10 @@ interface WeekDayOption {
   labelKey: string;
 }
 
-// A line in the month table: a worked day or a day off, interleaved by date.
+// A line in the month table: a worked day (with any part-day leave taken on it) or a
+// day off, interleaved by date.
 type MonthRow =
-  | { kind: "work"; id: string; date: string; entry: OvertimeEntry }
+  | { kind: "work"; id: string; date: string; entry: OvertimeEntry; leave?: LeaveDay }
   | { kind: "leave"; id: string; date: string; leave: LeaveDay };
 
 @Component({
@@ -394,11 +395,16 @@ export class OvertimeTrackerComponent implements OnInit {
   }
 
   private buildRows(): void {
+    // One line per date: part-day leave on a worked day rides on that day's row as a
+    // badge, and only a day off with no hours logged gets a row of its own.
+    const leaveByDate = new Map(this.leaveDays.map((l) => [this.isoDay(l.date), l]));
+    const worked = new Set(this.entries.map((e) => this.isoDay(e.date)));
     const rows: MonthRow[] = [
-      ...this.entries.map((entry): MonthRow => ({
-        kind: "work", id: `w${entry._id}`, date: this.isoDay(entry.date), entry,
-      })),
-      ...this.leaveDays.map((leave): MonthRow => ({
+      ...this.entries.map((entry): MonthRow => {
+        const date = this.isoDay(entry.date);
+        return { kind: "work", id: `w${entry._id}`, date, entry, leave: leaveByDate.get(date) };
+      }),
+      ...this.leaveDays.filter((l) => !worked.has(this.isoDay(l.date))).map((leave): MonthRow => ({
         kind: "leave", id: `l${leave._id}`, date: this.isoDay(leave.date), leave,
       })),
     ];
@@ -966,7 +972,10 @@ export class OvertimeTrackerComponent implements OnInit {
     });
     if (!confirm(confirmMessage)) return;
     this.secureService.deleteLeaveDay(leave._id).subscribe({
-      next: () => this.reloadAll(),
+      next: () => {
+        this.showEntryModal = false; // it can be deleted from its own edit form
+        this.reloadAll();
+      },
       error: (err: HttpErrorResponse) => this.showError(err),
     });
   }
